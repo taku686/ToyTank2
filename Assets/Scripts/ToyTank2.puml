@@ -1,0 +1,405 @@
+﻿@startuml
+
+skinparam groupInheritance 2
+
+
+
+
+
+
+namespace Canon{
+
+BeamType ..|> IShot
+BeamType ..|> IShotStop
+BeamType --|> CanonMoveBase
+BeamType --> Weapon.BeamEffect
+CanonType ..|> IShot
+CanonType ..|> ITargetMarker
+CanonType --|> CanonMoveBase
+FlameType ..|> IShot
+FlameType ..|> IShotStop
+FlameType --|> CanonMoveBase
+FlameType --> Weapon.FlameEffect
+MachineGunType ..|> IShot
+MachineGunType ..|> IShotStop
+MachineGunType --|> CanonMoveBase
+NormalBulletType ..|> IShot
+NormalBulletType --|> CanonMoveBase
+ShotGunType ..|> IShot
+ShotGunType --|> CanonMoveBase
+TrackingCanonType ..|> IShot
+TrackingCanonType ..|> ISetLayerMask
+TrackingCanonType --|> CanonMoveBase
+TwoCanonType ..|> IShot
+TwoCanonType --|> CanonMoveBase
+
+
+
+class CanonMoveBase
+{
+MonoBehaviour
+--
+- const string _joystickName = "CanonMove";
+# const string _fireTrigger = "Fire";
+# string _poolTag;
+# Transform _shotPos;
+# Animator _animator;
+}
+
+class BeamType
+{
+- GameObject _beamObj;
+- BeamEffect _beamEffect;
+--
++ Shot();
+- GenerateBeamObj();
++ ShotStop();
+}
+class CanonType
+{
+- Transform _targetMarker;
+- const float _angle;
+--
++ void CreateTargetMarker();
++ void MoveTargetMarker();
++ void Shot();
+- Vector3 CalculateVelocity();
+}
+class FlameType
+{
+- GameObject _flameObj;
+- FlameEffect _flameEffect;
+--
++ void Shot();
+- void GenerateEffect();
++ void ShotStop()
+}
+class MachineGunType
+{
+- float _time;
+- float _randomValue;
+--
++ void Shot();
+- void Fire();
++ void ShotStop()
+}
+class NormalBulletType
+{
++ void Shot();
+}
+class ShotGunType
+{
+- float _shotAngle;
++ void Shot();
+}
+class TrackingCanonType
+{
++ float m_fSightAngle = 60.0f;
+-  float _rigidSphereRadius = 10f;
+- const string _enemyTag = "Enemy";
+- LayerMask _enemyLayerMask;
+- Rigidbody _rigid;
+- SphereCollider _sphereCollider;
+- Transform _target;
+- List<Transform> _targetsList;
+- Vector3 _dir;
+--
+# override void Start()
+- void Update()
++ void Shot()
+- void DetectTarget()
+- Transform DecideTarget()
+- void OnTriggerEnter()
+- void OnTriggerExit()
++ void SetLayerMask()
+}
+class TwoCanonType
+{
+- const float _shotPosModifiedValue;
+--
++ void Shot();
+}
+
+interface IShot
+{
+Shot()
+}
+interface IShotStop
+{
+ShotStop()
+}
+interface ITargetMarker
+{
+CreateTargetMarker();
+MoveTargetMarker();
+}
+}
+
+
+
+namespace Base{
+class BaseMove
+{
+MonoBehaviour 
+--
+- RigidBody _rigidBody
+- CharacterController _characterController
+}
+}
+namespace Player{
+PlayerManager --> PlayerMove
+PlayerManager --> Data.UserData
+PlayerDeadState --|> State
+PlayerIdleState --|> State
+PlayerIdleState --> BaseMove
+PlayerMove --> BaseMove
+PlayerIdleState --> PlayerMove
+PlayerDeadState --> PlayerMove
+PlayerMove --> Canon.CanonMoveBase
+PlayerMove --> Canon.IShot
+PlayerMove --> Canon.IShotStop
+PlayerMove --> Canon.ITargetMarker
+PlayerMove --> Canon.ISetLayerMask
+PlayerMove --> UI.CanonBar
+PlayerMove --> Data.UserData
+PlayerMove --> Base.BaseMove
+
+
+
+class PlayerMove
+{
+MonoBehaviour
+--
++ Transform _targetMarker;
+- StateMachine<PlayerMove> _stateMachine;
+- BaseMove _baseMove;
+- UserData _userData;
+- CanonMoveBase _canonMoveBase;
+- ShellManager _shellManager;
+- UltimateJoystick _ultimateJoystick;
+- CanonBar _canonBar;
+- IShot _Ishot;
+- IShotStop _IshotStop;
+- ITargetMarker _ItargetMarker;
+- ISetLayerMask _IinitializeCanon;
+- LayerMask _enemyLayerMask;
+- GameObject[] _canonArray = new GameObject[3];
+- CanonData _currentCanon;
+- GameObject _currentCanonObj;
+- enum Event 
+}
+
+class PlayerManager
+{
+MonoBehaviour
+--
+- Transform generatePos;
+- float playerSize = 1;
+- GameObject canonBar;
+- GameObject targetMarker; 
+- LayerMask enemyLayerMask;
+- GameObject _playerObj;
+- PlayerMove _playerMoveSc;
+- UserData _userData;
+}
+
+class PlayerDeadState
+{
+}
+
+class PlayerIdleState
+{
+- BaseMove _baseMove;
+- CanonMoveBase _canonMoveBase;
+- UserData _userData;
+- Action _pointerUpCallBack;
+- bool _hasShotStopMethod;
+- const string _canonJoystickName = "CanonMove";
+}
+
+class State
+{
+StateMachine<PlayerMove>.State
+}
+class Health
+{
+MonoBehaviour
+--
++ bool _isBurning;
++ BurnEffect _burnEffectSc;
+}
+
+}
+
+namespace UI{
+class CanonBar{
+MonoBehaviour
+--
+- Slider _slider;
+- float _reloadTime;
+- bool isReload;
+- float _timer;
+--
+- void Update()
++ void Initialize()
++ bool isFire()
++ void Reload()
+}
+
+class CanonSwitchManager{
+
+}
+}
+
+namespace Weapon{
+CanonShell ..|> IInitialize
+CanonShell --|> ShellBase
+NormalShell ..|> IInitialize
+NormalShell --|> ShellBase
+TrackingShell ..|> IInitialize
+TrackingShell --|> ShellBase
+ShellManager --> "many" ShellBase
+ShellManager --> Data.UserData
+BurnEffect --> Player.Health
+
+class ShellManager
+{
+MonoBehaviour 
+--
++ List<ShellBase>[] _playerShellList = { new List<ShellBase>(), new List<ShellBase>(), new List<ShellBase>() };
++ List<ShellBase> _enemyShellList = new List<ShellBase>();
+- UserData _userData;
+- int _maxCount = 50;  
+- Transform[] _playerPools;   
+- Transform _enemyPool;
+- CanonData _currentCanon;
+--
++ void Initialize()
+- void CreatePool()
+- ShellBase CreateShell()
++ List<ShellBase> GetShell()
+- GameObject DetectShellType()
+}
+
+
+class BeamEffect
+{
+MonoBehaviour
+}
+class BurnEffect
+{
+MonoBehaviour
+--
+- Health _healthSc
+--
+- void Awake()
+- void OnEnable()
+- void OnParticleSystemStopped() 
+}
+class FlameEffect
+{
+MonoBehaviour
+--
+- const string _enemyTag = "Enemy";
+- GameObject _burnEffect;
+--
+- void OnParticleCollision()
+}
+class ShellBase
+{
+MonoBehaviour
+--
+# const string _groundTag = "Ground";
+# const string _enemyTag = "Enemy";
+# Rigidbody _rb;
+# Collider _col;
+# Vector3 _initPos;
+# float _limitRange;
+# Transform _pool;
+# bool _isInit;
+--
+# virtual void Update()
++ virtual void Reset()
+# virtual void Sleep()
+- void OnTriggerEnter()
+
+
+}
+
+interface IInitialize
+{
+void Initialize()
+}
+class CanonShell
+{
++ void Initialize()
+}
+class NormalShell
+{
++ void Initialize()
+}
+
+class TrackingShell
+{
+- Transform _target;
+- float _velocity;
+- float _maxDistance;
+- Vector3 _step;
+- CapsuleCollider _collider;
+- float _lifeTime = 3.5f;
+- float _timer = 0;
+- float _rotationSpeed = 1.5f;
+--
+# override void Update()
++ void Initialize()
++ void SetProperty()
+# override void Sleep()
+- void Tracking()
+
+}
+}
+
+namespace Data{
+UserData --> "many" BaseData
+UserData --> "many" CanonData
+
+
+class CanonData
+{
+ScriptableObject
+}
+class BaseData
+{
+ScriptableObject
+}
+class UserData
+{
++ BaseData _baseData;
++ int _currentCanonIndex;
++ List<BaseData> _availableBaseLists;
++ List<CanonData> _availableCanonList;
++ int _maxStage;
++ CanonData[] _currentEquippedCanonArray;
+}
+}
+
+namespace Camera{
+class EffectCamera
+{
+MonoBehaviour
+}
+class CameraManager{
+MonoBehaviour
+}
+}
+
+namespace General{
+class GeneralManager
+{
+}
+
+class SaveSystem
+{
+}
+}
+@enduml
