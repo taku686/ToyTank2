@@ -11,5 +11,7 @@ namespace Manager.TitleManager.Main
         public Button settingButton;
         public Button stageSelectCloseButton;
         public Button settingCloseButton;
+        public Button shopButton;
+        public Button factoryButton;
     }
 }

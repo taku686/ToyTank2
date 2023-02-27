@@ -1,70 +1,134 @@
+using System;
 using UnityEngine;
-[CreateAssetMenu(fileName = "Item", menuName = "Item/Canon")]
-public class CanonData : ScriptableObject
+
+[Serializable]
+public class CanonData
 {
-    [SerializeField,Tooltip("名前")]
-    private string _name;
-    [SerializeField, Tooltip("オブジェクト")]
-    private GameObject _canonObj;
-    [SerializeField, Tooltip("射程範囲")]
-    private float _range;
-    [SerializeField, Tooltip("1回で弾を撃てる数")]
-    private int _clipSize;
-    [SerializeField, Tooltip("発射ダメージ")]
-    private float _damage;
-    [SerializeField, Tooltip("１回で弾を発射する数")]
-    private int _fireCountLimit;
-    [SerializeField, Tooltip("発射スピード")]
-    private float _bulletSpeed;
-    [SerializeField, Tooltip("リロード時間")]
-    private float _reloadTime;
-    [SerializeField, Tooltip("発砲時間")]
-    private float _fireTime;
-    [SerializeField, Tooltip("発射間隔")]
-    private float _fireRate;
-    [SerializeField, Tooltip("")]
-    private float _chargeTime;
-    [SerializeField, Tooltip("バウンスする回数")]
-    private int _bounceLimit;
-    [SerializeField, Tooltip("大砲の種類")]
-    private CanonType _canonKinds;
-    [SerializeField, Tooltip("弾のオブジェクト")]
-    private GameObject _shellObj;
-    [SerializeField, Tooltip("発射位置")]
-    private Vector3 _shotPos;
-    [SerializeField, Tooltip("説明")]
-    private string _explanation;
+    public string name;
+    public int index;
+    public int canonObjIndex;
+    public GameObject canonObj;
+    public int imageIndex;
+    public Sprite image;
+    public float range;
+    public int clipSize;
+    public float damage;
+    public int fireCountLimit;
+    public float bulletSpeed;
+    public float reloadTime;
+    public float fireTime;
+    public float fireRate;
+    public float chargeTime;
+    public int bounceLimit;
+    public int canonKindsIndex;
+    public Data.CanonType canonKinds;
+    public int shellObjIndex;
+    public GameObject shellObj;
+    public float shotPosX;
+    public float shotPosY;
+    public float shotPosZ;
+    public Vector3 shotPos;
+    public string explanation;
 
 
-    public enum CanonType
+    public string Name
     {
-        NormalBulletType,
-        ShotGunBulletType,
-        TrackingBulletType,
-        ToxicBulletType,
-        BounceBulletType,
-        RailGunType,
-        BeamType,
-        MachinegunType,
-        CanonType,
-        FlameType,
-        TwoCanonType
+        get => name;
+        private set => name = value;
     }
 
-    public string Name { get => _name; private set => _name = value; }
-    public GameObject CanonObj { get => _canonObj; private set => _canonObj = value; }
-    public float Range { get => _range; private set => _range = value; }
-    public int ClipSize { get => _clipSize; private set => _clipSize = value; }
-    public float Damage { get => _damage; private set => _damage = value; }
-    public int FireCountLimit { get => _fireCountLimit; private set => _fireCountLimit = value; }
-    public float BulletSpeed { get => _bulletSpeed; private set => _bulletSpeed = value; }
-    public float ReloadTime { get => _reloadTime; private set => _reloadTime = value; }
-    public float FireTime { get => _fireTime; private set => _fireTime = value; }
-    public float FireRate { get => _fireRate; private set => _fireRate = value; }
-    public float ChargeTime { get => _chargeTime; private set => _chargeTime = value; }
-    public int BounceLimit { get => _bounceLimit; private set => _bounceLimit = value; }
-    public string Explanation { get => _explanation; private set => _explanation = value; }
-    public CanonType CanonKinds { get => _canonKinds; set => _canonKinds = value; }
-    public GameObject ShellObj { get => _shellObj; set => _shellObj = value; }
-    public Vector3 ShotPos { get => _shotPos; set => _shotPos = value; }
+    public GameObject CanonObj
+    {
+        get => canonObj;
+        private set => canonObj = value;
+    }
+
+    public Sprite Image => image;
+
+    public int Index => index;
+
+
+    public float Range
+    {
+        get => range;
+        private set => range = value;
+    }
+
+    public int ClipSize
+    {
+        get => clipSize;
+        private set => clipSize = value;
+    }
+
+    public float Damage
+    {
+        get => damage;
+        private set => damage = value;
+    }
+
+    public int FireCountLimit
+    {
+        get => fireCountLimit;
+        private set => fireCountLimit = value;
+    }
+
+    public float BulletSpeed
+    {
+        get => bulletSpeed;
+        private set => bulletSpeed = value;
+    }
+
+    public float ReloadTime
+    {
+        get => reloadTime;
+        private set => reloadTime = value;
+    }
+
+    public float FireTime
+    {
+        get => fireTime;
+        private set => fireTime = value;
+    }
+
+    public float FireRate
+    {
+        get => fireRate;
+        private set => fireRate = value;
+    }
+
+    public float ChargeTime
+    {
+        get => chargeTime;
+        private set => chargeTime = value;
+    }
+
+    public int BounceLimit
+    {
+        get => bounceLimit;
+        private set => bounceLimit = value;
+    }
+
+    public string Explanation
+    {
+        get => explanation;
+        private set => explanation = value;
+    }
+
+    public Data.CanonType CanonKinds
+    {
+        get => canonKinds;
+        set => canonKinds = value;
+    }
+
+    public GameObject ShellObj
+    {
+        get => shellObj;
+        set => shellObj = value;
+    }
+
+    public Vector3 ShotPos
+    {
+        get => shotPos;
+        set => shotPos = value;
+    }
 }

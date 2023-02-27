@@ -1,35 +1,53 @@
 ﻿using System.Collections.Generic;
+using Data;
 using UnityEngine;
 
 public class ShellManager : MonoBehaviour
 {
-    public List<ShellBase>[] _playerShellList = { new List<ShellBase>(), new List<ShellBase>(), new List<ShellBase>() };
-    public List<ShellBase> _enemyShellList = new List<ShellBase>();
+    public List<ShellBase>[] _playerShellList = { new(), new(), new() };
+    public List<ShellBase> _enemyShellList = new();
     private UserData _userData;
-    private int _maxCount = 50;
+    private readonly int _maxCount = 10;
 
     [SerializeField] private Transform[] _playerPools;
     [SerializeField] private Transform _enemyPool;
+    [SerializeField] private CanonDataManager canonDataManager;
+    [SerializeField] private BaseDataManager baseDataManager;
     private CanonData _currentCanon;
 
-    public void Initialize(UserData userData)
+
+    public void InitializePlayerPool(UserData userData)
     {
         _userData = userData;
-        _currentCanon = _userData.currentEquippedCanonArray[_userData.currentCanonIndex];
-        for (int i = 0; i < _userData.currentEquippedCanonArray.Length; i++)
+        var canonIndex = _userData.currentEquippedCanonList[_userData.currentCanonIndex];
+        _currentCanon = canonDataManager.GetCanonData(canonIndex);
+        for (int i = 0; i < _userData.currentEquippedCanonList.Count; i++)
         {
-            if (_userData.currentEquippedCanonArray[i].CanonKinds == CanonData.CanonType.BeamType ||
-                _userData.currentEquippedCanonArray[i].CanonKinds == CanonData.CanonType.FlameType)
+            var index = _userData.currentEquippedCanonList[i];
+            var canonData = canonDataManager.GetCanonData(index);
+            if (canonData.CanonKinds == Data.CanonType.BeamType ||
+                canonData.CanonKinds == Data.CanonType.FlameType)
             {
                 return;
             }
 
-            CreatePool(_userData.currentEquippedCanonArray[i].ShellObj, _playerPools[i], i);
+            CreatePlayerPool(canonData.ShellObj, _playerPools[i], i);
         }
     }
 
+    public void InitializeEnemyPool(CanonData canonData)
+    {
+        if (canonData.CanonKinds == Data.CanonType.BeamType ||
+            canonData.CanonKinds == Data.CanonType.FlameType)
+        {
+            return;
+        }
 
-    private void CreatePool(GameObject shellObj, Transform parent, int index)
+        CreateEnemyPool(canonData.ShellObj, _enemyPool);
+    }
+
+
+    private void CreatePlayerPool(GameObject shellObj, Transform parent, int index)
     {
         for (int i = 0; i < _maxCount; i++)
         {
@@ -39,74 +57,115 @@ public class ShellManager : MonoBehaviour
         }
     }
 
+    private void CreateEnemyPool(GameObject shellObj, Transform parent)
+    {
+        for (int i = 0; i < _maxCount; i++)
+        {
+            ShellBase newShellBase = CreateShell(shellObj, parent);
+            newShellBase.gameObject.SetActive(false);
+            _enemyShellList.Add(newShellBase);
+        }
+    }
+
     private ShellBase CreateShell(GameObject shellObj, Transform parent)
     {
         GameObject shell = Instantiate(shellObj, parent);
+        //shell.tag = GameCommonData.ShellTag;
         DetectShellType(_userData, shell);
         return shell.GetComponent<ShellBase>();
     }
 
-    public List<ShellBase> GetShell(string poolTag, int index)
+    public List<ShellBase> GetPlayerShell(string poolTag, int index)
     {
         List<ShellBase> objs = new List<ShellBase>();
+        var canonData =
+            canonDataManager.GetCanonData(_userData.currentEquippedCanonList[_userData.currentCanonIndex]);
         foreach (ShellBase obj in _playerShellList[index])
         {
             if (!obj.gameObject.activeSelf)
             {
                 obj.gameObject.SetActive(true);
-                obj.GetComponent<IInitialize>().Initialize(poolTag);
+                if (!obj.isInit)
+                {
+                    obj.GetComponent<IInitialize>().Initialize(poolTag);
+                    obj.tag = GameCommonData.PlayerShellTag;
+                }
+
                 objs.Add(obj);
-                if (objs.Count == _userData.currentEquippedCanonArray[_userData.currentCanonIndex].FireCountLimit)
+
+                if (objs.Count == canonData.FireCountLimit)
                 {
                     return objs;
                 }
             }
         }
 
-        for (int i = 0; i < _userData.currentEquippedCanonArray[_userData.currentCanonIndex].FireCountLimit; i++)
+        for (int i = 0; i < canonData.FireCountLimit; i++)
         {
-            ShellBase newobj = CreateShell(_userData.currentEquippedCanonArray[_userData.currentCanonIndex].ShellObj,
-                _playerPools[_userData.currentCanonIndex]);
-            _playerShellList[index].Add(newobj);
-            newobj.GetComponent<IInitialize>().Initialize(poolTag);
-            objs.Add(newobj);
+            ShellBase newObj = CreateShell(canonData.ShellObj, _playerPools[_userData.currentCanonIndex]);
+            _playerShellList[index].Add(newObj);
+            newObj.GetComponent<IInitialize>().Initialize(poolTag);
+            objs.Add(newObj);
         }
 
         return objs;
     }
 
-    private GameObject DetectShellType(UserData userData, GameObject shell)
+    public ShellBase GetEnemyShell(string poolTag, CanonData canonData)
     {
-        switch (userData.currentEquippedCanonArray[_userData.currentCanonIndex].CanonKinds)
+        foreach (ShellBase obj in _enemyShellList)
         {
-            case CanonData.CanonType.BeamType:
+            if (!obj.gameObject.activeSelf)
+            {
+                obj.gameObject.SetActive(true);
+                if (!obj.isInit)
+                {
+                    obj.GetComponent<IInitialize>().Initialize(poolTag);
+                    obj.tag = GameCommonData.EnemyShellTag;
+                }
+
+                return obj;
+            }
+        }
+
+        ShellBase newObj = CreateShell(canonData.ShellObj,
+            _enemyPool);
+        _enemyShellList.Add(newObj);
+        newObj.GetComponent<IInitialize>().Initialize(poolTag);
+        return newObj;
+    }
+
+    private void DetectShellType(UserData userData, GameObject shell)
+    {
+        var canonData = canonDataManager.GetCanonData(userData.currentEquippedCanonList[_userData.currentCanonIndex]);
+        switch (canonData.CanonKinds)
+        {
+            case Data.CanonType.BeamType:
                 break;
-            case CanonData.CanonType.BounceBulletType:
+            case Data.CanonType.BounceBulletType:
                 break;
-            case CanonData.CanonType.CanonType:
+            case Data.CanonType.CanonType:
                 shell.AddComponent<CanonShell>();
                 break;
-            case CanonData.CanonType.MachinegunType:
+            case Data.CanonType.MachineGunType:
                 shell.AddComponent<NormalShell>();
                 break;
-            case CanonData.CanonType.NormalBulletType:
+            case Data.CanonType.NormalBulletType:
                 shell.AddComponent<NormalShell>();
                 break;
-            case CanonData.CanonType.RailGunType:
+            case Data.CanonType.RailGunType:
                 break;
-            case CanonData.CanonType.ShotGunBulletType:
+            case Data.CanonType.ShotGunBulletType:
                 shell.AddComponent<NormalShell>();
                 break;
-            case CanonData.CanonType.ToxicBulletType:
+            case Data.CanonType.ToxicBulletType:
                 break;
-            case CanonData.CanonType.TrackingBulletType:
+            case Data.CanonType.TrackingBulletType:
                 shell.AddComponent<TrackingShell>();
                 break;
-            case CanonData.CanonType.TwoCanonType:
+            case Data.CanonType.TwoCanonType:
                 shell.AddComponent<NormalShell>();
                 break;
         }
-
-        return shell;
     }
 }

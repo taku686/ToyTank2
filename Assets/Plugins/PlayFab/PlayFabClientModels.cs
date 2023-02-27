@@ -2646,6 +2646,7 @@ namespace PlayFab.ClientModels
         /// </summary>
         public string PlayFabId ;
 
+        public Dictionary<string, string> TitleData { get; set; }
     }
 
     public class GetPlayerCombinedInfoResultPayload

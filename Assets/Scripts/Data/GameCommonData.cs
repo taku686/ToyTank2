@@ -6,10 +6,24 @@ namespace Data
     {
         public static bool IsInitialize;
         public static readonly string TitleId = "1589D";
-        public static readonly string EnemyMaterialName = "Enemy";
-        public static readonly int MaxStage = 50;
-        public static int TitleScene = 0;
+        public static readonly string TankMaterialName = "Tank (Instance)";
+        public static readonly string ShellManagerTag = "ShellManager";
+        public static readonly string PlayerTag = "Player";
+        public static readonly string GroundTag = "Ground";
+        public static readonly string EnemyTag = "Enemy";
+        public static readonly string PlayerShellTag = "PlayerShell";
+        public static readonly string EnemyShellTag = "EnemyShell";
+        public static readonly string EnemyDataKey = "EnemyDatum";
+        public static readonly string CanonDataKey = "CanonDatum";
+        public static readonly string BaseDataKey = "BaseDatum";
+        public static readonly string StageDataKey = "StageDatum";
+        public static readonly string UserDataKey = "UserData";
+        public static readonly string PlayerVariables = "Player";
+        public static readonly int MaxStage = 10;
+        public static readonly int TitleScene = 0;
         public static readonly int BattleScene = 1;
+        public static readonly float ClickDuration = 0.2f;
+        public static readonly Color PlayerColor = Color.white;
 
         public static Color GetEnemyColor(int index)
         {
@@ -37,9 +51,81 @@ namespace Data
                     return Color.white;
             }
         }
+
+        public static CanonType GetCanonType(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return CanonType.NormalBulletType;
+                case 1:
+                    return CanonType.ShotGunBulletType;
+                case 2:
+                    return CanonType.TrackingBulletType;
+                case 3:
+                    return CanonType.ToxicBulletType;
+                case 4:
+                    return CanonType.BounceBulletType;
+                case 5:
+                    return CanonType.RailGunType;
+                case 6:
+                    return CanonType.BeamType;
+                case 7:
+                    return CanonType.MachineGunType;
+                case 8:
+                    return CanonType.CanonType;
+                case 9:
+                    return CanonType.FlameType;
+                case 10:
+                    return CanonType.TwoCanonType;
+                default:
+                    return CanonType.None;
+            }
+        }
+
+        public static BaseType GetBaseType(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return BaseType.Ground;
+                case 1:
+                    return BaseType.Amphibious;
+                default:
+                    return BaseType.None;
+            }
+        }
+
+        public static CreatePos GetCreatePos(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return CreatePos.UpperCenterRight;
+                case 1:
+                    return CreatePos.UpperCenterCenter;
+                case 2:
+                    return CreatePos.UpperCenterLeft;
+                case 3:
+                    return CreatePos.UpperLeftRight;
+                case 4:
+                    return CreatePos.UpperLeftCenter;
+                case 5:
+                    return CreatePos.UpperLeftLeft;
+                case 6:
+                    return CreatePos.UpperRightRight;
+                case 7:
+                    return CreatePos.UpperRightCenter;
+                case 8:
+                    return CreatePos.UpperRightLeft;
+                default:
+                    return CreatePos.None;
+            }
+        }
     }
 
-    public enum CratePos
+
+    public enum CreatePos
     {
         UpperCenterRight,
         UpperCenterCenter,
@@ -50,5 +136,29 @@ namespace Data
         UpperRightRight,
         UpperRightCenter,
         UpperRightLeft,
+        None
+    }
+
+    public enum CanonType
+    {
+        NormalBulletType,
+        ShotGunBulletType,
+        TrackingBulletType,
+        ToxicBulletType,
+        BounceBulletType,
+        RailGunType,
+        BeamType,
+        MachineGunType,
+        CanonType,
+        FlameType,
+        TwoCanonType,
+        None
+    }
+
+    public enum BaseType
+    {
+        Ground,
+        Amphibious,
+        None
     }
 }

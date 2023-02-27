@@ -1,41 +1,81 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-[CreateAssetMenu(fileName ="Item",menuName ="Item/Base")]
-public class BaseData : ScriptableObject
+
+[Serializable]
+public class BaseData 
 {
-    [SerializeField]
-    private string _name;
-    [SerializeField]
-    private GameObject _baseObj;
-    [SerializeField]
-    private BaseType _baseType;
-    [SerializeField]
-    private int _hp;
-    [SerializeField]
-    private int _energyCapacity;
-    [SerializeField]
-    private float _energyChargeSpeed;
-    [SerializeField]
-    private int _moveSpeed;
-    [SerializeField]
-    private int _itemCapacity;
-    [SerializeField]
-    Vector3 _canonPos;
+    public string name;
+    public int baseObjIndex;
+    public GameObject baseObj;
+    public int baseTypeIndex;
+    public Data.BaseType baseType;
+    public int hp;
+    public int energyCapacity;
+    public float energyChargeSpeed;
+    public int moveSpeed;
+    public int itemCapacity;
+    public float canonPosX;
+    public float canonPosY;
+    public float canonPosZ;
+    public Vector3 canonPos;
 
-    public int Hp { get => _hp;private set => _hp = value; } 
-    public int EnergyCapacity { get => _energyCapacity;private set => _energyCapacity = value; }
-    public float EnergyChargeSpeed { get => _energyChargeSpeed;private set => _energyChargeSpeed = value; }
-    public int MoveSpeed { get => _moveSpeed;private set => _moveSpeed = value; }
-    public int ItemCapacity { get => _itemCapacity;private set => _itemCapacity = value; }
-    public string Name { get => _name;private set => _name = value; }
-    public GameObject BaseObj { get => _baseObj;private set => _baseObj = value; }
-    public BaseType BaseType1 { get => _baseType;private set => _baseType = value; }
-    public Vector3 CanonPos { get => _canonPos;private set => _canonPos = value; }
+    public int Hp
+    {
+        get => hp;
+        private set => hp = value;
+    }
 
-    public enum BaseType
+    public int EnergyCapacity
+    {
+        get => energyCapacity;
+        private set => energyCapacity = value;
+    }
+
+    public float EnergyChargeSpeed
+    {
+        get => energyChargeSpeed;
+        private set => energyChargeSpeed = value;
+    }
+
+    public int MoveSpeed
+    {
+        get => moveSpeed;
+        private set => moveSpeed = value;
+    }
+
+    public int ItemCapacity
+    {
+        get => itemCapacity;
+        private set => itemCapacity = value;
+    }
+
+    public string Name
+    {
+        get => name;
+        private set => name = value;
+    }
+
+    public GameObject BaseObj
+    {
+        get => baseObj;
+        private set => baseObj = value;
+    }
+
+    public Data.BaseType BaseType1
+    {
+        get => baseType;
+        private set => baseType = value;
+    }
+
+    public Vector3 CanonPos
+    {
+        get => canonPos;
+        private set => canonPos = value;
+    }
+
+    /*public enum BaseType
     {
         Ground,
         Amphibious
-    }
+    }*/
 }

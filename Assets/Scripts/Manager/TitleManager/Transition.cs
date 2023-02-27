@@ -28,20 +28,21 @@ namespace Manager.TitleManager
             var maxValue = 1;
             var minValue = 0;
             var halfDuration = duration / 2;
-            sequence.Append(transitionImage.DOColor(targetColor1, halfDuration).SetEase(Ease.OutExpo));
+            
+            sequence.Append(transitionImage.DOColor(targetColor1, halfDuration).SetEase(Ease.OutExpo)).SetLink(transitionImage.gameObject);
             sequence.Join(DOTween.ToAlpha(() => material.GetColor(Color1), x => material.SetColor(Color1, x),
-                maxValue, halfDuration).SetEase(Ease.OutExpo));
+                maxValue, halfDuration).SetEase(Ease.OutExpo)).SetLink(transitionImage.gameObject);
             sequence.Join(DOTween.To(() => material.GetFloat(Progress), x => material.SetFloat(Progress, x), minValue,
-                halfDuration).SetEase(Ease.OutExpo));
-            await sequence.Play();
+                halfDuration).SetEase(Ease.OutExpo)).SetLink(transitionImage.gameObject);
+            await sequence.Play().SetLink(transitionImage.gameObject);
             action.Invoke();
             sequence = DOTween.Sequence();
-            sequence.Append(transitionImage.DOColor(targetColor2, halfDuration).SetEase(Ease.OutExpo));
+            sequence.Append(transitionImage.DOColor(targetColor2, halfDuration).SetEase(Ease.OutExpo)).SetLink(transitionImage.gameObject);
             sequence.Join(DOTween.ToAlpha(() => material.GetColor(Color1), x => material.SetColor(Color1, x),
-                minValue, halfDuration).SetEase(Ease.OutExpo));
+                minValue, halfDuration).SetEase(Ease.OutExpo)).SetLink(transitionImage.gameObject);
             sequence.Join(DOTween.To(() => material.GetFloat(Progress), x => material.SetFloat(Progress, x), maxValue,
-                halfDuration).SetEase(Ease.OutExpo));
-            await sequence.Play();
+                halfDuration).SetEase(Ease.OutExpo)).SetLink(transitionImage.gameObject);
+            await sequence.Play().SetLink(transitionImage.gameObject);
         }
     }
 }

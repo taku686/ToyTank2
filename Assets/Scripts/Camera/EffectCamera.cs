@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class EffectCamera : MonoBehaviour
 {
-    private const string _mainCameraTag = "MainCamera";
+    private const string MainCameraTag = "MainCamera";
     private GameObject _mainCamera;
 
     // Start is called before the first frame update
     void Start()
     {
-        _mainCamera = GameObject.FindGameObjectWithTag(_mainCameraTag);
+        _mainCamera = GameObject.FindGameObjectWithTag(MainCameraTag);
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.transform.position = _mainCamera.transform.position;
-        this.transform.rotation = _mainCamera.transform.rotation;
+        var transform1 = transform;
+        transform1.position = _mainCamera.transform.position;
+        transform1.rotation = _mainCamera.transform.rotation;
     }
 }

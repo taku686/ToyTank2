@@ -14,12 +14,12 @@ public class BurnEffect : MonoBehaviour
 
     private void OnEnable()
     {
-        _healthSc._isBurning = true;
+        _healthSc.isBurning = true;
     }
 
     private void OnParticleSystemStopped()
     {
-        _healthSc._isBurning = false;
+        _healthSc.isBurning = false;
         this.gameObject.SetActive(false);
     }
 }

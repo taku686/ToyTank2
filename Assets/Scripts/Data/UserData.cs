@@ -1,19 +1,17 @@
 using System.Collections.Generic;
-using UnityEngine.Serialization;
 
 [System.Serializable]
 public class UserData
 {
-    public BaseData baseData;
+    public int baseDataIndex;
 
     public int currentCanonIndex;
 
-    public List<BaseData> availableBaseLists;
+    public List<int> availableBaseLists = new();
 
-    public List<CanonData> availableCanonList;
+    public List<int> availableCanonList = new();
 
     public int maxStage;
 
-    [FormerlySerializedAs("_currentEqipedCanonArray")]
-    public CanonData[] currentEquippedCanonArray;
+    public List<int> currentEquippedCanonList = new();
 }

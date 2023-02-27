@@ -28,7 +28,7 @@ public class FlameEffect : MonoBehaviour
         }
         else
         {
-            if (!healthSc._isBurning)
+            if (!healthSc.isBurning)
             {
                 healthSc._burnEffectSc.gameObject.SetActive(true);
             }

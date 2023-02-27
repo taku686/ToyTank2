@@ -1,6 +1,4 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using Manager.PlayFab;
+﻿using Cysharp.Threading.Tasks;
 using Manager.TitleManager.Login;
 using UnityEngine;
 using State = StateMachine<Manager.TitleManager.TitleCore>.State;
@@ -32,7 +30,7 @@ namespace Manager.TitleManager
 
             private async UniTask Login()
             {
-                var isSuccess = await _loginManager.playFabLogin.TryLogin();
+                var isSuccess = await _loginManager.playFabLogin.TryLoginWithGoogle();
                 Debug.Log(isSuccess ? "ログイン成功" : "ログイン失敗");
                 if (isSuccess)
                 {

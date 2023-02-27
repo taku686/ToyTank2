@@ -1,24 +1,29 @@
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using UnityEngine;
 
 /// <summary>
 /// ステートマシン
 /// </summary>
-public class StateMachine<TOwner> 
+public class StateMachine<TOwner>
 {
     /// <summary>
     /// ステートを表すクラス
     /// </summary>
-    public abstract class State 
+    public abstract class State
     {
         /// <summary>
         /// このステートを管理しているステートマシン
         /// </summary>
         protected StateMachine<TOwner> StateMachine => stateMachine;
+
         internal StateMachine<TOwner> stateMachine;
+
         /// <summary>
         /// 遷移の一覧
         /// </summary>
         internal Dictionary<int, State> transitions = new Dictionary<int, State>();
+
         /// <summary>
         /// このステートのオーナー
         /// </summary>
@@ -31,10 +36,13 @@ public class StateMachine<TOwner>
         {
             OnEnter(prevState);
         }
+
         /// <summary>
         /// ステートを開始した時に呼ばれる
         /// </summary>
-        protected virtual void OnEnter(State prevState) { }
+        protected virtual void OnEnter(State prevState)
+        {
+        }
 
         /// <summary>
         /// ステート更新
@@ -43,17 +51,22 @@ public class StateMachine<TOwner>
         {
             OnUpdate();
         }
+
         /// <summary>
         /// 毎フレーム呼ばれる
         /// </summary>
-        protected virtual void OnUpdate() { }
+        protected virtual void OnUpdate()
+        {
+        }
 
         internal void FixedUpdate()
         {
             OnFixedUpdate();
         }
 
-        protected virtual void OnFixedUpdate() { }
+        protected virtual void OnFixedUpdate()
+        {
+        }
 
         /// <summary>
         /// ステート終了
@@ -62,21 +75,36 @@ public class StateMachine<TOwner>
         {
             OnExit(nextState);
         }
+
         /// <summary>
         /// ステートを終了した時に呼ばれる
         /// </summary>
-        protected virtual void OnExit(State nextState) { }
+        protected virtual void OnExit(State nextState)
+        {
+        }
+
+        internal void TriggerEnter(Collider other)
+        {
+            OnTriggerEnter(other);
+        }
+
+        protected virtual void OnTriggerEnter(Collider other)
+        {
+        }
     }
 
     /// <summary>
     /// どのステートからでも特定のステートへ遷移できるようにするための仮想ステート
     /// </summary>
-    public sealed class AnyState : State { }
+    public sealed class AnyState : State
+    {
+    }
 
     /// <summary>
     /// このステートマシンのオーナー
     /// </summary>
     public TOwner Owner { get; }
+
     /// <summary>
     /// 現在のステート
     /// </summary>
@@ -117,6 +145,7 @@ public class StateMachine<TOwner>
                 return result;
             }
         }
+
         return Add<T>();
     }
 
@@ -196,7 +225,13 @@ public class StateMachine<TOwner>
                 return;
             }
         }
+
         Change(to);
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        CurrentState.TriggerEnter(other);
     }
 
     /// <summary>

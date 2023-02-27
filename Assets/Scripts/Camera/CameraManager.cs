@@ -6,23 +6,21 @@ using DG.Tweening;
 
 public class CameraManager : MonoBehaviour
 {
-    private const string _playerTag = "Player";
-    private const string _joystick = "CanonMove";
-    private const float _moveLimit = 3f;
+    private const string PlayerTag = "Player";
+    private const string Joystick = "CanonMove";
+    private const float MoveLimit = 3f;
 
-    [SerializeField]
-    private CinemachineVirtualCamera _virtualCamera;
-    [SerializeField]
-    private Camera _mainCamera;
+    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+    [SerializeField] private Camera mainCamera;
     private CinemachineTransposer _transposer;
     private Vector3 _initPos;
-    private float _backSpeed = 2;
-    private float _moveSpeed = 7;
-    private float _modifiedValue = 0.01f;
+    private readonly float _backSpeed = 2;
+    private readonly float _moveSpeed = 7;
+    private readonly float _modifiedValue = 0.01f;
 
     public void Initialize()
     {
-        Transform target = GameObject.FindGameObjectWithTag(_playerTag).transform;
+        Transform target = GameObject.FindGameObjectWithTag(PlayerTag).transform;
         _transposer = _virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         _virtualCamera.Follow = target;
         _initPos = _transposer.m_FollowOffset;
@@ -36,28 +34,32 @@ public class CameraManager : MonoBehaviour
 
     private void CameraMove()
     {
-        float hori = UltimateJoystick.GetHorizontalAxis(_joystick);
-        float vert = UltimateJoystick.GetVerticalAxis(_joystick);
+        float hor = -UltimateJoystick.GetHorizontalAxis(Joystick);
+        float vert = -UltimateJoystick.GetVerticalAxis(Joystick);
 
 
-
-        if (UltimateJoystick.GetJoystickState(_joystick))
+        if (UltimateJoystick.GetJoystickState(Joystick))
         {
-            _transposer.m_FollowOffset += new Vector3(hori, 0, vert) * _moveSpeed * Time.unscaledDeltaTime;
-            if (_transposer.m_FollowOffset.x >= _initPos.x + _moveLimit + _modifiedValue ||
-                _transposer.m_FollowOffset.x <= _initPos.x - _moveLimit - _modifiedValue)
+            _transposer.m_FollowOffset += new Vector3(hor, 0, vert) * _moveSpeed * Time.unscaledDeltaTime;
+            if (_transposer.m_FollowOffset.x >= _initPos.x + MoveLimit + _modifiedValue ||
+                _transposer.m_FollowOffset.x <= _initPos.x - MoveLimit - _modifiedValue)
             {
-                _transposer.m_FollowOffset.x = Mathf.Clamp(_transposer.m_FollowOffset.x, _initPos.x - _moveLimit, _initPos.x + _moveLimit);
+                _transposer.m_FollowOffset.x = Mathf.Clamp(_transposer.m_FollowOffset.x, _initPos.x - MoveLimit,
+                    _initPos.x + MoveLimit);
             }
-            if (_transposer.m_FollowOffset.z >= _initPos.z + _moveLimit + _modifiedValue ||
-                     _transposer.m_FollowOffset.z <= _initPos.z - _moveLimit - _modifiedValue)
+
+            if (_transposer.m_FollowOffset.z >= _initPos.z + MoveLimit + _modifiedValue ||
+                _transposer.m_FollowOffset.z <= _initPos.z - MoveLimit - _modifiedValue)
             {
-                _transposer.m_FollowOffset.z = Mathf.Clamp(_transposer.m_FollowOffset.z, _initPos.z - _moveLimit, _initPos.z + _moveLimit);
+                _transposer.m_FollowOffset.z = Mathf.Clamp(_transposer.m_FollowOffset.z, _initPos.z - MoveLimit,
+                    _initPos.z + MoveLimit);
             }
         }
-        if (!UltimateJoystick.GetJoystickState(_joystick))
+
+        if (!UltimateJoystick.GetJoystickState(Joystick))
         {
-            _transposer.m_FollowOffset = Vector3.MoveTowards(_transposer.m_FollowOffset, _initPos, _backSpeed * Time.deltaTime);
+            _transposer.m_FollowOffset =
+                Vector3.MoveTowards(_transposer.m_FollowOffset, _initPos, _backSpeed * Time.deltaTime);
         }
     }
 }

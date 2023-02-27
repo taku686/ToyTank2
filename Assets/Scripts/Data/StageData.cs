@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace Data
 {
     [System.Serializable]
-    [CreateAssetMenu(fileName = "Item", menuName = "Item/Stage")]
-    public class StageData : ScriptableObject
+    public class StageData 
     {
         public int stage;
-        public CratePos[] createPoses;
-        public int[] enemyLevels;
+        public string createPosIndex;
+        public List<CreatePos> createPoses = new();
+        public string enemyDatumIndex;
+        public List<EnemyData> enemyDatum = new();
     }
 }
