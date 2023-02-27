@@ -10,6 +10,7 @@ namespace Manager.TitleManager
 {
     public partial class TitleCore : MonoBehaviour
     {
+        [SerializeField] private StageDataManager stageDataManager;
         [SerializeField] private CanonDataManager canonDataManager;
         [SerializeField] private BaseDataManager baseDataManager;
         [SerializeField] private UserDataManager userDataManager;
@@ -81,11 +82,11 @@ namespace Manager.TitleManager
 
         private void Save()
         {
-            if (_userData.maxStage <= 0)
+            /*if (_userData.maxStage <= 0)
             {
                 SaveSystem.Instance.UserData.maxStage = 1;
                 SaveSystem.Instance.Save();
-            }
+            }*/
         }
     }
 }

@@ -24,6 +24,11 @@ namespace Manager.TitleManager
                 InitializeButton();
             }
 
+            protected override void OnExit(State nextState)
+            {
+                _mainView.platformObj.SetActive(false);
+            }
+
             protected override void OnUpdate()
             {
                 _playerPos.eulerAngles = new Vector3(0, Time.time * RotationSpeed, 0);
@@ -36,8 +41,12 @@ namespace Manager.TitleManager
                 _mainView = Owner.mainView;
                 _userData = Owner._userData;
                 _playerPos = Owner.playerPos;
+                var stageDataManager = Owner.stageDataManager;
+                var userDataManager = Owner.userDataManager;
+                _mainManager.stageSelectGrid.Initialize(stageDataManager, userDataManager, _uiAnimation);
                 _mainView.settingPanel.SetActive(false);
                 _mainView.stageSelectPanel.SetActive(false);
+                _mainView.platformObj.SetActive(true);
                 _playerPos.gameObject.SetActive(true);
             }
 
@@ -55,7 +64,7 @@ namespace Manager.TitleManager
             {
                 var battleButton = _mainView.battleButton.transform;
                 var panel = _mainView.stageSelectPanel.transform;
-                _mainManager.stageSelectGrid.CreateGrids(_userData.maxStage);
+                _mainManager.stageSelectGrid.CreateGrids();
                 await _uiAnimation.Click(battleButton, GameCommonData.ClickDuration);
                 panel.localScale = Vector3.zero;
                 panel.gameObject.SetActive(true);

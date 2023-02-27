@@ -7,6 +7,7 @@ namespace Manager.TitleManager.Main
     {
         public GameObject stageSelectPanel;
         public GameObject settingPanel;
+        public GameObject platformObj;
         public Button battleButton;
         public Button settingButton;
         public Button stageSelectCloseButton;
