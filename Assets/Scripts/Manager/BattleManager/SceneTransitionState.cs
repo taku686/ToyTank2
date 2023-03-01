@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using State = StateMachine<BattleCore>.State;
 
 public partial class BattleCore
@@ -20,6 +22,11 @@ public partial class BattleCore
 
         private void ShowAds(PlayFabAdsManager adsManager)
         {
+            if (UserDataManager.Instance.IsRemoveAds())
+            {
+                SceneManager.LoadScene(GameCommonData.TitleScene);
+            }
+
             adsManager.ShowAd();
         }
     }
