@@ -1,39 +1,34 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GeneralManager : MonoBehaviour
 {
-    [SerializeField] private int[] defaultBaseNumber = new int[3];
-    [SerializeField] private List<CanonData> defaultCanonData = new();
-    [SerializeField] private List<BaseData> baseDataList;
-    [SerializeField] private List<CanonData> canonDataList;
     [SerializeField] private PlayerManager playerManager;
     [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private ShellManager shellManager;
     [SerializeField] private BattleCore battleCore;
     [SerializeField] private CanonSwitchManager canonSwitchManager;
-    [SerializeField] private CanonDataManager canonDataManager;
-    [SerializeField] private BaseDataManager baseDataManager;
-    private CanonData _currentCanonData;
+    private const int DefaultBaseIndex = 0;
+    private const int DefaultCanonCapacity = 1;
 
     private void Awake()
     {
-        UserData userData = SaveSystem.Instance.UserData;
-        var baseData = baseDataManager.GetBaseData(userData.baseDataIndex);
+        Application.targetFrameRate = 60;
+        UserData userData = UserDataManager.Instance.GetUserData();
+        var baseData = BaseDataManager.Instance.GetBaseData(userData.baseDataIndex);
         if (baseData == null || userData.currentEquippedCanonList.Count == 0)
         {
-            baseData = baseDataList[defaultBaseNumber[0]];
-            userData.currentEquippedCanonList = new List<int>(0);
+            baseData = BaseDataManager.Instance.GetBaseData(DefaultBaseIndex);
+            userData.currentEquippedCanonList = new List<int>(DefaultCanonCapacity);
         }
 
-        Application.targetFrameRate = 60;
         List<CanonData> canonDatum = new List<CanonData>();
         foreach (var canonIndex in userData.currentEquippedCanonList)
         {
-            canonDatum.Add(canonDataManager.GetCanonData(canonIndex));
+            var canonData = CanonDataManager.Instance.GetCanonData(canonIndex);
+            Debug.Log(canonData.name);
+            canonDatum.Add(canonData);
         }
 
         canonSwitchManager.Initialize(canonDatum, playerManager);

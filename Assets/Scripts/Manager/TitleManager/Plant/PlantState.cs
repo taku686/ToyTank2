@@ -25,11 +25,10 @@ namespace Manager.TitleManager
                 _plantView = Owner.plantView;
                 _userData = Owner._userData;
                 _uiAnimation = Owner.uiAnimation;
-                var canonDataManager = Owner.canonDataManager;
                 List<CanonData> availableCanonList = new List<CanonData>();
                 foreach (var canonIndex in _userData.availableCanonList)
                 {
-                    var canonData = canonDataManager.GetCanonData(canonIndex);
+                    var canonData = CanonDataManager.Instance.GetCanonData(canonIndex);
                     availableCanonList.Add(canonData);
                 }
 

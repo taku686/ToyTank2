@@ -8,7 +8,6 @@ public partial class BattleCore
     {
         protected override void OnEnter(State prevState)
         {
-            Debug.Log("Battle Start");
             var playerHealth = Owner._playerManager.Health;
             var enemyManager = Owner._enemyManager;
             SetGameOverSubscribe(playerHealth);

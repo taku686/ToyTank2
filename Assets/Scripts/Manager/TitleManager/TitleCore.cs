@@ -1,4 +1,4 @@
-using System;
+using Cysharp.Threading.Tasks;
 using Data;
 using Manager.PlayFab;
 using Manager.TitleManager.Login;
@@ -10,15 +10,14 @@ namespace Manager.TitleManager
 {
     public partial class TitleCore : MonoBehaviour
     {
-        [SerializeField] private StageDataManager stageDataManager;
-        [SerializeField] private CanonDataManager canonDataManager;
-        [SerializeField] private BaseDataManager baseDataManager;
-        [SerializeField] private UserDataManager userDataManager;
         [SerializeField] private LoginManager loginManager;
-        [SerializeField] private LoginView loginView;
         [SerializeField] private MainManager mainManager;
+        [SerializeField] private PlayFabShopManager playFabShopManager;
+        [SerializeField] private PlayFabCatalogManager playFabCatalogManager;
+        [SerializeField] private LoginView loginView;
         [SerializeField] private MainView mainView;
         [SerializeField] private PlantView plantView;
+        [SerializeField] private ShopView shopView;
         [SerializeField] private Transition transition;
         [SerializeField] private UIAnimation uiAnimation;
         [SerializeField] private Transform playerPos;
@@ -30,7 +29,8 @@ namespace Manager.TitleManager
         {
             Login,
             Main,
-            Plant
+            Plant,
+            Shop
         }
 
         private void Start()
@@ -64,6 +64,7 @@ namespace Manager.TitleManager
 
             _stateMachine.AddTransition<LoginState, MainState>((int)Event.Main);
             _stateMachine.AddTransition<MainState, PlantState>((int)Event.Plant);
+            _stateMachine.AddTransition<MainState, ShopState>((int)Event.Shop);
             _stateMachine.AddAnyTransition<MainState>((int)Event.Main);
             GameCommonData.IsInitialize = true;
         }

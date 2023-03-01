@@ -762,6 +762,7 @@ UnityEngine.GUIUtility::set_imeCompositionMode
 UnityEngine.GUIUtility::set_systemCopyBuffer
 UnityEngine.Hash128::Hash128ToStringImpl_Injected
 UnityEngine.HumanTrait::GetBoneIndexFromMono
+UnityEngine.ImageConversion::LoadImage
 UnityEngine.Input::CheckDisabled
 UnityEngine.Input::GetButton
 UnityEngine.Input::GetButtonDown
@@ -930,6 +931,8 @@ UnityEngine.Networking.DownloadHandler::Release
 UnityEngine.Networking.DownloadHandlerAssetBundle::CreateCached_Injected
 UnityEngine.Networking.DownloadHandlerAssetBundle::get_assetBundle
 UnityEngine.Networking.DownloadHandlerBuffer::Create
+UnityEngine.Networking.DownloadHandlerTexture::Create
+UnityEngine.Networking.DownloadHandlerTexture::InternalGetTextureNative
 UnityEngine.Networking.UnityWebRequest::IsExecuting
 UnityEngine.Networking.UnityWebRequest::get_isModifiable
 UnityEngine.Networking.UnityWebRequest::get_responseCode
@@ -1142,8 +1145,6 @@ UnityEngine.PlayerPrefs::Save
 UnityEngine.PolygonCollider2D::GetTotalPointCount
 UnityEngine.PolygonCollider2D::get_pathCount
 UnityEngine.PolygonCollider2D::GetPath_Internal
-UnityEngine.Profiling.Profiler::BeginSampleImpl
-UnityEngine.Profiling.Profiler::EndSample
 UnityEngine.Projector::set_material
 UnityEngine.Projector::set_orthographicSize
 UnityEngine.Projector::get_material
@@ -1363,9 +1364,7 @@ UnityEngine.SceneManagement.Scene::GetIsLoadedInternal
 UnityEngine.SceneManagement.Scene::IsValidInternal
 UnityEngine.SceneManagement.Scene::GetRootCountInternal
 UnityEngine.SceneManagement.Scene::GetRootGameObjectsInternal
-UnityEngine.SceneManagement.SceneManager::get_sceneCount
 UnityEngine.SceneManagement.SceneManager::GetActiveScene_Injected
-UnityEngine.SceneManagement.SceneManager::GetSceneAt_Injected
 UnityEngine.SceneManagement.SceneManagerAPIInternal::LoadSceneAsyncNameIndexInternal_Injected
 UnityEngine.Screen::get_fullScreen
 UnityEngine.Screen::get_height
@@ -1423,6 +1422,7 @@ UnityEngine.SystemInfo::GetMaxTextureSize
 UnityEngine.SystemInfo::SupportedRenderTargetCount
 UnityEngine.SystemInfo::MaxGraphicsBufferSize
 UnityEngine.SystemInfo::GetDeviceModel
+UnityEngine.SystemInfo::GetDeviceUniqueIdentifier
 UnityEngine.SystemInfo::GetDeviceType
 UnityEngine.SystemInfo::GetCompatibleFormat
 UnityEngine.SystemInfo::GetGraphicsFormat
@@ -1477,6 +1477,7 @@ UnityEngine.Texture2D::GetPixelBilinearImpl_Injected
 UnityEngine.Texture2D::SetAllPixels32
 UnityEngine.Texture2D::SetPixelImpl_Injected
 UnityEngine.Texture2D::SetPixelsImpl
+UnityEngine.Texture2D::get_blackTexture
 UnityEngine.Texture2D::get_whiteTexture
 UnityEngine.Texture2D::get_format
 UnityEngine.Texture2DArray::Internal_CreateImpl

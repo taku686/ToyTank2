@@ -4,6 +4,7 @@ public partial class BattleCore : MonoBehaviour
 {
     [SerializeField] private CreateObjectView createObjectView;
     [SerializeField] private BattleUIView battleUIView;
+    [SerializeField] private PlayFabAdsManager playFabAdsManager;
     private StateMachine<BattleCore> _stateMachine;
     private PlayerManager _playerManager;
     private EnemyManager _enemyManager;
@@ -23,6 +24,7 @@ public partial class BattleCore : MonoBehaviour
     {
         _playerManager = playerManager;
         _enemyManager = enemyManager;
+        playFabAdsManager.Initialize();
         battleUIView.Initialize();
         InitializeState();
     }
@@ -37,5 +39,7 @@ public partial class BattleCore : MonoBehaviour
         _stateMachine.AddTransition<CreateObjectState, BattleStartState>((int)Event.BattleStart);
         _stateMachine.AddTransition<BattleStartState, GameOverState>((int)Event.GameOver);
         _stateMachine.AddTransition<BattleStartState, GameClearState>((int)Event.GameClear);
+        _stateMachine.AddTransition<GameOverState, SceneTransitionState>((int)Event.SceneTransition);
+        _stateMachine.AddTransition<GameClearState, SceneTransitionState>((int)Event.SceneTransition);
     }
 }

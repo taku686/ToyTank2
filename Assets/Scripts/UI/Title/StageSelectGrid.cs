@@ -14,24 +14,25 @@ public class StageSelectGrid : MonoBehaviour
     [SerializeField] private GameObject disableGrid;
     [SerializeField] private TextMeshProUGUI pageText;
     [SerializeField] private Button nextButton;
+
     [SerializeField] private Button prevButton;
-    private StageDataManager _stageDataManager;
-    private UserDataManager _userDataManager;
+
+    /*private StageDataManager _stageDataManager;
+    private UserDataManager _userDataManager;*/
     private UIAnimation _uiAnimation;
     private readonly List<GameObject> _grids = new();
     private const int MaxStageCountPerPage = 8;
     private int _currentPage = 1;
 
-    private int PlayerMaxStage => _userDataManager.GetUserData().maxStage;
+    private int PlayerMaxStage => UserDataManager.Instance.GetUserData().maxStage;
+
     //private int MaxStage => _stageDataManager.stageDatum.Count;
     //ToDo ‰¼ƒf[ƒ^
     private int MaxStage => 45;
     private int MaxPage => MaxStage / MaxStageCountPerPage;
 
-    public void Initialize(StageDataManager stageDataManager, UserDataManager userDataManager, UIAnimation uiAnimation)
+    public void Initialize(UIAnimation uiAnimation)
     {
-        _stageDataManager = stageDataManager;
-        _userDataManager = userDataManager;
         _uiAnimation = uiAnimation;
         nextButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickNextButton()));
         prevButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickPrevButton()));
@@ -75,6 +76,7 @@ public class StageSelectGrid : MonoBehaviour
         {
             _currentPage = 1;
         }
+
         CreateGrids();
     }
 
@@ -87,6 +89,7 @@ public class StageSelectGrid : MonoBehaviour
         {
             _currentPage = MaxPage;
         }
+
         CreateGrids();
     }
 

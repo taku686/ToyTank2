@@ -14,7 +14,6 @@ public partial class PlayerCore
         private CanonMoveBase _canonMoveBase;
         private UserData _userData;
         private BaseData _baseData;
-        private BaseDataManager _baseDataManager;
         private PlayerHealth _health;
         private Action _pointerUpCallBack;
         private bool _hasShotStopMethod;
@@ -27,8 +26,7 @@ public partial class PlayerCore
             _baseMove = Owner._baseMove;
             _canonMoveBase = Owner._canonMoveBase;
             _userData = Owner._userData;
-            _baseDataManager = Owner._baseDataManager;
-            _baseData = _baseDataManager.GetBaseData(_userData.baseDataIndex);
+            _baseData = BaseDataManager.Instance.GetBaseData(_userData.baseDataIndex);
             _health = Owner._health;
             _cts = new CancellationTokenSource();
             _cts.RegisterRaiseCancelOnDestroy(Owner.gameObject);

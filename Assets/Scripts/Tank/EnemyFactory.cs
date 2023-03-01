@@ -7,7 +7,6 @@ using UnityEngine.AI;
 
 public class EnemyFactory : MonoBehaviour, ITankFactory
 {
-    [SerializeField] private EnemyData[] enemyDatum;
     [SerializeField] private Material enemyMaterial;
     [SerializeField] private ExternalBehavior externalBehavior;
     private const float ColliderRadius = 1f;
@@ -18,30 +17,21 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
     // ReSharper disable Unity.PerformanceAnalysis
     public GameObject CreateEnemy(int level, int version, Transform createPos)
     {
-        foreach (var enemyData in enemyDatum.Where(x => x.level == level && x.version == version))
+        var enemyData = EnemyDataManager.Instance.GetEnemyData(level, version);
+        var enemy = new GameObject
         {
-            if (enemyData == null)
-            {
-                return null;
-            }
-
-            var enemy = new GameObject
-            {
-                name = level + "_" + version,
-                tag = GameCommonData.EnemyTag
-            };
-            var enemyTransform = enemy.transform;
-            enemyTransform.position = createPos.position;
-            var canonData = enemyData.canonData;
-            var baseData = enemyData.baseData;
-            CreateCanon(canonData, baseData, enemyTransform);
-            CreateBase(baseData, enemyTransform);
-            SetMaterial(enemy, level);
-            SetComponent(enemy, enemyData);
-            return enemy;
-        }
-
-        return null;
+            name = level + "_" + version,
+            tag = GameCommonData.EnemyTag
+        };
+        var enemyTransform = enemy.transform;
+        enemyTransform.position = createPos.position;
+        var canonData = enemyData.canonData;
+        var baseData = enemyData.baseData;
+        CreateCanon(canonData, baseData, enemyTransform);
+        CreateBase(baseData, enemyTransform);
+        SetMaterial(enemy, level);
+        SetComponent(enemy, enemyData);
+        return enemy;
     }
 
     private void CreateCanon(CanonData canonData, BaseData baseData, Transform createPos)

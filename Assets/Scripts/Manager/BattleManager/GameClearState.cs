@@ -1,7 +1,4 @@
 ﻿using System;
-using Data;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using State = StateMachine<BattleCore>.State;
 
@@ -10,6 +7,7 @@ public partial class BattleCore
     public class GameClearState : State
     {
         private BattleUIView _battleUIView;
+
 
         protected override void OnEnter(State prevState)
         {
@@ -61,7 +59,8 @@ public partial class BattleCore
 
         private void OnClickSceneTransition()
         {
-            SceneManager.LoadScene(GameCommonData.TitleScene);
+            Owner._stateMachine.Dispatch((int)Event.SceneTransition);
+            // SceneManager.LoadScene(GameCommonData.TitleScene);
         }
     }
 }

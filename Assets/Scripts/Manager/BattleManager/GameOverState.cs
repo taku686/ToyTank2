@@ -35,7 +35,8 @@ public partial class BattleCore
 
         private void OnClickSceneTransition()
         {
-            SceneManager.LoadScene(GameCommonData.TitleScene);
+            Owner._stateMachine.Dispatch((int)Event.SceneTransition);
+            //SceneManager.LoadScene(GameCommonData.TitleScene);
         }
     }
 }

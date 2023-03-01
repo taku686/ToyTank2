@@ -10,9 +10,6 @@ public partial class PlayerCore : MonoBehaviour
     private const string JoystickTag = "CanonJoystick";
     private const string ShellPoolTag = "PlayerShellPool";
     private StateMachine<PlayerCore> _stateMachine;
-    private BaseDataManager _baseDataManager;
-    private CanonDataManager _canonDataManager;
-    private UserDataManager _userDataManager;
     private BaseMove _baseMove;
     private UserData _userData;
     private CanonMoveBase _canonMoveBase;
@@ -50,23 +47,20 @@ public partial class PlayerCore : MonoBehaviour
     }
 
     public void Initialize(UserData userData, Transform targetMarker, GameObject canonBar, GameObject hpBar,
-        LayerMask enemyLayer, Material playerMaterial, BaseDataManager baseDataManager,
-        CanonDataManager canonDataManager, UserDataManager userDataManager)
+        LayerMask enemyLayer, Material playerMaterial)
     {
-        InitializeComponent(userData, targetMarker, canonBar, hpBar, enemyLayer, playerMaterial, baseDataManager,
-            canonDataManager, userDataManager);
+        InitializeComponent(userData, targetMarker, canonBar, hpBar, enemyLayer, playerMaterial);
         InitializeState();
     }
 
     private void InitializeComponent(UserData userData, Transform targetMarker, GameObject canonBar,
-        GameObject hpBar, LayerMask enemyLayer, Material playerMaterial, BaseDataManager baseDataManager,
-        CanonDataManager canonDataManager, UserDataManager userDataManager)
+        GameObject hpBar, LayerMask enemyLayer, Material playerMaterial)
     {
         _userData = userData;
         _shellManager = GameObject.FindGameObjectWithTag(GameCommonData.ShellManagerTag).GetComponent<ShellManager>();
         GameObject joystick = GameObject.FindGameObjectWithTag(JoystickTag);
         _ultimateJoystick = joystick.GetComponent<UltimateJoystick>();
-        var baseData = baseDataManager.GetBaseData(_userData.baseDataIndex);
+        var baseData = BaseDataManager.Instance.GetBaseData(_userData.baseDataIndex);
         CreateCanon(userData.currentEquippedCanonList, baseData, canonBar, userData.currentCanonIndex);
         CreateBase(baseData);
         SetMaterial(gameObject, playerMaterial);
@@ -77,10 +71,6 @@ public partial class PlayerCore : MonoBehaviour
         _health = gameObject.AddComponent<PlayerHealth>();
         var slider = Instantiate(hpBar, transform).GetComponentInChildren<Slider>();
         _health.Initialize(baseData.Hp, slider);
-
-        _userDataManager = userDataManager;
-        _baseDataManager = baseDataManager;
-        _canonDataManager = canonDataManager;
     }
 
     private void InitializeState()
@@ -95,7 +85,7 @@ public partial class PlayerCore : MonoBehaviour
 
     private void CreateCanon(List<int> canonDataArray, BaseData baseData, GameObject canonBar, int CanonIndex)
     {
-        var canonData = _canonDataManager.GetCanonData(canonDataArray[CanonIndex]);
+        var canonData = CanonDataManager.Instance.GetCanonData(canonDataArray[CanonIndex]);
         _currentCanonObj = Instantiate(canonData.canonObj, transform);
         _currentCanonObj.transform.localPosition = baseData.CanonPos;
         DecideCanonType(canonData, _currentCanonObj);
