@@ -24,9 +24,6 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] private Material playerMaterial;
     [SerializeField] private LayerMask playerLayer;
-    [SerializeField] private CanonDataManager canonDataManager;
-    [SerializeField] private BaseDataManager baseDataManager;
-    [SerializeField] private UserDataManager userDataManager;
     private GameObject _playerObj;
     private PlayerCore _playerCoreSc;
     private UserData _userData;
@@ -57,7 +54,7 @@ public class PlayerManager : MonoBehaviour
     {
         _playerCoreSc = player.AddComponent<PlayerCore>();
         _playerCoreSc.Initialize(_userData, targetMarker.transform, canonBar, hpBar, enemyLayerMask,
-            playerMaterial, baseDataManager, canonDataManager, userDataManager);
+            playerMaterial);
         var col = player.AddComponent<SphereCollider>();
         col.center = Center;
         col.radius = Radius;

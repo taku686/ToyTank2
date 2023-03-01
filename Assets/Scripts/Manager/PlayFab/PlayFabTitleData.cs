@@ -9,10 +9,6 @@ public class PlayFabTitleData : MonoBehaviour
     [SerializeField] private GameObject[] baseObj;
     [SerializeField] private GameObject[] shellObj;
     [SerializeField] private Sprite[] sprites;
-    public StageDataManager stageDataManager;
-    public EnemyDataManager enemyDataManager;
-    public CanonDataManager canonDataManager;
-    public BaseDataManager baseDataManager;
 
     public void SetTitleData(Dictionary<string, string> titleDatum)
     {
@@ -35,7 +31,7 @@ public class PlayFabTitleData : MonoBehaviour
             canonData.canonKinds = GameCommonData.GetCanonType(canonData.canonKindsIndex);
             canonData.shellObj = shellObj[canonData.shellObjIndex];
             canonData.shotPos = new Vector3(canonData.shotPosX, canonData.shotPosY, canonData.shotPosZ);
-            canonDataManager.canonDatum.Add(canonData);
+            CanonDataManager.Instance.canonDatum.Add(canonData);
         }
     }
 
@@ -46,7 +42,7 @@ public class PlayFabTitleData : MonoBehaviour
             baseData.baseObj = baseObj[baseData.baseObjIndex];
             baseData.baseType = GameCommonData.GetBaseType(baseData.baseTypeIndex);
             baseData.canonPos = new Vector3(baseData.canonPosX, baseData.canonPosY, baseData.canonPosZ);
-            baseDataManager.baseDatum.Add(baseData);
+            BaseDataManager.Instance.baseDatum.Add(baseData);
         }
     }
 
@@ -54,9 +50,9 @@ public class PlayFabTitleData : MonoBehaviour
     {
         foreach (var enemyData in enemyDatum)
         {
-            enemyData.baseData = baseDataManager.GetBaseData(enemyData.baseDataIndex);
-            enemyData.canonData = canonDataManager.GetCanonData(enemyData.canonDataIndex);
-            enemyDataManager.enemyDatum.Add(enemyData);
+            enemyData.baseData = BaseDataManager.Instance.GetBaseData(enemyData.baseDataIndex);
+            enemyData.canonData = CanonDataManager.Instance.GetCanonData(enemyData.canonDataIndex);
+            EnemyDataManager.Instance.enemyDatum.Add(enemyData);
         }
     }
 
@@ -77,11 +73,11 @@ public class PlayFabTitleData : MonoBehaviour
                 var enemyLevelVersion = enemyData.Split('_');
                 var level = int.Parse(enemyLevelVersion[0]);
                 var version = int.Parse(enemyLevelVersion[1]);
-                var data = enemyDataManager.GetEnemyData(level, version);
+                var data = EnemyDataManager.Instance.GetEnemyData(level, version);
                 stageData.enemyDatum.Add(data);
             }
 
-            stageDataManager.stageDatum.Add(stageData);
+            StageDataManager.Instance.stageDatum.Add(stageData);
         }
     }
 }

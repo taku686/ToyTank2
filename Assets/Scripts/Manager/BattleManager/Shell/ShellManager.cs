@@ -11,8 +11,6 @@ public class ShellManager : MonoBehaviour
 
     [SerializeField] private Transform[] _playerPools;
     [SerializeField] private Transform _enemyPool;
-    [SerializeField] private CanonDataManager canonDataManager;
-    [SerializeField] private BaseDataManager baseDataManager;
     private CanonData _currentCanon;
 
 
@@ -20,11 +18,11 @@ public class ShellManager : MonoBehaviour
     {
         _userData = userData;
         var canonIndex = _userData.currentEquippedCanonList[_userData.currentCanonIndex];
-        _currentCanon = canonDataManager.GetCanonData(canonIndex);
+        _currentCanon = CanonDataManager.Instance.GetCanonData(canonIndex);
         for (int i = 0; i < _userData.currentEquippedCanonList.Count; i++)
         {
             var index = _userData.currentEquippedCanonList[i];
-            var canonData = canonDataManager.GetCanonData(index);
+            var canonData = CanonDataManager.Instance.GetCanonData(index);
             if (canonData.CanonKinds == Data.CanonType.BeamType ||
                 canonData.CanonKinds == Data.CanonType.FlameType)
             {
@@ -79,7 +77,7 @@ public class ShellManager : MonoBehaviour
     {
         List<ShellBase> objs = new List<ShellBase>();
         var canonData =
-            canonDataManager.GetCanonData(_userData.currentEquippedCanonList[_userData.currentCanonIndex]);
+            CanonDataManager.Instance.GetCanonData(_userData.currentEquippedCanonList[_userData.currentCanonIndex]);
         foreach (ShellBase obj in _playerShellList[index])
         {
             if (!obj.gameObject.activeSelf)
@@ -137,7 +135,8 @@ public class ShellManager : MonoBehaviour
 
     private void DetectShellType(UserData userData, GameObject shell)
     {
-        var canonData = canonDataManager.GetCanonData(userData.currentEquippedCanonList[_userData.currentCanonIndex]);
+        var canonData =
+            CanonDataManager.Instance.GetCanonData(userData.currentEquippedCanonList[_userData.currentCanonIndex]);
         switch (canonData.CanonKinds)
         {
             case Data.CanonType.BeamType:

@@ -4,17 +4,16 @@ using UnityEngine.SceneManagement;
 
 public class SceneTransition : MonoBehaviour
 {
-    private static SceneTransition instance;
-    public static SceneTransition Instance => instance;
-    public int currentStage;
+    private static SceneTransition _instance;
+    public static SceneTransition Instance => _instance;
 
     private void Awake()
     {
-        if (instance == null)
+        if (_instance == null)
         {
-            instance = this;
+            _instance = this;
         }
-        else if (instance != this)
+        else if (_instance != this)
         {
             Destroy(gameObject);
         }

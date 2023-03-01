@@ -6,6 +6,23 @@ using UnityEngine;
 public class StageDataManager : MonoBehaviour
 {
     public List<StageData> stageDatum = new();
+    private static StageDataManager _instance;
+    public static StageDataManager Instance => _instance;
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+
+        DontDestroyOnLoad(gameObject);
+    }
 
     public StageData GetStageData(int index)
     {

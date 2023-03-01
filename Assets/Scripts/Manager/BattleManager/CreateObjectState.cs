@@ -34,7 +34,7 @@ public partial class BattleCore
 
         private void GenerateEnemy()
         {
-            var stageData = _createObjectView.stageDatum[0];
+            var stageData = StageDataManager.Instance.GetStageData(1);
             _enemyManager.CreateEnemy(stageData);
         }
     }

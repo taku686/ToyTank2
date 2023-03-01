@@ -19381,7 +19381,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* X509Certificate_FormatDate_m92BA85C
 		L_6 = DateTime_get_Day_m872DBCA4C79955EC1E27EB68746B6C2F6A183B28((&___date0), NULL);
 		NullCheck(L_3);
 		bool L_7;
-		L_7 = VirtualFuncInvoker4< bool, int32_t, int32_t, int32_t, int32_t >::Invoke(26 /* System.Boolean System.Globalization.Calendar::IsValidDay(System.Int32,System.Int32,System.Int32,System.Int32) */, L_3, L_4, L_5, L_6, 0);
+		L_7 = VirtualFuncInvoker4< bool, int32_t, int32_t, int32_t, int32_t >::Invoke(27 /* System.Boolean System.Globalization.Calendar::IsValidDay(System.Int32,System.Int32,System.Int32,System.Int32) */, L_3, L_4, L_5, L_6, 0);
 		if (L_7)
 		{
 			goto IL_0034;

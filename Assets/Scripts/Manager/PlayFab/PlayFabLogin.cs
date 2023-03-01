@@ -10,6 +10,8 @@ namespace Manager.PlayFab
     {
         [SerializeField] private PlayFabTitleData playFabTitleData;
         [SerializeField] private PlayFabUserData playFabUserData;
+        [SerializeField] private PlayFabCatalogManager playFabCatalogManager;
+        [SerializeField] private PlayFabShopManager playFabShopManager;
 
         private static readonly GetPlayerCombinedInfoRequestParams CombinedInfoRequestParams =
             new()
@@ -67,6 +69,8 @@ namespace Manager.PlayFab
             var userData = data.UserData;
             playFabTitleData.SetTitleData(titleData);
             await playFabUserData.SetUserData(userData);
+            await playFabCatalogManager.GetCatalogItems();
+            await playFabShopManager.Initialize(playFabCatalogManager);
         }
     }
 }
