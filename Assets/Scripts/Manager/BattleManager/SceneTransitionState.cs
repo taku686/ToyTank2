@@ -26,8 +26,10 @@ public partial class BattleCore
             {
                 SceneManager.LoadScene(GameCommonData.TitleScene);
             }
-
-            adsManager.ShowAd();
+            else
+            {
+                adsManager.ShowAd();
+            }
         }
     }
 }

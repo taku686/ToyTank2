@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Data;
 using Manager.PlayFab;
 using UI;
+using UnityEngine;
 using State = StateMachine<Manager.TitleManager.TitleCore>.State;
 
 namespace Manager.TitleManager
@@ -28,14 +29,18 @@ namespace Manager.TitleManager
                 _playFabShopManager = Owner.playFabShopManager;
                 _shopView = Owner.shopView;
                 _uiAnimation = Owner.uiAnimation;
+                _shopView.errorPanel.SetActive(false);
             }
 
             private void InitializeButton()
             {
                 _shopView.backButton.onClick.RemoveAllListeners();
                 _shopView.adRemoveButton.onClick.RemoveAllListeners();
+                _shopView.errorPanelCloseButton.onClick.RemoveAllListeners();
                 _shopView.backButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickBackToLobby()));
                 _shopView.adRemoveButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickPurchase()));
+                _shopView.errorPanelCloseButton.onClick.AddListener(() =>
+                    UniTask.Void(async () => await OnclickCloseErrorPanel()));
             }
 
             private async UniTask OnClickBackToLobby()
@@ -48,16 +53,36 @@ namespace Manager.TitleManager
             private async UniTask OnClickPurchase()
             {
                 await _uiAnimation.Click(_shopView.adRemoveButton.transform, GameCommonData.ClickDuration);
-                var item = _playFabCatalogManager.catalogList.First(x => x.ItemId == GameCommonData.RemoveAdsItem);
-                var result = await _playFabShopManager.TryPurchaseItem(item.ItemId, GameCommonData.RealMoneyKey,
-                    GameCommonData.RemoveAdsPrice);
-                if (!result)
+                if (UserDataManager.Instance.IsRemoveAds())
                 {
-                    _shopView.debugText.text = "Fail";
-                    return;
+                    await OpenErrorPanel();
                 }
+                else
+                {
+                    var item = _playFabCatalogManager.catalogList.First(x => x.ItemId == GameCommonData.RemoveAdsItem);
+                    var result = await _playFabShopManager.TryPurchaseItem(item.ItemId, GameCommonData.RealMoneyKey,
+                        GameCommonData.RemoveAdsPrice);
+                    if (!result)
+                    {
+                        //   await OpenErrorPanel();
+                    }
+                }
+            }
 
-                _shopView.debugText.text = "Success";
+            private async UniTask OnclickCloseErrorPanel()
+            {
+                await _uiAnimation.Click(_shopView.errorPanelCloseButton.transform, GameCommonData.ClickDuration);
+                var errorPanel = _shopView.errorPanel.transform;
+                await _uiAnimation.Close(errorPanel, GameCommonData.CloseDuration);
+                _shopView.errorPanel.SetActive(false);
+            }
+
+            private async UniTask OpenErrorPanel()
+            {
+                var errorPanel = _shopView.errorPanel.transform;
+                errorPanel.gameObject.SetActive(true);
+                errorPanel.localScale = Vector3.zero;
+                await _uiAnimation.Open(errorPanel, GameCommonData.ClickDuration);
             }
         }
     }

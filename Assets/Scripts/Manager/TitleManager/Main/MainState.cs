@@ -77,7 +77,7 @@ namespace Manager.TitleManager
                 var panel = _mainView.stageSelectPanel.transform;
                 var closeButton = _mainView.stageSelectCloseButton.transform;
                 await _uiAnimation.Click(closeButton, GameCommonData.ClickDuration);
-                await _uiAnimation.Close(panel, 0.5f);
+                await _uiAnimation.Close(panel, GameCommonData.CloseDuration);
                 panel.gameObject.SetActive(false);
                 _mainManager.stageSelectGrid.DestroyGrids();
             }

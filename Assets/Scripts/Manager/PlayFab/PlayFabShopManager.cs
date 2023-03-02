@@ -56,8 +56,7 @@ namespace Manager.PlayFab
                 return false;
             }
 
-            await _playFabUserData.UseItem(result.Result.Items);
-            await _playFabUserData.GetUserInventory();
+
             return true;
         }
 
@@ -81,6 +80,7 @@ namespace Manager.PlayFab
                 Debug.Log("Validated failed" + result.Error.GenerateErrorReport());
             }
 
+            await _playFabUserData.GetUserInventory();
             Debug.Log("Validated success");
         }
 

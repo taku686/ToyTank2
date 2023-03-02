@@ -60,12 +60,7 @@ public class UserDataManager : MonoBehaviour
     public bool IsRemoveAds()
     {
         var removeAds =
-            _inventory.FirstOrDefault(x => x.ItemId == GameCommonData.RemoveAdsItem && x.RemainingUses == 0);
-        if (removeAds == null)
-        {
-            return false;
-        }
-
-        return true;
+            _inventory.FirstOrDefault(x => x.ItemId == GameCommonData.RemoveAdsItem);
+        return removeAds != null;
     }
 }
