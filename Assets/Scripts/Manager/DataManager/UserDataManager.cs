@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
+using Data;
+using PlayFab.ClientModels;
 using UnityEngine;
 
 public class UserDataManager : MonoBehaviour
 {
-    [SerializeField] private BaseDataManager baseDataManager;
-    [SerializeField] private CanonDataManager canonDataManager;
-    [SerializeField] private UserData _userData;
+    private UserData _userData;
+    private List<ItemInstance> _inventory = new();
 
     private static UserDataManager _instance;
     public static UserDataManager Instance => _instance;
@@ -35,6 +37,11 @@ public class UserDataManager : MonoBehaviour
         _userData = userData;
     }
 
+    public void SetInventory(List<ItemInstance> inventory)
+    {
+        _inventory = inventory;
+    }
+
     public UserData CreateUserData()
     {
         var userData = new UserData()
@@ -48,5 +55,12 @@ public class UserDataManager : MonoBehaviour
         };
 
         return userData;
+    }
+
+    public bool IsRemoveAds()
+    {
+        var removeAds =
+            _inventory.FirstOrDefault(x => x.ItemId == GameCommonData.RemoveAdsItem);
+        return removeAds != null;
     }
 }

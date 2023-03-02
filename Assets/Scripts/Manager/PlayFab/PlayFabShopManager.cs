@@ -15,15 +15,16 @@ namespace Manager.PlayFab
         private ConfigurationBuilder _builder;
         private IStoreController _storeController;
         private IExtensionProvider _extensionProvider;
+        private PlayFabUserData _playFabUserData;
 
-
-        public async UniTask Initialize(PlayFabCatalogManager playFabCatalogManager)
+        public async UniTask Initialize(PlayFabCatalogManager playFabCatalogManager, PlayFabUserData playFabUserData)
         {
             if (_isInitialized)
             {
                 return;
             }
 
+            _playFabUserData = playFabUserData;
             var options = new InitializationOptions();
             await UnityServices.InitializeAsync(options);
             _isInitialized = true;
@@ -39,8 +40,7 @@ namespace Manager.PlayFab
 
         public async UniTask<bool> TryPurchaseItem(string itemName, string virtualCurrencyKey, int price)
         {
-            //  await Login();
-            var request = new PurchaseItemRequest()
+            var request = new PurchaseItemRequest
             {
                 ItemId = itemName,
                 VirtualCurrency = virtualCurrencyKey,
@@ -56,53 +56,16 @@ namespace Manager.PlayFab
                 return false;
             }
 
-            //  await _playFabCommonManager.SetVirtualCurrency();
+
             return true;
         }
 
-
-        private async UniTask Login()
-        {
-#if UNITY_IOS
-        var request = new LoginWithIOSDeviceIDRequest()
-        {
-            CreateAccount = true,
-            DeviceId = SystemInfo.deviceUniqueIdentifier
-        };
-
-        var result = await PlayFabClientAPI.LoginWithIOSDeviceIDAsync(request);
-
-        if (result.Error != null)
-        {
-            Debug.LogError(result.Error.GenerateErrorReport());
-        }
-        else
-        {
-            Debug.Log("Logged in");
-
-            // Refresh available items
-            RefreshIAPItems();
-        }
-#elif UNITY_ANDROID
-            var request = new LoginWithAndroidDeviceIDRequest()
-            {
-                CreateAccount = true,
-                AndroidDeviceId = SystemInfo.deviceUniqueIdentifier
-            };
-            var result = await PlayFabClientAPI.LoginWithAndroidDeviceIDAsync(request);
-
-            if (result.Error != null)
-            {
-                Debug.LogError(result.Error.GenerateErrorReport());
-            }
-#endif
-        }
 
         private async void ValidateGooglePlayPurchaseAsync(PurchaseEventArgs e)
         {
             Debug.Log(e.purchasedProduct.metadata.isoCurrencyCode);
             var googleReceipt = GooglePurchase.FromJson(e.purchasedProduct.receipt);
-            var request = new ValidateGooglePlayPurchaseRequest()
+            var request = new ValidateGooglePlayPurchaseRequest
             {
                 CurrencyCode = e.purchasedProduct.metadata.isoCurrencyCode,
                 PurchasePrice = (uint)(e.purchasedProduct.metadata.localizedPrice * 100),
@@ -117,12 +80,8 @@ namespace Manager.PlayFab
                 Debug.Log("Validated failed" + result.Error.GenerateErrorReport());
             }
 
+            await _playFabUserData.GetUserInventory();
             Debug.Log("Validated success");
-        }
-
-
-        public void Dispose()
-        {
         }
 
         public void OnInitializeFailed(InitializationFailureReason error)
@@ -180,17 +139,23 @@ namespace Manager.PlayFab
 
     public class PayloadData
     {
-        public JsonData JsonData;
+        private JsonData _jsonData;
 
         // JSON Fields, ! Case-sensitive
         public string signature;
         public string json;
 
+        public PayloadData(string signature, string json)
+        {
+            this.signature = signature;
+            this.json = json;
+        }
+
         public static PayloadData FromJson(string json)
         {
             Debug.Log(json);
             var payload = JsonUtility.FromJson<PayloadData>(json);
-            payload.JsonData = JsonUtility.FromJson<JsonData>(payload.json);
+            payload._jsonData = JsonUtility.FromJson<JsonData>(payload.json);
             return payload;
         }
     }

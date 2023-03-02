@@ -674,10 +674,10 @@ Il2CppSequencePoint g_sequencePointsBehaviorDesigner_Runtime[1] = { { 0, 0, 0, 0
 #endif
 #if IL2CPP_MONO_DEBUGGER
 static const Il2CppCatchPoint g_catchPoints[] = {
-{ 74669, 35440, 126, 0, -1 },
-{ 74673, 35440, 163, 0, -1 },
-{ 74673, 35440, 210, 1, -1 },
-{ 74866, 35440, 108, 0, -1 },
+{ 74690, 35443, 126, 0, -1 },
+{ 74694, 35443, 163, 0, -1 },
+{ 74694, 35443, 210, 1, -1 },
+{ 74887, 35443, 108, 0, -1 },
 };
 #else
 static const Il2CppCatchPoint g_catchPoints[1] = { { 0, 0, 0, 0, } };

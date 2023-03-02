@@ -13,34 +13,19 @@ namespace Manager.PlayFab
         [SerializeField] private PlayFabCatalogManager playFabCatalogManager;
         [SerializeField] private PlayFabShopManager playFabShopManager;
 
-        private static readonly GetPlayerCombinedInfoRequestParams CombinedInfoRequestParams =
-            new()
-            {
-                GetUserAccountInfo = true,
-                GetPlayerProfile = true,
-                GetTitleData = true,
-                GetUserData = true,
-                GetUserInventory = true,
-                GetUserVirtualCurrency = true,
-            };
+        private static readonly GetPlayerCombinedInfoRequestParams CombinedInfoRequestParams = new()
+        {
+            GetUserAccountInfo = true,
+            GetPlayerProfile = true,
+            GetTitleData = true,
+            GetUserData = true,
+            GetUserInventory = true,
+            GetUserVirtualCurrency = true,
+        };
 
         public void Initialize()
         {
             PlayFabSettings.staticSettings.TitleId = GameCommonData.TitleId;
-        }
-
-        public async UniTask<bool> TryLogin()
-        {
-            var request = new LoginWithCustomIDRequest
-            {
-                CustomId = "GettingStartedGuide",
-                CreateAccount = true,
-                InfoRequestParameters = CombinedInfoRequestParams
-            };
-            var result = await PlayFabClientAPI.LoginWithCustomIDAsync(request);
-
-
-            return result.Error == null;
         }
 
         public async UniTask<bool> TryLoginWithGoogle()
@@ -67,10 +52,12 @@ namespace Manager.PlayFab
         {
             var titleData = data.TitleData;
             var userData = data.UserData;
+            var inventoryData = data.UserInventory;
             playFabTitleData.SetTitleData(titleData);
             await playFabUserData.SetUserData(userData);
+            playFabUserData.SetInventory(inventoryData);
             await playFabCatalogManager.GetCatalogItems();
-            await playFabShopManager.Initialize(playFabCatalogManager);
+            await playFabShopManager.Initialize(playFabCatalogManager, playFabUserData);
         }
     }
 }

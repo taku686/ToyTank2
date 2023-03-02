@@ -69,8 +69,8 @@ Il2CppSequencePoint g_sequencePointsGoogleMobileAds_Ump_Android[1] = { { 0, 0, 0
 #endif
 #if IL2CPP_MONO_DEBUGGER
 static const Il2CppCatchPoint g_catchPoints[] = {
-{ 82109, 35440, 45, 0, -1 },
-{ 82112, 35440, 74, 0, -1 },
+{ 82130, 35443, 45, 0, -1 },
+{ 82133, 35443, 74, 0, -1 },
 };
 #else
 static const Il2CppCatchPoint g_catchPoints[1] = { { 0, 0, 0, 0, } };

@@ -35,11 +35,11 @@ static const Il2CppMethodExecutionContextInfoIndex g_methodExecutionContextInfoI
 IL2CPP_EXTERN_C Il2CppSequencePoint g_sequencePointsUnityEngine_Purchasing_WinRTStub[];
 Il2CppSequencePoint g_sequencePointsUnityEngine_Purchasing_WinRTStub[5] = 
 {
-	{ 82731, 0, 0, 0, 0, 0, -1, kSequencePointKind_Normal, 0, 0 } /* seqPointIndex: 0 */,
-	{ 82731, 0, 0, 0, 0, 0, 16777215, kSequencePointKind_Normal, 0, 1 } /* seqPointIndex: 1 */,
-	{ 82731, 1, 16, 16, 9, 10, 0, kSequencePointKind_Normal, 0, 2 } /* seqPointIndex: 2 */,
-	{ 82731, 1, 17, 17, 13, 49, 1, kSequencePointKind_Normal, 0, 3 } /* seqPointIndex: 3 */,
-	{ 82731, 1, 17, 17, 13, 49, 1, kSequencePointKind_StepOut, 0, 4 } /* seqPointIndex: 4 */,
+	{ 82752, 0, 0, 0, 0, 0, -1, kSequencePointKind_Normal, 0, 0 } /* seqPointIndex: 0 */,
+	{ 82752, 0, 0, 0, 0, 0, 16777215, kSequencePointKind_Normal, 0, 1 } /* seqPointIndex: 1 */,
+	{ 82752, 1, 16, 16, 9, 10, 0, kSequencePointKind_Normal, 0, 2 } /* seqPointIndex: 2 */,
+	{ 82752, 1, 17, 17, 13, 49, 1, kSequencePointKind_Normal, 0, 3 } /* seqPointIndex: 3 */,
+	{ 82752, 1, 17, 17, 13, 49, 1, kSequencePointKind_StepOut, 0, 4 } /* seqPointIndex: 4 */,
 };
 #else
 extern Il2CppSequencePoint g_sequencePointsUnityEngine_Purchasing_WinRTStub[];
@@ -61,7 +61,7 @@ static const Il2CppSequencePointSourceFile g_sequencePointSourceFiles[1] = { NUL
 #if IL2CPP_MONO_DEBUGGER
 static const Il2CppTypeSourceFilePair g_typeSourceFiles[1] = 
 {
-	{ 14854, 1 },
+	{ 14859, 1 },
 };
 #else
 static const Il2CppTypeSourceFilePair g_typeSourceFiles[1] = { { 0, 0 } };
