@@ -18,7 +18,6 @@ public class BeamType : CanonMoveBase, IShot,IShotStop
         _beamObj.SetActive(true);
         Transform transform1;
         _beamObj.transform.position = (transform1 = transform).TransformPoint(canonData.ShotPos);
-        
         _beamEffect.OnSpawned(canonData.ShotPos, transform1.parent);
     }
 

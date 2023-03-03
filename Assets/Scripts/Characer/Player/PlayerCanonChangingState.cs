@@ -1,4 +1,5 @@
-﻿using State = StateMachine<PlayerCore>.State;
+﻿using UnityEngine;
+using State = StateMachine<PlayerCore>.State;
 
 public partial class PlayerCore
 {
@@ -6,11 +7,16 @@ public partial class PlayerCore
     {
         protected override void OnEnter(State prevState)
         {
-            var baseData = BaseDataManager.Instance.GetBaseData(Owner._userData.baseDataIndex);
-            DestroyImmediate(Owner._currentCanonObj);
-            Owner._currentCanonObj = Instantiate(Owner._currentCanon.CanonObj, Owner.transform);
-            Owner._currentCanonObj.transform.localPosition = baseData.CanonPos;
-            Owner.DecideCanonType(Owner._currentCanon, Owner._currentCanonObj);
+            var baseData = BaseDataManager.Instance.GetBaseData(Owner._userData.currentBaseDataIndex);
+            var canonData = CanonDataManager.Instance.GetCanonData(Owner._userData.currentCanonDataIndex);
+            Owner.CreateCanon(canonData, baseData);
+            Debug.Log("Start canon switch");
+        }
+
+        protected override void OnUpdate()
+        {
+            Debug.Log("Update canon switch");
+            Owner._stateMachine.Dispatch((int)Event.Idle);
         }
     }
 }

@@ -21,10 +21,6 @@ public class PlayFabCatalogManager : MonoBehaviour
         }
 
         catalogList = response.Result.Catalog;
-        foreach (var item in catalogList)
-        {
-            Debug.Log(item.ItemId);
-        }
     }
 
     public async UniTask ConsumeItemAsync(string itemId, int consumeCount)

@@ -16,7 +16,7 @@ public class GeneralManager : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         UserData userData = UserDataManager.Instance.GetUserData();
-        var baseData = BaseDataManager.Instance.GetBaseData(userData.baseDataIndex);
+        var baseData = BaseDataManager.Instance.GetBaseData(userData.currentBaseDataIndex);
         if (baseData == null || userData.currentEquippedCanonList.Count == 0)
         {
             baseData = BaseDataManager.Instance.GetBaseData(DefaultBaseIndex);
@@ -27,7 +27,6 @@ public class GeneralManager : MonoBehaviour
         foreach (var canonIndex in userData.currentEquippedCanonList)
         {
             var canonData = CanonDataManager.Instance.GetCanonData(canonIndex);
-            Debug.Log(canonData.name);
             canonDatum.Add(canonData);
         }
 
