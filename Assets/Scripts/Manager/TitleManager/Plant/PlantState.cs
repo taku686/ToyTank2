@@ -91,7 +91,7 @@ namespace Manager.TitleManager
                 _userData.currentEquippedCanonList[2] = _userData.currentEquippedCanonList[1];
                 _userData.currentEquippedCanonList[1] = _userData.currentEquippedCanonList[0];
                 _userData.currentEquippedCanonList[0] = canonData.index;
-                _userData.currentCanonIndex = canonData.index;
+                _userData.currentCanonDataIndex = canonData.index;
             }
 
             private void PhaseTransition()
@@ -105,7 +105,7 @@ namespace Manager.TitleManager
             {
                 await _uiAnimation.Click(grid.transform, GameCommonData.ClickDuration);
                 var canonData = grid.canonData;
-                var baseData = BaseDataManager.Instance.GetBaseData(_userData.baseDataIndex);
+                var baseData = BaseDataManager.Instance.GetBaseData(_userData.currentBaseDataIndex);
                 Owner.CreateTank(canonData, baseData);
                 var imageArray = _plantView.equippedCanonImage;
                 if (imageArray[1].sprite != null)
@@ -131,30 +131,10 @@ namespace Manager.TitleManager
             private async UniTask OnClickSelect()
             {
                 await _uiAnimation.Click(_plantView.selectButton.transform, GameCommonData.ClickDuration);
+                UserDataManager.Instance.SetUserData(_userData);
                 await _playFabUserData.UpdateUserData(_userData);
                 PhaseTransition();
             }
-
-
-            //ToDo Ç†Ç∆Ç≈è¡Ç∑
-            /*private void DebugUserData()
-            {
-                if (_isInitialize)
-                {
-                    return;
-                }
-
-                _isInitialize = true;
-                var userData = UserDataManager.Instance.GetUserData();
-                var availableCanonData = userData.availableCanonList;
-                foreach (var canonData in CanonDataManager.Instance.canonDatum)
-                {
-                    availableCanonData.Add(canonData.index);
-                }
-
-                userData.availableCanonList = availableCanonData;
-                UserDataManager.Instance.SetUserData(userData);
-            }*/
         }
     }
 }

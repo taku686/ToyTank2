@@ -23,7 +23,6 @@ public class PlayerManager : MonoBehaviour
     private LayerMask enemyLayerMask;
 
     [SerializeField] private Material playerMaterial;
-    [SerializeField] private LayerMask playerLayer;
     private GameObject _playerObj;
     private PlayerCore _playerCoreSc;
     private UserData _userData;
@@ -39,7 +38,6 @@ public class PlayerManager : MonoBehaviour
         {
             name = Name,
             tag = Name,
-            // layer = playerLayer,
             transform =
             {
                 position = generatePos.position,
@@ -60,8 +58,8 @@ public class PlayerManager : MonoBehaviour
         col.radius = Radius;
     }
 
-    public void ChangeCanon(CanonData canonData, int canonIndex)
+    public void ChangeCanon(CanonData canonData)
     {
-        _playerCoreSc.ChangeCanon(_userData, canonData, canonIndex);
+        _playerCoreSc.ChangeCanon(canonData);
     }
 }

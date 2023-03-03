@@ -46,8 +46,8 @@ public class UserDataManager : MonoBehaviour
     {
         var userData = new UserData()
         {
-            baseDataIndex = 0,
-            currentCanonIndex = 0,
+            currentBaseDataIndex = 0,
+            currentCanonDataIndex = 0,
             availableBaseLists = new List<int> { 0 },
             availableCanonList = new List<int> { 0 },
             maxStage = 1,

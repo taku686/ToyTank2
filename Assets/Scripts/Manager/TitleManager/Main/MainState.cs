@@ -59,8 +59,8 @@ namespace Manager.TitleManager
             private void SetupTank()
             {
                 var userData = UserDataManager.Instance.GetUserData();
-                var canonData = CanonDataManager.Instance.GetCanonData(userData.currentCanonIndex);
-                var baseData = BaseDataManager.Instance.GetBaseData(userData.baseDataIndex);
+                var canonData = CanonDataManager.Instance.GetCanonData(userData.currentCanonDataIndex);
+                var baseData = BaseDataManager.Instance.GetBaseData(userData.currentBaseDataIndex);
                 Owner.CreateTank(canonData, baseData);
                 _playerPos.gameObject.SetActive(true);
             }

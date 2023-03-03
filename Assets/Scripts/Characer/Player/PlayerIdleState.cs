@@ -26,7 +26,7 @@ public partial class PlayerCore
             _baseMove = Owner._baseMove;
             _canonMoveBase = Owner._canonMoveBase;
             _userData = Owner._userData;
-            _baseData = BaseDataManager.Instance.GetBaseData(_userData.baseDataIndex);
+            _baseData = BaseDataManager.Instance.GetBaseData(_userData.currentBaseDataIndex);
             _health = Owner._health;
             _cts = new CancellationTokenSource();
             _cts.RegisterRaiseCancelOnDestroy(Owner.gameObject);
@@ -70,7 +70,7 @@ public partial class PlayerCore
         {
             if (Owner._canonBar.IsFire())
             {
-                Owner._iShot.Shot(Owner._shellManager.GetPlayerShell(ShellPoolTag, _userData.currentCanonIndex),
+                Owner._iShot.Shot(Owner._shellManager.GetPlayerShell(ShellPoolTag, _userData.currentCanonDataIndex),
                     Owner._currentCanon);
             }
             else if (!Owner._canonBar.IsFire() && Owner._iShotStop != null)
@@ -89,7 +89,7 @@ public partial class PlayerCore
         {
             if (!_hasShotStopMethod)
             {
-                Owner._iShot.Shot(Owner._shellManager.GetPlayerShell(ShellPoolTag, _userData.currentCanonIndex),
+                Owner._iShot.Shot(Owner._shellManager.GetPlayerShell(ShellPoolTag, _userData.currentCanonDataIndex),
                     Owner._currentCanon);
             }
             else if (_hasShotStopMethod)

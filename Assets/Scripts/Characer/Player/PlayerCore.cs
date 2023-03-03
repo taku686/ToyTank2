@@ -24,7 +24,8 @@ public partial class PlayerCore : MonoBehaviour
     public Transform targetMarker;
     private GameObject[] _canonArray = new GameObject[3];
     private CanonData _currentCanon;
-    private GameObject _currentCanonObj;
+    private GameObject _canonObj;
+    private GameObject _baseObj;
     private PlayerHealth _health;
     public PlayerHealth Health => _health;
 
@@ -60,8 +61,9 @@ public partial class PlayerCore : MonoBehaviour
         _shellManager = GameObject.FindGameObjectWithTag(GameCommonData.ShellManagerTag).GetComponent<ShellManager>();
         GameObject joystick = GameObject.FindGameObjectWithTag(JoystickTag);
         _ultimateJoystick = joystick.GetComponent<UltimateJoystick>();
-        var baseData = BaseDataManager.Instance.GetBaseData(_userData.baseDataIndex);
-        CreateCanon(userData.currentEquippedCanonList, baseData, canonBar, userData.currentCanonIndex);
+        var baseData = BaseDataManager.Instance.GetBaseData(_userData.currentBaseDataIndex);
+        var canonData = CanonDataManager.Instance.GetCanonData(_userData.currentCanonDataIndex);
+        CreateCanon(canonData, baseData, canonBar, userData.currentCanonDataIndex);
         CreateBase(baseData);
         SetMaterial(gameObject, playerMaterial);
 
@@ -83,33 +85,50 @@ public partial class PlayerCore : MonoBehaviour
     }
 
 
-    private void CreateCanon(List<int> canonDataArray, BaseData baseData, GameObject canonBar, int CanonIndex)
+    private void CreateCanon(CanonData canonData, BaseData baseData, GameObject canonBar, int canonDataIndex)
     {
-        var canonData = CanonDataManager.Instance.GetCanonData(canonDataArray[CanonIndex]);
-        _currentCanonObj = Instantiate(canonData.canonObj, transform);
-        _currentCanonObj.transform.localPosition = baseData.CanonPos;
-        DecideCanonType(canonData, _currentCanonObj);
+        _canonObj = Instantiate(canonData.canonObj, transform);
+        _canonObj.transform.localPosition = baseData.CanonPos;
+        DecideCanonType(canonData, _canonObj);
         _currentCanon = canonData;
-        _userData.currentCanonIndex = 0;
         _canonBar = Instantiate(canonBar, transform).GetComponentInChildren<CanonBar>();
         _canonBar.Initialize(canonData.FireTime, canonData.ReloadTime);
     }
 
+    private void CreateCanon(CanonData canonData, BaseData baseData)
+    {
+        if (_canonObj != null)
+        {
+            Destroy(_canonObj);
+            _canonObj = new GameObject();
+        }
+
+        _canonObj = Instantiate(canonData.canonObj, transform);
+        _canonObj.transform.localPosition = baseData.canonPos;
+        DecideCanonType(canonData, _canonObj);
+    }
+
     private void CreateBase(BaseData baseData)
     {
-        GameObject baseObj = Instantiate(baseData.BaseObj, transform);
-        baseObj.transform.localPosition = Vector3.zero;
+        if (_baseObj != null)
+        {
+            Destroy(_baseObj);
+            _baseObj = new GameObject();
+        }
+
+        _baseObj = Instantiate(baseData.BaseObj, transform);
+        _baseObj.transform.localPosition = Vector3.zero;
         _baseMove = gameObject.AddComponent<BaseMove>();
         _baseMove.InitializeCharacterController();
     }
 
-    public void ChangeCanon(UserData userData, CanonData canonData, int canonIndex)
+
+    public void ChangeCanon(CanonData canonData)
     {
-        _userData.currentCanonIndex = canonIndex;
+        _userData.currentCanonDataIndex = canonData.index;
         _canonBar.Initialize(canonData.FireTime, canonData.ReloadTime);
         _currentCanon = canonData;
         _stateMachine.Dispatch((int)Event.CanonChanging);
-        _stateMachine.Dispatch((int)Event.Idle);
     }
 
     private void SetMaterial(GameObject tankObj, Material playerMaterial)
