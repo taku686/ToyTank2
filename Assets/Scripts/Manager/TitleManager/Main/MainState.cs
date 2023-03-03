@@ -12,7 +12,6 @@ namespace Manager.TitleManager
     {
         public class MainState : State
         {
-            private const float RotationSpeed = 25f;
             private MainView _mainView;
             private MainManager _mainManager;
             private UIAnimation _uiAnimation;
@@ -30,17 +29,12 @@ namespace Manager.TitleManager
                 _mainView.platformObj.SetActive(false);
             }
 
-            protected override void OnUpdate()
-            {
-                _playerPos.eulerAngles = new Vector3(0, Time.time * RotationSpeed, 0);
-            }
-
             private void Initialize()
             {
                 _uiAnimation = Owner.uiAnimation;
                 _mainManager = Owner.mainManager;
                 _mainView = Owner.mainView;
-                _userData = Owner._userData;
+                _userData = UserDataManager.Instance.GetUserData();
                 _playerPos = Owner.playerPos;
                 _mainManager.stageSelectGrid.Initialize(_uiAnimation);
                 _mainView.settingPanel.SetActive(false);
@@ -54,11 +48,13 @@ namespace Manager.TitleManager
                 _mainView.battleButton.onClick.RemoveAllListeners();
                 _mainView.stageSelectCloseButton.onClick.RemoveAllListeners();
                 _mainView.shopButton.onClick.RemoveAllListeners();
+                _mainView.plantButton.onClick.RemoveAllListeners();
                 _mainView.battleButton.onClick.AddListener(() =>
                     UniTask.Void(async () => await OnClickOpenStageSelectPanel()));
                 _mainView.stageSelectCloseButton.onClick.AddListener(() =>
                     UniTask.Void(async () => await OnClickCloseStageSelectPanel()));
                 _mainView.shopButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickShopButton()));
+                _mainView.plantButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickPlantButton()));
             }
 
             private async UniTask OnClickOpenStageSelectPanel()
@@ -85,8 +81,15 @@ namespace Manager.TitleManager
             private async UniTask OnClickShopButton()
             {
                 await _uiAnimation.Click(_mainView.shopButton.transform, GameCommonData.ClickDuration);
-                Owner._stateMachine.Dispatch((int)Event.Shop);
                 Owner.SwitchPhaseGameObject((int)Event.Shop);
+                Owner._stateMachine.Dispatch((int)Event.Shop);
+            }
+
+            private async UniTask OnClickPlantButton()
+            {
+                await _uiAnimation.Click(_mainView.plantButton.transform, GameCommonData.ClickDuration);
+                Owner.SwitchPhaseGameObject((int)Event.Plant);
+                Owner._stateMachine.Dispatch((int)Event.Plant);
             }
         }
     }

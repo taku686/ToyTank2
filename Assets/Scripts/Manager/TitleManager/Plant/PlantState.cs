@@ -22,8 +22,9 @@ namespace Manager.TitleManager
 
             private void Initialize()
             {
+                DebugUserData();
                 _plantView = Owner.plantView;
-                _userData = Owner._userData;
+                _userData = UserDataManager.Instance.GetUserData();
                 _uiAnimation = Owner.uiAnimation;
                 List<CanonData> availableCanonList = new List<CanonData>();
                 foreach (var canonIndex in _userData.availableCanonList)
@@ -57,9 +58,30 @@ namespace Manager.TitleManager
             {
                 await _uiAnimation.Click(grid.transform, GameCommonData.ClickDuration);
                 var imageArray = _plantView.equippedCanonImage;
-                imageArray[1].sprite ??= imageArray[0].sprite;
-                imageArray[2].sprite ??= imageArray[1].sprite;
-                imageArray[0].sprite ??= grid.image.sprite;
+                if (imageArray[0].sprite != null)
+                {
+                    imageArray[1].sprite = imageArray[0].sprite;
+                }
+
+                if (imageArray[1].sprite != null)
+                {
+                    imageArray[2].sprite = imageArray[1].sprite;
+                }
+
+                imageArray[0].sprite = grid.image.sprite;
+            }
+
+            private void DebugUserData()
+            {
+                var userData = UserDataManager.Instance.GetUserData();
+                var availableCanonData = userData.availableCanonList;
+                foreach (var canonData in CanonDataManager.Instance.canonDatum)
+                {
+                    availableCanonData.Add(canonData.index);
+                }
+
+                userData.availableCanonList = availableCanonData;
+                UserDataManager.Instance.SetUserData(userData);
             }
         }
     }

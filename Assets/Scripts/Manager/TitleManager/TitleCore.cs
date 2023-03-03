@@ -23,7 +23,7 @@ namespace Manager.TitleManager
         [SerializeField] private Transform playerPos;
         [SerializeField] private GameObject[] phaseGameObjects;
         private StateMachine<TitleCore> _stateMachine;
-        private UserData _userData;
+        private const float RotationSpeed = 25f;
 
         private enum Event
         {
@@ -35,9 +35,6 @@ namespace Manager.TitleManager
 
         private void Start()
         {
-            SaveSystem.Instance.Load();
-            _userData = SaveSystem.Instance.UserData;
-            Save();
             playerPos.gameObject.SetActive(false);
             InitializeState();
         }
@@ -45,6 +42,7 @@ namespace Manager.TitleManager
         private void Update()
         {
             _stateMachine.Update();
+            playerPos.eulerAngles = new Vector3(0, Time.time * RotationSpeed, 0);
         }
 
 
@@ -77,17 +75,6 @@ namespace Manager.TitleManager
             }
 
             phaseGameObjects[index].SetActive(true);
-        }
-
-        //Debug
-
-        private void Save()
-        {
-            /*if (_userData.maxStage <= 0)
-            {
-                SaveSystem.Instance.UserData.maxStage = 1;
-                SaveSystem.Instance.Save();
-            }*/
         }
     }
 }
