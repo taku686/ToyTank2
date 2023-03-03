@@ -14,8 +14,8 @@ namespace Manager.TitleManager
         {
             private MainView _mainView;
             private MainManager _mainManager;
+
             private UIAnimation _uiAnimation;
-            private UserData _userData;
             private Transform _playerPos;
 
             protected override void OnEnter(State prevState)
@@ -34,13 +34,12 @@ namespace Manager.TitleManager
                 _uiAnimation = Owner.uiAnimation;
                 _mainManager = Owner.mainManager;
                 _mainView = Owner.mainView;
-                _userData = UserDataManager.Instance.GetUserData();
                 _playerPos = Owner.playerPos;
                 _mainManager.stageSelectGrid.Initialize(_uiAnimation);
                 _mainView.settingPanel.SetActive(false);
                 _mainView.stageSelectPanel.SetActive(false);
                 _mainView.platformObj.SetActive(true);
-                _playerPos.gameObject.SetActive(true);
+                SetupTank();
             }
 
             private void InitializeButton()
@@ -55,6 +54,15 @@ namespace Manager.TitleManager
                     UniTask.Void(async () => await OnClickCloseStageSelectPanel()));
                 _mainView.shopButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickShopButton()));
                 _mainView.plantButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickPlantButton()));
+            }
+
+            private void SetupTank()
+            {
+                var userData = UserDataManager.Instance.GetUserData();
+                var canonData = CanonDataManager.Instance.GetCanonData(userData.currentCanonIndex);
+                var baseData = BaseDataManager.Instance.GetBaseData(userData.baseDataIndex);
+                Owner.CreateTank(canonData, baseData);
+                _playerPos.gameObject.SetActive(true);
             }
 
             private async UniTask OnClickOpenStageSelectPanel()

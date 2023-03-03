@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class UserDataManager : MonoBehaviour
 {
-    private UserData _userData;
+    [SerializeField] private UserData _userData;
     private List<ItemInstance> _inventory = new();
 
     private static UserDataManager _instance;
@@ -48,10 +48,10 @@ public class UserDataManager : MonoBehaviour
         {
             baseDataIndex = 0,
             currentCanonIndex = 0,
-            availableBaseLists = new List<int>() { 0 },
-            availableCanonList = new List<int>() { 0 },
+            availableBaseLists = new List<int> { 0 },
+            availableCanonList = new List<int> { 0 },
             maxStage = 1,
-            currentEquippedCanonList = new List<int>() { 0 }
+            currentEquippedCanonList = new List<int>(3) { 0, 0, 0 }
         };
 
         return userData;

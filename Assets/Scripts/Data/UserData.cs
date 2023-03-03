@@ -13,5 +13,5 @@ public class UserData
 
     public int maxStage;
 
-    public List<int> currentEquippedCanonList = new();
+    public List<int> currentEquippedCanonList = new(3);
 }

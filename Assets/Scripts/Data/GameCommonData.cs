@@ -22,6 +22,7 @@ namespace Data
         public static readonly int TitleScene = 0;
         public static readonly int BattleScene = 1;
         public static readonly int RemoveAdsPrice = 300;
+        public static readonly int EquippedCanonCountLimit = 3;
         public static readonly float ClickDuration = 0.2f;
         public static readonly float CloseDuration = 0.5f;
         public static readonly Color PlayerColor = Color.white;
