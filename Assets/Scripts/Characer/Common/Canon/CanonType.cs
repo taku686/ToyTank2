@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class CanonType : CanonMoveBase, IShot, ITargetMarker
@@ -12,7 +13,7 @@ public class CanonType : CanonMoveBase, IShot, ITargetMarker
         targetMarker = Instantiate(targetMarker.gameObject).transform;
         var transform1 = targetMarker.transform;
         transform1.parent = null;
-        
+
         targetMarker.localPosition = new Vector3(0, 0.5f, 0);
         targetMarker.eulerAngles = new Vector3(90, 0, 0);
         _targetMarker = transform1;
@@ -39,18 +40,14 @@ public class CanonType : CanonMoveBase, IShot, ITargetMarker
         shell[0].transform.localPosition = Vector3.zero;
         shell[0].transform.parent = null;
         shell[0].Reset(canonData.Range);
-        Vector3 velocity = CalculateVelocity(shell[0].transform.position, _targetMarker.position, Angle);
-        Rigidbody rigid = shell[0].GetComponent<Rigidbody>();
-        rigid.useGravity = true;
-        rigid.AddForce(velocity * rigid.mass, ForceMode.Impulse);
+        shell[0].transform.DOLocalJump(_targetMarker.position, 2, 1, 1f);
     }
 
     public void Shot(ShellBase shell, CanonData canonData)
     {
-        throw new System.NotImplementedException();
     }
 
-    private Vector3 CalculateVelocity(Vector3 pointA, Vector3 pointB, float angle)
+    /*private Vector3 CalculateVelocity(Vector3 pointA, Vector3 pointB, float angle)
     {
         // 射出角をラジアンに変換
         float rad = angle * Mathf.PI / 180;
@@ -72,5 +69,5 @@ public class CanonType : CanonMoveBase, IShot, ITargetMarker
         }
 
         return (new Vector3(pointB.x - pointA.x, x * Mathf.Tan(rad), pointB.z - pointA.z).normalized * speed);
-    }
+    }*/
 }
