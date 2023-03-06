@@ -80,7 +80,7 @@ public partial class PlayerCore
 
             if (Owner._iTargetMarker != null)
             {
-                Owner._iTargetMarker.MoveTargetMarker(Owner.targetMarker, CanonJoystickName, Owner._currentCanon.Range,
+                Owner._iTargetMarker.MoveTargetMarker(Owner._targetMarker, CanonJoystickName, Owner._currentCanon.Range,
                     Owner.transform);
             }
         }

@@ -21,7 +21,7 @@ public partial class PlayerCore : MonoBehaviour
     private ITargetMarker _iTargetMarker;
     private ISetLayerMask _iInitializeCanon;
     private LayerMask _enemyLayerMask;
-    public Transform targetMarker;
+    private Transform _targetMarker;
     private GameObject[] _canonArray = new GameObject[3];
     private CanonData _currentCanon;
     private GameObject _canonObj;
@@ -58,21 +58,20 @@ public partial class PlayerCore : MonoBehaviour
         GameObject hpBar, LayerMask enemyLayer, Material playerMaterial)
     {
         _userData = userData;
+        _targetMarker = targetMarker;
+        _enemyLayerMask = enemyLayer;
+        var baseData = BaseDataManager.Instance.GetBaseData(_userData.currentBaseDataIndex);
+        var canonData = CanonDataManager.Instance.GetCanonData(_userData.currentCanonDataIndex);
         _shellManager = GameObject.FindGameObjectWithTag(GameCommonData.ShellManagerTag).GetComponent<ShellManager>();
         GameObject joystick = GameObject.FindGameObjectWithTag(JoystickTag);
         _ultimateJoystick = joystick.GetComponent<UltimateJoystick>();
-        var baseData = BaseDataManager.Instance.GetBaseData(_userData.currentBaseDataIndex);
-        var canonData = CanonDataManager.Instance.GetCanonData(_userData.currentCanonDataIndex);
+        var slider = Instantiate(hpBar, transform).GetComponentInChildren<Slider>();
+        _health = gameObject.AddComponent<PlayerHealth>();
+        _health.Initialize(baseData.Hp, slider);
+
         CreateCanon(canonData, baseData, canonBar, userData.currentCanonDataIndex);
         CreateBase(baseData);
         SetMaterial(gameObject, playerMaterial);
-
-        this.targetMarker = targetMarker;
-        _enemyLayerMask = enemyLayer;
-
-        _health = gameObject.AddComponent<PlayerHealth>();
-        var slider = Instantiate(hpBar, transform).GetComponentInChildren<Slider>();
-        _health.Initialize(baseData.Hp, slider);
     }
 
     private void InitializeState()
@@ -187,7 +186,7 @@ public partial class PlayerCore : MonoBehaviour
         _iInitializeCanon = _canonMoveBase.GetComponent<ISetLayerMask>();
         if (_iTargetMarker != null)
         {
-            _iTargetMarker.CreateTargetMarker(ref targetMarker, transform);
+            _iTargetMarker.CreateTargetMarker(ref _targetMarker, transform);
         }
 
         if (_iInitializeCanon != null)

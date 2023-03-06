@@ -6,6 +6,7 @@ public class FlameType : CanonMoveBase, IShot, IShotStop
 {
     private GameObject _flameObj;
     private FlameEffect _flameEffect;
+
     public void Shot(List<ShellBase> shell, CanonData canonData)
     {
         GenerateEffect(canonData);
@@ -20,17 +21,22 @@ public class FlameType : CanonMoveBase, IShot, IShotStop
 
     private void GenerateEffect(CanonData canonData)
     {
-        if(_flameObj != null)
+        if (_flameObj != null)
         {
             return;
         }
+
         _flameObj = Instantiate(canonData.ShellObj, Vector3.zero, Quaternion.identity, ShotPos);
         _flameObj.transform.localEulerAngles = Vector3.zero;
-
     }
 
     public void ShotStop()
     {
+        if (_flameObj == null)
+        {
+            return;
+        }
+
         _flameObj.SetActive(false);
     }
 }
