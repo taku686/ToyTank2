@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public partial class BattleCore : MonoBehaviour
@@ -17,6 +18,11 @@ public partial class BattleCore : MonoBehaviour
         BattleStart,
         GameOver,
         GameClear
+    }
+
+    private void Update()
+    {
+        _stateMachine.Update();
     }
 
 

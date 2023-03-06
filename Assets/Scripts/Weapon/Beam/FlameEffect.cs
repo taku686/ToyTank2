@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class FlameEffect : MonoBehaviour
 {
-    private const string _enemyTag = "Enemy";
+    private const string EnemyTag = "Enemy";
     [SerializeField] private GameObject _burnEffect;
 
     private void OnParticleCollision(GameObject other)
     {
-        if (!other.CompareTag(_enemyTag))
+        if (!other.CompareTag(EnemyTag))
         {
             return;
         }

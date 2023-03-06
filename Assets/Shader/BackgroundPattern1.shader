@@ -68,9 +68,9 @@
 
             fixed4 frag(v2f i) : SV_Target
             {
-                fixed4 col = float4(boxWave(i.uv, _Repetition),
-                                    boxWave(i.uv, _Repetition),
-                                    boxWave(i.uv, _Repetition),
+                fixed4 col = float4(boxWave(i.uv, 9),
+                                    boxWave(i.uv, 18),
+                                    boxWave(i.uv, 36),
                                     1);
                 return col;
             }

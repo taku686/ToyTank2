@@ -3,9 +3,9 @@ using System.Collections.Generic;
 [System.Serializable]
 public class UserData
 {
-    public int baseDataIndex;
+    public int currentBaseDataIndex;
 
-    public int currentCanonIndex;
+    public int currentCanonDataIndex;
 
     public List<int> availableBaseLists = new();
 
@@ -13,5 +13,5 @@ public class UserData
 
     public int maxStage;
 
-    public List<int> currentEquippedCanonList = new();
+    public List<int> currentEquippedCanonList = new(3);
 }

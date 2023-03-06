@@ -26,7 +26,7 @@ public partial class BattleCore
 
         private void InitializeButton(GameClearView gameClearView)
         {
-            gameClearView.titleButton.onClick.AddListener(OnClickSceneTransition);
+            gameClearView.titleButton.onClick.AddListener(OnClickPhaseTransition);
         }
 
         private void SetStar(Image[] stars, PlayerHealth health)
@@ -57,7 +57,7 @@ public partial class BattleCore
             }
         }
 
-        private void OnClickSceneTransition()
+        private void OnClickPhaseTransition()
         {
             Owner._stateMachine.Dispatch((int)Event.SceneTransition);
             // SceneManager.LoadScene(GameCommonData.TitleScene);

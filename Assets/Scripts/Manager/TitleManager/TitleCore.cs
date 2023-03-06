@@ -14,6 +14,7 @@ namespace Manager.TitleManager
         [SerializeField] private MainManager mainManager;
         [SerializeField] private PlayFabShopManager playFabShopManager;
         [SerializeField] private PlayFabCatalogManager playFabCatalogManager;
+        [SerializeField] private PlayFabUserData playFabUserData;
         [SerializeField] private LoginView loginView;
         [SerializeField] private MainView mainView;
         [SerializeField] private PlantView plantView;
@@ -23,7 +24,12 @@ namespace Manager.TitleManager
         [SerializeField] private Transform playerPos;
         [SerializeField] private GameObject[] phaseGameObjects;
         private StateMachine<TitleCore> _stateMachine;
-        private UserData _userData;
+        private Transform _playerObjTransform;
+        private GameObject _canonObj;
+        private GameObject _baseObj;
+        private const float RotationSpeed = 25f;
+        private const int TankScale = 3;
+        private const float TankPosY = -0.68f;
 
         private enum Event
         {
@@ -35,16 +41,18 @@ namespace Manager.TitleManager
 
         private void Start()
         {
-            SaveSystem.Instance.Load();
-            _userData = SaveSystem.Instance.UserData;
-            Save();
             playerPos.gameObject.SetActive(false);
+            _playerObjTransform = new GameObject().transform;
+            _playerObjTransform.SetParent(playerPos);
+            _playerObjTransform.localPosition = new Vector3(0, TankPosY, 0);
+            _playerObjTransform.localScale = Vector3.one * TankScale;
             InitializeState();
         }
 
         private void Update()
         {
             _stateMachine.Update();
+            playerPos.eulerAngles = new Vector3(0, Time.time * RotationSpeed, 0);
         }
 
 
@@ -79,15 +87,34 @@ namespace Manager.TitleManager
             phaseGameObjects[index].SetActive(true);
         }
 
-        //Debug
-
-        private void Save()
+        private void CreateTank(CanonData canonData, BaseData baseData)
         {
-            /*if (_userData.maxStage <= 0)
+            CreateCanon(canonData, baseData);
+            CreateBase(baseData);
+        }
+
+        private void CreateCanon(CanonData canonData, BaseData baseData)
+        {
+            if (_canonObj != null)
             {
-                SaveSystem.Instance.UserData.maxStage = 1;
-                SaveSystem.Instance.Save();
-            }*/
+                Destroy(_canonObj);
+                _canonObj = new GameObject();
+            }
+
+            _canonObj = Instantiate(canonData.canonObj, _playerObjTransform);
+            _canonObj.transform.localPosition = baseData.canonPos;
+        }
+
+        private void CreateBase(BaseData baseData)
+        {
+            if (_baseObj != null)
+            {
+                Destroy(_baseObj);
+                _baseObj = new GameObject();
+            }
+
+            _baseObj = Instantiate(baseData.baseObj, _playerObjTransform);
+            _baseObj.transform.localPosition = Vector3.zero;
         }
     }
 }
