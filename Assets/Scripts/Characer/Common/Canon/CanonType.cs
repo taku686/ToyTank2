@@ -2,30 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CanonType : CanonMoveBase, IShot,ITargetMarker
+public class CanonType : CanonMoveBase, IShot, ITargetMarker
 {
-    Transform _targetMarker;
-    const float _angle = 60;
+    private Transform _targetMarker;
+    private const float Angle = 60;
+
     public void CreateTargetMarker(ref Transform targetMarker, Transform player)
     {
         targetMarker = Instantiate(targetMarker.gameObject).transform;
-        targetMarker.transform.parent = null;
-        targetMarker.localPosition = new Vector3(0, 0.3f, 0);
+        var transform1 = targetMarker.transform;
+        transform1.parent = null;
+        
+        targetMarker.localPosition = new Vector3(0, 0.5f, 0);
         targetMarker.eulerAngles = new Vector3(90, 0, 0);
-        _targetMarker = targetMarker.transform;
+        _targetMarker = transform1;
     }
 
-    public void MoveTargetMarker(Transform targetMarker,string controllerName,float range,Transform player)
+    public void MoveTargetMarker(Transform targetMarker, string controllerName, float range, Transform player)
     {
-        //Debug.Log("TargetMarkerMove");
-        float hori = UltimateJoystick.GetHorizontalAxis(controllerName);
-        float vert = UltimateJoystick.GetVerticalAxis(controllerName);
-       
-        if (hori != 0 || vert != 0)
-        {
-            targetMarker.position = new Vector3(hori, 0, vert) * range + new Vector3(player.position.x, 0.3f, player.position.z);
-        }
+        float hor = -UltimateJoystick.GetHorizontalAxis(controllerName);
+        float vert = -UltimateJoystick.GetVerticalAxis(controllerName);
 
+        if (hor != 0 || vert != 0)
+        {
+            var position = player.position;
+            targetMarker.position = new Vector3(hor, 0, vert) * range +
+                                    new Vector3(position.x, 0.5f, position.z);
+        }
     }
 
     public void Shot(List<ShellBase> shell, CanonData canonData)
@@ -36,9 +39,8 @@ public class CanonType : CanonMoveBase, IShot,ITargetMarker
         shell[0].transform.localPosition = Vector3.zero;
         shell[0].transform.parent = null;
         shell[0].Reset(canonData.Range);
-        Vector3 velocity = CalculateVelocity(shell[0].transform.position, _targetMarker.position, _angle);
+        Vector3 velocity = CalculateVelocity(shell[0].transform.position, _targetMarker.position, Angle);
         Rigidbody rigid = shell[0].GetComponent<Rigidbody>();
-        //rigid.mass = canonData.BulletSpeed;
         rigid.useGravity = true;
         rigid.AddForce(velocity * rigid.mass, ForceMode.Impulse);
     }
@@ -60,7 +62,8 @@ public class CanonType : CanonMoveBase, IShot,ITargetMarker
         float y = pointA.y - pointB.y;
 
         // 斜方投射の公式を初速度について解く
-        float speed = Mathf.Sqrt(-Physics.gravity.y * Mathf.Pow(x, 2) / (2 * Mathf.Pow(Mathf.Cos(rad), 2) * (x * Mathf.Tan(rad) + y)));
+        float speed = Mathf.Sqrt(-Physics.gravity.y * Mathf.Pow(x, 2) /
+                                 (2 * Mathf.Pow(Mathf.Cos(rad), 2) * (x * Mathf.Tan(rad) + y)));
 
         if (float.IsNaN(speed))
         {
