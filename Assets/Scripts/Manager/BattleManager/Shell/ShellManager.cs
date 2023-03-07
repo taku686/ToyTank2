@@ -6,7 +6,7 @@ public class ShellManager : MonoBehaviour
 {
     public List<ShellBase> enemyShellList = new();
     private readonly Dictionary<int, List<ShellBase>> _playerShellDictionary = new();
-    private Dictionary<int, Transform> _playerPoolTransformDictionary = new();
+    private readonly Dictionary<int, Transform> _playerPoolTransformDictionary = new();
     private UserData _userData;
     private const int MaxCount = 10;
 
@@ -24,10 +24,9 @@ public class ShellManager : MonoBehaviour
         {
             var index = _userData.currentEquippedCanonList[i];
             var canonData = CanonDataManager.Instance.GetCanonData(index);
-            if (canonData.CanonKinds == Data.CanonType.BeamType ||
-                canonData.CanonKinds == Data.CanonType.FlameType)
+            if (canonData.CanonKinds is Data.CanonType.BeamType or Data.CanonType.FlameType)
             {
-                return;
+                continue;
             }
 
             _playerShellDictionary[canonData.index] = new List<ShellBase>();
@@ -39,13 +38,12 @@ public class ShellManager : MonoBehaviour
 
     public void InitializeEnemyPool(CanonData canonData)
     {
-        if (canonData.CanonKinds == Data.CanonType.BeamType ||
-            canonData.CanonKinds == Data.CanonType.FlameType)
+        if (canonData.CanonKinds is Data.CanonType.BeamType or Data.CanonType.FlameType)
         {
             return;
         }
 
-        CreateEnemyPool(canonData.ShellObj, _enemyPool);
+        CreateEnemyPool(canonData, _enemyPool);
     }
 
 
@@ -53,26 +51,26 @@ public class ShellManager : MonoBehaviour
     {
         for (int i = 0; i < MaxCount; i++)
         {
-            ShellBase newShellBase = CreateShell(canonData.shellObj, parent);
+            ShellBase newShellBase = CreateShell(canonData, parent);
             newShellBase.gameObject.SetActive(false);
             _playerShellDictionary[canonData.index].Add(newShellBase);
         }
     }
 
-    private void CreateEnemyPool(GameObject shellObj, Transform parent)
+    private void CreateEnemyPool(CanonData canonData, Transform parent)
     {
         for (int i = 0; i < MaxCount; i++)
         {
-            ShellBase newShellBase = CreateShell(shellObj, parent);
+            ShellBase newShellBase = CreateShell(canonData, parent);
             newShellBase.gameObject.SetActive(false);
             enemyShellList.Add(newShellBase);
         }
     }
 
-    private ShellBase CreateShell(GameObject shellObj, Transform parent)
+    private ShellBase CreateShell(CanonData canonData, Transform parent)
     {
-        GameObject shell = Instantiate(shellObj, parent);
-        DetectShellType(_userData, shell);
+        GameObject shell = Instantiate(canonData.shellObj, parent);
+        DetectShellType(canonData, shell);
         return shell.GetComponent<ShellBase>();
     }
 
@@ -80,6 +78,11 @@ public class ShellManager : MonoBehaviour
     {
         List<ShellBase> objs = new List<ShellBase>();
         var canonData = CanonDataManager.Instance.GetCanonData(_userData.currentCanonDataIndex);
+        if (canonData.CanonKinds is Data.CanonType.BeamType or Data.CanonType.FlameType)
+        {
+            return null;
+        }
+
         foreach (ShellBase obj in _playerShellDictionary[currentCanonIndex])
         {
             if (!obj.gameObject.activeSelf)
@@ -102,7 +105,7 @@ public class ShellManager : MonoBehaviour
 
         for (int i = 0; i < canonData.FireCountLimit; i++)
         {
-            ShellBase newObj = CreateShell(canonData.ShellObj, _playerPoolTransformDictionary[canonData.index]);
+            ShellBase newObj = CreateShell(canonData, _playerPoolTransformDictionary[canonData.index]);
             _playerShellDictionary[currentCanonIndex].Add(newObj);
             newObj.GetComponent<IInitialize>().Initialize(poolTag);
             objs.Add(newObj);
@@ -128,15 +131,14 @@ public class ShellManager : MonoBehaviour
             }
         }
 
-        ShellBase newObj = CreateShell(canonData.ShellObj, _enemyPool);
+        ShellBase newObj = CreateShell(canonData, _enemyPool);
         enemyShellList.Add(newObj);
         newObj.GetComponent<IInitialize>().Initialize(poolTag);
         return newObj;
     }
 
-    private void DetectShellType(UserData userData, GameObject shell)
+    private void DetectShellType(CanonData canonData, GameObject shell)
     {
-        var canonData = CanonDataManager.Instance.GetCanonData(userData.currentCanonDataIndex);
         switch (canonData.CanonKinds)
         {
             case Data.CanonType.BeamType:
