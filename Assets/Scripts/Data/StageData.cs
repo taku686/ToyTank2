@@ -3,7 +3,7 @@
 namespace Data
 {
     [System.Serializable]
-    public class StageData 
+    public class StageData
     {
         public int stage;
         public string createPosIndex;

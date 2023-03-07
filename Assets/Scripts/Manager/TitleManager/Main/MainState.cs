@@ -73,7 +73,7 @@ namespace Manager.TitleManager
                 await _uiAnimation.Click(battleButton, GameCommonData.ClickDuration);
                 panel.localScale = Vector3.zero;
                 panel.gameObject.SetActive(true);
-                await _uiAnimation.Open(panel, 1f);
+                await _uiAnimation.Open(panel, GameCommonData.OpenDuration);
             }
 
             private async UniTask OnClickCloseStageSelectPanel()
