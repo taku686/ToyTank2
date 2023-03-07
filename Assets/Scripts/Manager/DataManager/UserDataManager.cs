@@ -57,6 +57,16 @@ public class UserDataManager : MonoBehaviour
         return userData;
     }
 
+    public void AddAvailableCanonData(CanonData canonData)
+    {
+        _userData.availableCanonList.Add(canonData.index);
+    }
+
+    public void AddAvailableCanonData(int canonDataIndex)
+    {
+        _userData.availableCanonList.Add(canonDataIndex);
+    }
+
     public bool IsRemoveAds()
     {
         var removeAds =
