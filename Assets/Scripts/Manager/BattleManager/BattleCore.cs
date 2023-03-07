@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using UI;
 using UnityEngine;
 
 public partial class BattleCore : MonoBehaviour
@@ -6,9 +9,12 @@ public partial class BattleCore : MonoBehaviour
     [SerializeField] private CreateObjectView createObjectView;
     [SerializeField] private BattleUIView battleUIView;
     [SerializeField] private PlayFabAdsManager playFabAdsManager;
+    [SerializeField] private PlayFabUserData playFabUserData;
+    [SerializeField] private UIAnimation uiAnimation;
     private StateMachine<BattleCore> _stateMachine;
     private PlayerManager _playerManager;
     private EnemyManager _enemyManager;
+
 
     private enum Event
     {
@@ -17,7 +23,8 @@ public partial class BattleCore : MonoBehaviour
         CountDown,
         BattleStart,
         GameOver,
-        GameClear
+        GameClear,
+        Reward
     }
 
     private void Update()
@@ -47,5 +54,42 @@ public partial class BattleCore : MonoBehaviour
         _stateMachine.AddTransition<BattleStartState, GameClearState>((int)Event.GameClear);
         _stateMachine.AddTransition<GameOverState, SceneTransitionState>((int)Event.SceneTransition);
         _stateMachine.AddTransition<GameClearState, SceneTransitionState>((int)Event.SceneTransition);
+        _stateMachine.AddTransition<GameClearState, RewardState>((int)Event.Reward);
+        _stateMachine.AddTransition<RewardState, SceneTransitionState>((int)Event.SceneTransition);
+    }
+
+    private bool TryGetCanonReward(out List<CanonData> canonDatum)
+    {
+        canonDatum = new List<CanonData>();
+        var availableCanonList = UserDataManager.Instance.GetUserData().availableCanonList;
+        var enemyCanonList = StageDataManager.Instance.GetCurrentStageData().enemyDatum
+            .Select(x => x.canonDataIndex).ToList();
+        var found = false;
+        foreach (var enemyCanonDataIndex in enemyCanonList)
+        {
+            if (canonDatum.Contains(CanonDataManager.Instance.GetCanonData(enemyCanonDataIndex)))
+            {
+                continue;
+            }
+
+            foreach (var availableCanonDataIndex in availableCanonList)
+            {
+                if (enemyCanonDataIndex == availableCanonDataIndex)
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found)
+            {
+                found = false;
+                continue;
+            }
+
+            canonDatum.Add(CanonDataManager.Instance.GetCanonData(enemyCanonDataIndex));
+        }
+
+        return canonDatum.Count != 0;
     }
 }

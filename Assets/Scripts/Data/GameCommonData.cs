@@ -25,6 +25,7 @@ namespace Data
         public static readonly int EquippedCanonCountLimit = 3;
         public static readonly float ClickDuration = 0.2f;
         public static readonly float CloseDuration = 0.5f;
+        public static readonly float OpenDuration = 1.0f;
         public static readonly Color PlayerColor = Color.white;
         public static readonly string AdUnitId = "ca-app-pub-3759795642939239/4324583739";
         public static readonly string NonConsumable = "NonConsumable";

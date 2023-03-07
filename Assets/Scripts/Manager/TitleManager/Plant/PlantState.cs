@@ -32,7 +32,8 @@ namespace Manager.TitleManager
                 _playFabUserData = Owner.playFabUserData;
                 _uiAnimation = Owner.uiAnimation;
                 _userData = UserDataManager.Instance.GetUserData();
-                List<CanonData> availableCanonList = _userData.availableCanonList
+                var availableCanonDatum = _userData.availableCanonList.OrderBy(x => x).ToList();
+                List<CanonData> availableCanonList = availableCanonDatum
                     .Select(canonIndex => CanonDataManager.Instance.GetCanonData(canonIndex)).ToList();
                 CreateCanonGrid(availableCanonList);
             }

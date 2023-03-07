@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UI;
 using State = StateMachine<BattleCore>.State;
 
@@ -59,8 +61,14 @@ public partial class BattleCore
 
         private void OnClickPhaseTransition()
         {
-            Owner._stateMachine.Dispatch((int)Event.SceneTransition);
-            // SceneManager.LoadScene(GameCommonData.TitleScene);
+            if (Owner.TryGetCanonReward(out var canonDatum))
+            {
+                Owner._stateMachine.Dispatch((int)Event.Reward);
+            }
+            else
+            {
+                Owner._stateMachine.Dispatch((int)Event.SceneTransition);
+            }
         }
     }
 }

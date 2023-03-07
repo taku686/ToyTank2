@@ -23,7 +23,6 @@ public class PlayFabAdsManager : MonoBehaviour
         if (_isAdFinish)
         {
             _isAdFinish = false;
-            battleUIView.debugText.text = "Close";
             // Reload the ad so that we can show another as soon as possible.
             SceneManager.LoadScene(GameCommonData.TitleScene);
         }
@@ -81,9 +80,6 @@ public class PlayFabAdsManager : MonoBehaviour
     {
         if (_interstitialAd != null && _interstitialAd.CanShowAd())
         {
-            Debug.Log("Showing interstitial ad.");
-
-            battleUIView.debugText.text = "Ad start";
             _interstitialAd.Show();
         }
         else
@@ -94,7 +90,6 @@ public class PlayFabAdsManager : MonoBehaviour
 
     private void RegisterReloadHandler(InterstitialAd ad)
     {
-        battleUIView.debugText.text = "Register";
         // Raised when the ad closed full screen content.
         ad.OnAdFullScreenContentClosed += () =>
         {
