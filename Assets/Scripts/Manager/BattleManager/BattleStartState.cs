@@ -15,7 +15,7 @@ public partial class BattleCore
 
         private void SetGameOverSubscribe(PlayerHealth health)
         {
-            health.isAlive.Subscribe(alive =>
+            health.IsAlive.Subscribe(alive =>
                 {
                     if (alive)
                     {

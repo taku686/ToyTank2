@@ -66,7 +66,10 @@ public partial class PlayerCore : MonoBehaviour
         _shellManager = GameObject.FindGameObjectWithTag(GameCommonData.ShellManagerTag).GetComponent<ShellManager>();
         GameObject joystick = GameObject.FindGameObjectWithTag(JoystickTag);
         _ultimateJoystick = joystick.GetComponent<UltimateJoystick>();
-        var slider = Instantiate(hpBar, transform).GetComponentInChildren<Slider>();
+        var hpBarObj = Instantiate(hpBar, transform);
+        var slider = hpBarObj.GetComponentInChildren<Slider>();
+        var hpBarSc = hpBarObj.GetComponentInChildren<HpBar>();
+        hpBarSc.Initialize();
         _health = gameObject.AddComponent<PlayerHealth>();
         _health.Initialize(baseData.Hp, slider);
 
