@@ -1,0 +1,37 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FlameEffect : MonoBehaviour
+{
+    private const string EnemyTag = "Enemy";
+    [SerializeField] private GameObject _burnEffect;
+
+    private void OnParticleCollision(GameObject other)
+    {
+        if (!other.CompareTag(EnemyTag))
+        {
+            return;
+        }
+
+        Health healthSc = other.GetComponent<Health>();
+        if (healthSc == null)
+        {
+            return;
+        }
+
+        if (healthSc.burnEffectSc == null)
+        {
+            GameObject effect = Instantiate(_burnEffect, other.transform);
+            effect.transform.localPosition = Vector3.zero;
+            effect.transform.localEulerAngles = Vector3.zero;
+        }
+        else
+        {
+            if (!healthSc.isBurning)
+            {
+                healthSc.burnEffectSc.gameObject.SetActive(true);
+            }
+        }
+    }
+}

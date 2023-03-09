@@ -1,0 +1,24 @@
+﻿@startuml
+EnemyFactory ..|> IEnemyFactoryBase
+EnemyFactory --> EnemyData
+EnemyManager --> EnemyFactory
+
+class EnemyManager{
+・敵を何体生成するか、どこに生成するか、レベル指定
+・現在生きているかを確認
+}
+
+interface IEnemyFactoryBase
+{
+敵を生成する基本クラス
+}
+class EnemyFactory
+{
+敵を実際に生成する
+}
+class EnemyData
+{
+敵の生成に必要なデータを保持する
+}
+
+@enduml
