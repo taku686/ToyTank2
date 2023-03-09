@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 using State = StateMachine<BattleCore>.State;
 
@@ -13,17 +14,19 @@ public partial class BattleCore
 
         protected override void OnEnter(State prevState)
         {
-            Initialize();
+            Initialize().Forget();
         }
 
-        private void Initialize()
+        private async UniTaskVoid Initialize()
         {
             var clearUIView = Owner.battleUIView.gameClearView;
             var stars = clearUIView.starImages;
             var health = Owner._playerManager.Health;
+            var playFabUserData = Owner.playFabUserData;
             clearUIView.gameObject.SetActive(true);
             InitializeButton(clearUIView);
             SetStar(stars, health);
+            await UpdateUserStageData(playFabUserData);
         }
 
         private void InitializeButton(GameClearView gameClearView)
@@ -59,9 +62,24 @@ public partial class BattleCore
             }
         }
 
+        private async UniTask UpdateUserStageData(PlayFabUserData playFabUserData)
+        {
+            var maxStage = UserDataManager.Instance.GetUserData().maxStage;
+            var currentStage = StageDataManager.Instance.CurrentStage;
+            if (maxStage <= currentStage)
+            {
+                return;
+            }
+
+            var userData = UserDataManager.Instance.GetUserData();
+            userData.maxStage = currentStage;
+            UserDataManager.Instance.SetUserData(userData);
+            await playFabUserData.UpdateUserData(userData);
+        }
+
         private void OnClickPhaseTransition()
         {
-            if (Owner.TryGetCanonReward(out var canonDatum))
+            if (Owner.TryGetCanonReward(out _))
             {
                 Owner._stateMachine.Dispatch((int)Event.Reward);
             }

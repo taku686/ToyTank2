@@ -20,7 +20,7 @@ public class FlameEffect : MonoBehaviour
             return;
         }
 
-        if (healthSc._burnEffectSc == null)
+        if (healthSc.burnEffectSc == null)
         {
             GameObject effect = Instantiate(_burnEffect, other.transform);
             effect.transform.localPosition = Vector3.zero;
@@ -30,7 +30,7 @@ public class FlameEffect : MonoBehaviour
         {
             if (!healthSc.isBurning)
             {
-                healthSc._burnEffectSc.gameObject.SetActive(true);
+                healthSc.burnEffectSc.gameObject.SetActive(true);
             }
         }
     }

@@ -7,7 +7,7 @@ public partial class PlayerCore
     {
         protected override void OnEnter(State prevState)
         {
-            Owner._health.isAlive.OnNext(false);
+            Owner._health.IsAlive.OnNext(false);
             Debug.Log("Dead");
         }
     }
