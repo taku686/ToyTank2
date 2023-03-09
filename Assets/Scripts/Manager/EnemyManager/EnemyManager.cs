@@ -34,7 +34,7 @@ public class EnemyManager : MonoBehaviour
 
     private void CheckDead(EnemyHealth health, int enemyCount)
     {
-        health.isAlive.Subscribe(alive =>
+        health.IsAlive.Subscribe(alive =>
         {
             if (alive)
             {

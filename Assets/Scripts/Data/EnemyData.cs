@@ -8,4 +8,5 @@ public class EnemyData
     public int level;
     public int version;
     public float shotInterval;
+    public float hpRate;
 }

@@ -91,6 +91,7 @@ public class ShellManager : MonoBehaviour
                 if (!obj.isInit)
                 {
                     obj.GetComponent<IInitialize>().Initialize(poolTag);
+                    obj.damage = canonData.damage;
                     obj.tag = GameCommonData.PlayerShellTag;
                 }
 
@@ -108,6 +109,7 @@ public class ShellManager : MonoBehaviour
             ShellBase newObj = CreateShell(canonData, _playerPoolTransformDictionary[canonData.index]);
             _playerShellDictionary[currentCanonIndex].Add(newObj);
             newObj.GetComponent<IInitialize>().Initialize(poolTag);
+            newObj.damage = canonData.damage;
             objs.Add(newObj);
         }
 
@@ -125,6 +127,7 @@ public class ShellManager : MonoBehaviour
                 {
                     obj.GetComponent<IInitialize>().Initialize(poolTag);
                     obj.tag = GameCommonData.EnemyShellTag;
+                    obj.damage = canonData.damage;
                 }
 
                 return obj;
@@ -134,6 +137,7 @@ public class ShellManager : MonoBehaviour
         ShellBase newObj = CreateShell(canonData, _enemyPool);
         enemyShellList.Add(newObj);
         newObj.GetComponent<IInitialize>().Initialize(poolTag);
+        newObj.damage = canonData.damage;
         return newObj;
     }
 

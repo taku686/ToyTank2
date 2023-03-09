@@ -9,7 +9,7 @@ public class BurnEffect : MonoBehaviour
     private void Awake()
     {
         _healthSc = GetComponentInParent<Health>();
-        _healthSc._burnEffectSc = this;
+        _healthSc.burnEffectSc = this;
     }
 
     private void OnEnable()

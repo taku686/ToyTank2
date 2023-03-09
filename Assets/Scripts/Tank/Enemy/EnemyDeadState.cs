@@ -13,7 +13,7 @@ public partial class EnemyCore
         private void Initialize()
         {
             var health = Owner.enemyHealth;
-            health.isAlive.OnNext(false);
+            health.IsAlive.OnNext(false);
         }
 
         private void Dead()

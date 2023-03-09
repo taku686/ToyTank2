@@ -6,16 +6,18 @@ public class CanonBar : MonoBehaviour
     Slider _slider;
     float _reloadTime;
     bool _isReload;
-    float _timer = 0;
+    float _timer;
+    private Camera _mainCamera;
 
     // Update is called once per frame
     void Update()
     {
-        transform.eulerAngles = new Vector3(0, 0, 0);
+        transform.rotation = _mainCamera.transform.rotation;
     }
 
     public void Initialize(float maxValue, float reloadTime)
     {
+        _mainCamera = Camera.main;
         _slider = GetComponent<Slider>();
         _slider.maxValue = maxValue;
         _reloadTime = reloadTime;

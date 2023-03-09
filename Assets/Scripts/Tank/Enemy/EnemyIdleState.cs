@@ -1,5 +1,7 @@
 using BehaviorDesigner.Runtime;
+using Cysharp.Threading.Tasks;
 using Data;
+using UniRx;
 using UnityEngine;
 using State = StateMachine<EnemyCore>.State;
 
@@ -17,6 +19,7 @@ public partial class EnemyCore
         private EnemyData _enemyData;
         private float _shotTimer;
         private float _interval;
+        private EnemyHealth _enemyHealth;
 
         protected override void OnEnter(State prevState)
         {
@@ -37,10 +40,13 @@ public partial class EnemyCore
 
         protected override void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(GameCommonData.PlayerShellTag))
+            if (!other.CompareTag(GameCommonData.PlayerShellTag))
             {
-                Owner._stateMachine.Dispatch((int)Event.Dead);
+                return;
             }
+
+            var shellBase = other.GetComponentInChildren<ShellBase>();
+            _enemyHealth.OnDamage(shellBase.damage);
         }
 
         private void Initialize()
@@ -50,6 +56,8 @@ public partial class EnemyCore
             _shellManager = Owner._shellManager;
             _canonData = Owner._canonData;
             _enemyData = Owner._enemyData;
+            _enemyHealth = Owner.enemyHealth;
+            SetEnemyHealthSubscribe(_enemyHealth);
         }
 
         private void GetPlayer()
@@ -82,6 +90,19 @@ public partial class EnemyCore
                 _interval = _enemyData.shotInterval + Random.Range(0f, MaxRandomValue);
                 _iShot.Shot(_shellManager.GetEnemyShell(ShellPoolTag, canonData), canonData);
             }
+        }
+
+        private void SetEnemyHealthSubscribe(EnemyHealth enemyHealth)
+        {
+            enemyHealth.Hp.Subscribe(hp =>
+            {
+                if (hp > 0)
+                {
+                    return;
+                }
+
+                Owner._stateMachine.Dispatch((int)Event.Dead);
+            }).AddTo(Owner.GetCancellationTokenOnDestroy());
         }
     }
 }
