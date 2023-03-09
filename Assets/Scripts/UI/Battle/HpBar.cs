@@ -1,13 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public class HpBar : MonoBehaviour
 {
+    private Camera _mainCamera;
+
+    public void Initialize()
+    {
+        _mainCamera = Camera.main;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        transform.eulerAngles = new Vector3(0, 0, 0);
+        transform.rotation = _mainCamera.transform.rotation;
     }
 }

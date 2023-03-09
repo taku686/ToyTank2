@@ -27,7 +27,7 @@ public class StageSelectGrid : MonoBehaviour
     private int PlayerMaxStage => UserDataManager.Instance.GetUserData().maxStage;
 
     //private int MaxStage => _stageDataManager.stageDatum.Count;
-    //ToDo ‰¼ƒf[ƒ^
+    //ToDo ???f?[?^
     private int MaxStage => 45;
     private int MaxPage => MaxStage / MaxStageCountPerPage;
 
@@ -42,18 +42,20 @@ public class StageSelectGrid : MonoBehaviour
     {
         SetPageText();
         pageText.text = _currentPage + " / " + MaxPage;
-        var createGridCount = _currentPage * MaxStageCountPerPage <= PlayerMaxStage
+        var modifiedPlayerMaxStage = PlayerMaxStage + 1;
+        var createGridCount = _currentPage * MaxStageCountPerPage <= modifiedPlayerMaxStage
             ? MaxStageCountPerPage
-            : PlayerMaxStage - (_currentPage - 1) * MaxStageCountPerPage;
+            : modifiedPlayerMaxStage - (_currentPage - 1) * MaxStageCountPerPage;
         for (int i = 0; i < MaxStageCountPerPage; i++)
         {
             if (createGridCount > i)
             {
                 var obj = Instantiate(grid, parent);
                 var text = obj.GetComponentInChildren<TextMeshProUGUI>();
-                text.text = (i + 1).ToString();
+                var stageNum = i + 1;
+                text.text = stageNum.ToString();
                 var stageGridSc = obj.AddComponent<StageGrid>();
-                stageGridSc.Initialize();
+                stageGridSc.Initialize(stageNum);
                 _grids.Add(obj);
                 continue;
             }
