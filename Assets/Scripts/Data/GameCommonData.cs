@@ -13,6 +13,7 @@ namespace Data
         public static readonly string EnemyTag = "Enemy";
         public static readonly string PlayerShellTag = "PlayerShell";
         public static readonly string EnemyShellTag = "EnemyShell";
+        public static readonly string GrassTag = "Grass";
         public static readonly string EnemyDataKey = "EnemyDatum";
         public static readonly string CanonDataKey = "CanonDatum";
         public static readonly string BaseDataKey = "BaseDatum";

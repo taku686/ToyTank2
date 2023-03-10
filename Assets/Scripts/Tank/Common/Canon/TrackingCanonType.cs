@@ -1,18 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using Data;
 
 public class TrackingCanonType : CanonMoveBase, IShot, ISetLayerMask
 {
     [SerializeField] private float rigidSphereRadius = 10f;
-    private const string EnemyTag = "Enemy";
+
+
     private LayerMask _enemyLayerMask;
     private Rigidbody _rigid;
     private SphereCollider _sphereCollider;
-    public float mFSightAngle = 60.0f;
-    [SerializeField] private Transform _target;
-    [SerializeField] private List<Transform> _targetsList = new();
+    private const float SightAngle = 60.0f;
+    [SerializeField] private Transform target;
+    [SerializeField] private List<Transform> targetsList = new();
 
     protected override void Start()
     {
@@ -37,7 +37,7 @@ public class TrackingCanonType : CanonMoveBase, IShot, ISetLayerMask
         shell[0].transform.parent = null;
         shell[0].Reset(canonData.Range);
         shell[0].transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
-        shell[0].GetComponent<TrackingShell>().SetProperty(canonData.Range, canonData.BulletSpeed, _target);
+        shell[0].GetComponent<TrackingShell>().SetProperty(canonData.Range, canonData.BulletSpeed, target);
     }
 
     public void Shot(ShellBase shell, CanonData canonData)
@@ -45,26 +45,26 @@ public class TrackingCanonType : CanonMoveBase, IShot, ISetLayerMask
         throw new System.NotImplementedException();
     }
 
-    private void DetectTarget(Transform target)
+    private void DetectTarget(Transform targetEnemy)
     {
-        if (target == null) return;
+        if (targetEnemy == null) return;
         var transform1 = transform;
-        Vector3 posDelta = target.transform.position - transform1.position;
+        Vector3 posDelta = targetEnemy.transform.position - transform1.position;
         float targetAngle = Vector3.Angle(transform1.forward, posDelta);
-        if (targetAngle < mFSightAngle)
+        if (targetAngle < SightAngle)
         {
             _dir = new Vector3(posDelta.x, 0f, posDelta.z);
             if (Physics.Raycast(transform.position, _dir, out RaycastHit hit))
             {
-                if (hit.collider.gameObject == target.gameObject)
+                if (hit.collider.gameObject == targetEnemy.gameObject)
                 {
-                    _target = target.transform;
+                    this.target = targetEnemy.transform;
                 }
             }
         }
         else
         {
-            _target = null;
+            this.target = null;
         }
     }
 
@@ -72,66 +72,74 @@ public class TrackingCanonType : CanonMoveBase, IShot, ISetLayerMask
 
     private Transform DecideTarget()
     {
-        Transform target = null;
-        if (_targetsList.Count < 1)
+        Transform targetEnemy = null;
+        if (targetsList.Count < 1)
         {
-            return target;
+            return null;
         }
 
-        if (_targetsList.Count == 1)
+        if (targetsList.Count == 1)
         {
-            return _targetsList[0];
+            return targetsList[0];
         }
 
-        foreach (var target_candidate in _targetsList)
+        foreach (var targetCandidate in targetsList)
         {
-            if (target == null)
+            if (targetCandidate == null)
             {
-                target = target_candidate;
+                targetsList.Remove(targetCandidate);
+                break;
             }
 
-            if (Vector3.Distance(this.transform.position, target.position) >
-                Vector3.Distance(this.transform.position, target_candidate.position))
+            if (targetEnemy == null)
             {
-                target = target_candidate;
+                targetEnemy = targetCandidate;
+            }
+
+            if (Vector3.Distance(this.transform.position, targetEnemy.position) >
+                Vector3.Distance(this.transform.position, targetCandidate.position))
+            {
+                targetEnemy = targetCandidate;
             }
         }
 
-        return target;
+        return targetEnemy;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag(EnemyTag))
+        if (!other.CompareTag(GameCommonData.EnemyTag))
         {
             return;
         }
 
-        foreach (var target in _targetsList)
+        foreach (var targetEnemy in targetsList)
         {
-            if (target.gameObject == other.gameObject)
+            if (targetEnemy.gameObject == other.gameObject)
             {
                 return;
             }
         }
 
-        _targetsList.Add(other.transform);
+        targetsList.Add(other.transform);
     }
 
-    private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
-        if (_target == null) return;
-        Debug.DrawRay(transform.position, _target.transform.position - transform.position, Color.red, 0.01f);
-    }
+        if (target == null) return;
+        var transform1 = transform;
+        var position = transform1.position;
+        Debug.DrawRay(position, target.transform.position - position, Color.red, 0.01f);
+    }*/
 
     private void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag(EnemyTag))
+        if (!other.CompareTag(GameCommonData.EnemyTag))
         {
             return;
         }
 
-        _targetsList.Remove(other.transform);
+        targetsList.Remove(other.transform);
     }
 
     public void SetLayerMask(LayerMask layerMask)
