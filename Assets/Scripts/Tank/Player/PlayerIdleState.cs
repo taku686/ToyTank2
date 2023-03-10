@@ -31,7 +31,7 @@ public partial class PlayerCore
             _cts = new CancellationTokenSource();
             _cts.RegisterRaiseCancelOnDestroy(Owner.gameObject);
             SetHpSubscribe(_health);
-            DetectEventTrigger(_userData);
+            DetectEventTrigger();
         }
 
         protected override void OnExit(State nextState)
@@ -67,6 +67,19 @@ public partial class PlayerCore
             }
         }
 
+        protected override void OnTriggerStay(Collider other)
+        {
+            if (other.CompareTag(GameCommonData.BeamTag))
+            {
+                var hitEffect = other.GetComponent<HitEffect>();
+                var damage = hitEffect.canonData.damage * Time.fixedDeltaTime;
+                /*Debug.Log("canonDamage" + hitEffect.canonData.damage);
+                Debug.Log("fixedTime" + Time.fixedTime);
+                Debug.Log(damage);*/
+                _health.OnDamage(damage);
+            }
+        }
+
         private void OnDragUltimateJoystick()
         {
             if (Owner._canonBar.IsFire())
@@ -99,7 +112,7 @@ public partial class PlayerCore
             }
         }
 
-        private void DetectEventTrigger(UserData userData)
+        private void DetectEventTrigger()
         {
             if (Owner._currentCanon.CanonKinds == Data.CanonType.BeamType ||
                 Owner._currentCanon.CanonKinds == Data.CanonType.MachineGunType ||

@@ -17,4 +17,9 @@ public class CanonShell : ShellBase, IInitialize
         Col.isTrigger = true;
         pool = GameObject.FindGameObjectWithTag(poolTag).transform;
     }
+
+    public void Initialize(bool isPlayer)
+    {
+        throw new System.NotImplementedException();
+    }
 }

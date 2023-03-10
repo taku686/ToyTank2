@@ -14,6 +14,7 @@ namespace Data
         public static readonly string PlayerShellTag = "PlayerShell";
         public static readonly string EnemyShellTag = "EnemyShell";
         public static readonly string GrassTag = "Grass";
+        public static readonly string BeamTag = "Beam";
         public static readonly string EnemyDataKey = "EnemyDatum";
         public static readonly string CanonDataKey = "CanonDatum";
         public static readonly string BaseDataKey = "BaseDatum";
@@ -33,6 +34,7 @@ namespace Data
         public static readonly string RemoveAdsItem = "removeads";
         public static readonly string MainStoreKey = "Main";
         public static readonly string RealMoneyKey = "RM";
+        public static readonly string CanonJoystickName = "CanonMove";
 
         public static Color GetEnemyColor(int index)
         {
