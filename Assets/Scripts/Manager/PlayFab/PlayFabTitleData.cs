@@ -50,10 +50,11 @@ public class PlayFabTitleData : MonoBehaviour
     {
         foreach (var enemyData in enemyDatum)
         {
-            enemyData.baseData = BaseDataManager.Instance.GetBaseData(enemyData.baseDataIndex);
-            enemyData.canonData = CanonDataManager.Instance.GetCanonData(enemyData.canonDataIndex);
-            EnemyDataManager.Instance.enemyDatum.Add(enemyData);
+            EnemyDataManager.Instance.AddEnemyData(enemyData);
         }
+        
+        //todo Ç†Ç∆Ç≈è¡Ç∑
+        EnemyDataManager.Instance.TestSetEnemyData();
     }
 
     private void SetStageData(StageData[] stageDatum)
@@ -77,7 +78,15 @@ public class PlayFabTitleData : MonoBehaviour
                 stageData.enemyDatum.Add(data);
             }
 
-            StageDataManager.Instance.stageDatum.Add(stageData);
+            StageDataManager.Instance.AddStageData(stageData);
         }
+
+        //todo Ç†Ç∆Ç≈è¡Ç∑
+        DebugData();
+    }
+
+    private void DebugData()
+    {
+        StageDataManager.Instance.DebugSetStageData();
     }
 }

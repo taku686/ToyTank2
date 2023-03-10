@@ -31,11 +31,9 @@ public class CanonBar : MonoBehaviour
         {
             return true;
         }
-        else
-        {
-            _isReload = true;
-            return false;
-        }
+
+        _isReload = true;
+        return false;
     }
 
     public void Reload()

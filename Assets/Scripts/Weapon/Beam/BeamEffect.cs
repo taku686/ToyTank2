@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Data;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class BeamEffect : MonoBehaviour
 {
-    private const string TargetTag = "Enemy";
-    private const string JoystickName = "CanonMove";
+    // private const string TargetTag = "Enemy";
+
     public bool OneShot; // Constant or single beam?
 
     public Texture[] BeamFrames; // Animation frame sequence
@@ -19,7 +19,7 @@ public class BeamEffect : MonoBehaviour
     public float UVTime; // UV Animation speed
 
     public GameObject _rayImpactEffect;
-    public List<Transform> rayImpactList = new List<Transform>(); // Impact transform
+    public List<Transform> rayImpactList = new(); // Impact transform
     public Transform rayMuzzle; // Muzzle flash transform
     LineRenderer _lineRenderer; // Line rendered component
     int _frameNo; // Frame counter
@@ -29,17 +29,19 @@ public class BeamEffect : MonoBehaviour
     public float fxOffset; // Fx offset from bullet's touch point
 
     [FormerlySerializedAs("_targets")] [SerializeField]
-    private List<GameObject> targets = new List<GameObject>();
+    private List<GameObject> targets = new();
 
     private Vector3 _endPoint;
     private float _radius = 18;
     private SphereCollider _sphereCollider;
     private bool _isMultiTargets;
+    private bool _isPlayer;
 
-    public void Initialize(bool isMultiTargets, float radius)
+    public void Initialize(bool isMultiTargets, float radius, bool isPlayer)
     {
         _isMultiTargets = isMultiTargets;
         _radius = radius;
+        _isPlayer = isPlayer;
         // Get line renderer component
         _lineRenderer = GetComponent<LineRenderer>();
 
@@ -49,14 +51,14 @@ public class BeamEffect : MonoBehaviour
 
         // Randomize uv offset
         _initialBeamOffset = Random.Range(0f, 5f);
-        _sphereCollider = this.gameObject.AddComponent<SphereCollider>();
+        _sphereCollider = gameObject.AddComponent<SphereCollider>();
         _sphereCollider.isTrigger = true;
         _sphereCollider.radius = _radius;
         _sphereCollider.center = Vector3.zero;
     }
 
     // OnSpawned called by pool manager 
-    public void OnSpawned(Vector3 shotPos, Transform canonTransform)
+    public void OnSpawned(Vector3 shotPos)
     {
         if (AnimateUV)
         {
@@ -65,28 +67,27 @@ public class BeamEffect : MonoBehaviour
             if (_animateUVTime > 1.0f)
                 _animateUVTime = 0f;
 
-            _lineRenderer.material.SetTextureOffset("_MainTex",
+            _lineRenderer.material.SetTextureOffset(MainTex,
                 new Vector2(_animateUVTime * UVTime + _initialBeamOffset, 0f));
         }
 
-        DetectTarget(shotPos, canonTransform);
+        DetectTarget(shotPos);
     }
 
-    private void DetectTarget(Vector3 shotPos, Transform canonTransform)
+    private void DetectTarget(Vector3 shotPos)
     {
         if (_isMultiTargets)
         {
         }
 
         Vector3 initPos = transform.TransformPoint(shotPos);
-        //  this.transform.position = initPos;
 
         _lineRenderer.SetPosition(0, Vector3.zero);
         rayMuzzle.localPosition = Vector3.zero;
         if (targets.Count == 0)
         {
-            float hor = -UltimateJoystick.GetHorizontalAxis(JoystickName);
-            float vert = -UltimateJoystick.GetVerticalAxis(JoystickName);
+            float hor = -UltimateJoystick.GetHorizontalAxis(GameCommonData.CanonJoystickName);
+            float vert = -UltimateJoystick.GetVerticalAxis(GameCommonData.CanonJoystickName);
             var direction = new Vector3(hor, 0, vert);
             _endPoint = direction * _radius;
             _lineRenderer.SetPosition(1, new Vector3(_endPoint.x, initPos.y, _endPoint.z));
@@ -97,7 +98,7 @@ public class BeamEffect : MonoBehaviour
             _lineRenderer.positionCount = targets.Count + 1;
             for (int i = 0; i < targets.Count; i++)
             {
-                var direction = (targets[i].transform.position - this.transform.position);
+                var direction = (targets[i].transform.position - transform.position);
                 _lineRenderer.SetPosition(i + 1, direction);
                 GenerateRayImpact(targets, direction, i);
             }
@@ -110,17 +111,17 @@ public class BeamEffect : MonoBehaviour
         }
     }
 
-    private void GenerateRayImpact(List<GameObject> targets, Vector3 generatePos, int index)
+    private void GenerateRayImpact(List<GameObject> targetObjects, Vector3 generatePos, int index)
     {
-        if (rayImpactList.Count < targets.Count || rayImpactList.Count < 0)
+        if (rayImpactList.Count < targetObjects.Count || rayImpactList.Count < 0)
         {
-            GameObject effect = Instantiate(_rayImpactEffect, this.transform);
+            GameObject effect = Instantiate(_rayImpactEffect, transform);
             effect.transform.localPosition = generatePos;
             rayImpactList.Add(effect.transform);
         }
-        else if (rayImpactList.Count > targets.Count && targets.Count < 1)
+        else if (rayImpactList.Count > targetObjects.Count && targetObjects.Count < 1)
         {
-            for (int i = rayImpactList.Count - 1; i > (targets.Count); i--)
+            for (int i = rayImpactList.Count - 1; i > (targetObjects.Count); i--)
             {
                 rayImpactList[i].gameObject.SetActive(false);
             }
@@ -128,7 +129,7 @@ public class BeamEffect : MonoBehaviour
 
         if (rayImpactList.Count > 0)
         {
-            if (rayImpactList[index].gameObject.activeSelf == false && index >= targets.Count - 1)
+            if (rayImpactList[index].gameObject.activeSelf == false && index >= targetObjects.Count - 1)
             {
                 rayImpactList[index].gameObject.SetActive(true);
             }
@@ -156,11 +157,17 @@ public class BeamEffect : MonoBehaviour
     }
 
     private float _animateUVTime;
+    private static readonly int MainTex = Shader.PropertyToID("_MainTex");
 
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(TargetTag))
+        if (other.CompareTag(GameCommonData.EnemyTag) && _isPlayer)
+        {
+            targets.Add(other.gameObject);
+        }
+
+        if (other.CompareTag(GameCommonData.PlayerTag) && !_isPlayer)
         {
             targets.Add(other.gameObject);
         }
@@ -168,7 +175,12 @@ public class BeamEffect : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(TargetTag))
+        if (other.CompareTag(GameCommonData.EnemyTag) && _isPlayer)
+        {
+            targets.Remove(other.gameObject);
+        }
+
+        if (other.CompareTag(GameCommonData.PlayerTag) && !_isPlayer)
         {
             targets.Remove(other.gameObject);
         }
@@ -176,6 +188,6 @@ public class BeamEffect : MonoBehaviour
 
     void OnDisable()
     {
-        targets.RemoveRange(0, targets.Count);
+        targets.Clear();
     }
 }

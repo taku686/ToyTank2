@@ -78,7 +78,6 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         hpBarSc.Initialize();
         var health = enemy.AddComponent<EnemyHealth>();
         enemyHealths.Add(health);
-        // var hp = (int)(enemyData.hpRate * enemyData.baseData.hp);
         var hp = enemyData.baseData.hp;
         health.Initialize(hp, slider);
     }
@@ -153,6 +152,12 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         if (canonMoveBase == null)
         {
             return;
+        }
+
+        var iInitialize = canonMoveBase.GetComponent<IInitialize>();
+        if (canonData.canonKinds == Data.CanonType.BeamType && iInitialize != null)
+        {
+            iInitialize.Initialize(false);
         }
 
         canonMoveBase.CreateShotPos(canonData.ShotPos);

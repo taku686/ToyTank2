@@ -2,7 +2,7 @@
 
 public class TrackingShell : ShellBase, IInitialize
 {
-    [SerializeField] private Transform _target;
+    [SerializeField] private Transform target;
     private float _velocity;
     private float _maxDistance;
     Vector3 _step;
@@ -44,11 +44,16 @@ public class TrackingShell : ShellBase, IInitialize
         isInit = true;
     }
 
+    public void Initialize(bool isPlayer)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void SetProperty(float range, float shellSpeed, Transform target)
     {
         _maxDistance = range;
         _velocity = shellSpeed;
-        _target = target;
+        this.target = target;
     }
 
     protected override void Sleep()
@@ -59,7 +64,7 @@ public class TrackingShell : ShellBase, IInitialize
 
     private void Tracking()
     {
-        if (_target == null)
+        if (target == null)
         {
             transform.position = Vector3.MoveTowards(this.transform.position,
                 transform.position + transform.forward * _maxDistance, Time.deltaTime * _velocity);
@@ -67,7 +72,7 @@ public class TrackingShell : ShellBase, IInitialize
         else
         {
             transform.rotation = Quaternion.Lerp(transform.rotation,
-                Quaternion.LookRotation(new Vector3(_target.position.x, this.transform.position.y, _target.position.z) -
+                Quaternion.LookRotation(new Vector3(target.position.x, this.transform.position.y, target.position.z) -
                                         transform.position), Time.deltaTime * _rotationSpeed);
             _step = transform.forward * Time.deltaTime * _velocity;
             transform.position += _step;
