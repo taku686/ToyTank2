@@ -14,7 +14,6 @@ namespace Manager.TitleManager
         {
             private MainView _mainView;
             private MainManager _mainManager;
-
             private UIAnimation _uiAnimation;
             private Transform _playerPos;
 

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerHealth : Health
 {
-    public ReadOnlyReactiveProperty<float> Hp => _hp.ToReadOnlyReactiveProperty();
+    /*public ReadOnlyReactiveProperty<float> Hp => _hp.ToReadOnlyReactiveProperty();
     public Slider HpBar => _hpBar;
     private readonly ReactiveProperty<float> _hp = new();
     private Slider _hpBar;
@@ -26,5 +26,5 @@ public class PlayerHealth : Health
     public void OnDamage(float damage)
     {
         _hp.Value -= damage;
-    }
+    }*/
 }
