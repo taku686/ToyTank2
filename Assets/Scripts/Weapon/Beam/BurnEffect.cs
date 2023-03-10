@@ -20,6 +20,6 @@ public class BurnEffect : MonoBehaviour
     private void OnParticleSystemStopped()
     {
         _healthSc.isBurning = false;
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

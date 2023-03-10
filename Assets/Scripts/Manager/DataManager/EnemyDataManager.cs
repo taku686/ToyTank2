@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyDataManager : MonoBehaviour
 {
-    public List<EnemyData> enemyDatum = new();
+    [SerializeField] private List<EnemyData> enemyDatum = new();
     private static EnemyDataManager _instance;
     public static EnemyDataManager Instance => _instance;
 
@@ -27,5 +27,20 @@ public class EnemyDataManager : MonoBehaviour
     public EnemyData GetEnemyData(int level, int version)
     {
         return enemyDatum.FirstOrDefault(x => x.level == level && x.version == version);
+    }
+
+    public void AddEnemyData(EnemyData enemyData)
+    {
+        enemyData.baseData = BaseDataManager.Instance.GetBaseData(enemyData.baseDataIndex);
+        enemyData.canonData = CanonDataManager.Instance.GetCanonData(enemyData.canonDataIndex);
+        enemyDatum.Add(enemyData);
+    }
+
+    public void TestSetEnemyData()
+    {
+        var enemyData = EnemyData.TestEnemyData();
+        enemyData.baseData = BaseDataManager.Instance.GetBaseData(enemyData.baseDataIndex);
+        enemyData.canonData = CanonDataManager.Instance.GetCanonData(enemyData.canonDataIndex);
+        enemyDatum.Add(enemyData);
     }
 }

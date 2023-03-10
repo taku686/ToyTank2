@@ -9,7 +9,7 @@ public partial class EnemyCore : MonoBehaviour
     private IShot _iShot;
     private IShotStop _iShotStop;
     private ITargetMarker _iTargetMarker;
-    private ISetLayerMask _iInitializeCanon;
+    private ISetLayerMask _iSetLayerMask;
     private LayerMask _enemyLayerMask;
     private Transform _targetMarker;
     private Transform _playerTransform;
@@ -44,6 +44,11 @@ public partial class EnemyCore : MonoBehaviour
         _stateMachine.OnTriggerEnter(other);
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        _stateMachine.OnTriggerStay(other);
+    }
+
     private void InitializeState()
     {
         _stateMachine = new StateMachine<EnemyCore>(this);
@@ -53,20 +58,27 @@ public partial class EnemyCore : MonoBehaviour
 
     private void InitializeComponent(CanonData canonData)
     {
-        SetCanon();
+        SetCanon(canonData);
         SetShellManager(canonData);
         enemyHealth = gameObject.GetComponent<EnemyHealth>();
     }
 
-    private void SetCanon()
+    private void SetCanon(CanonData canonData)
     {
         _canonMoveBase = gameObject.GetComponentInChildren<CanonMoveBase>();
         _iShot = _canonMoveBase.GetComponent<IShot>();
         _iShotStop = _canonMoveBase.GetComponent<IShotStop>();
         _iTargetMarker = _canonMoveBase.GetComponent<ITargetMarker>();
-        _iInitializeCanon = _canonMoveBase.GetComponent<ISetLayerMask>();
+        _iSetLayerMask = _canonMoveBase.GetComponent<ISetLayerMask>();
+        var iInitialize = _canonMoveBase.GetComponent<IInitialize>();
         _iTargetMarker?.CreateTargetMarker(ref _targetMarker, _targetMarkerObj, transform);
-        _iInitializeCanon?.SetLayerMask(_enemyLayerMask);
+        _iSetLayerMask?.SetLayerMask(_enemyLayerMask);
+        if (canonData.canonKinds != Data.CanonType.BeamType)
+        {
+            return;
+        }
+
+        iInitialize?.Initialize(false);
     }
 
     private void SetShellManager(CanonData canonData)
