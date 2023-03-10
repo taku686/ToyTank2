@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Data;
+using Tank.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +24,6 @@ public partial class PlayerCore : MonoBehaviour
     private LayerMask _enemyLayerMask;
     private Transform _targetMarker;
     private GameObject _targetMarkerObj;
-    private GameObject[] _canonArray = new GameObject[3];
     private CanonData _currentCanon;
     private GameObject _canonObj;
     private GameObject _baseObj;
@@ -61,11 +61,14 @@ public partial class PlayerCore : MonoBehaviour
         _userData = userData;
         _targetMarkerObj = targetMarker.gameObject;
         _enemyLayerMask = enemyLayer;
+
         var baseData = BaseDataManager.Instance.GetBaseData(_userData.currentBaseDataIndex);
         var canonData = CanonDataManager.Instance.GetCanonData(_userData.currentCanonDataIndex);
         _shellManager = GameObject.FindGameObjectWithTag(GameCommonData.ShellManagerTag).GetComponent<ShellManager>();
+
         GameObject joystick = GameObject.FindGameObjectWithTag(JoystickTag);
         _ultimateJoystick = joystick.GetComponent<UltimateJoystick>();
+
         var hpBarObj = Instantiate(hpBar, transform);
         var slider = hpBarObj.GetComponentInChildren<Slider>();
         var hpBarSc = hpBarObj.GetComponentInChildren<HpBar>();
@@ -73,7 +76,9 @@ public partial class PlayerCore : MonoBehaviour
         _health = gameObject.AddComponent<PlayerHealth>();
         _health.Initialize(baseData.Hp, slider);
 
-        CreateCanon(canonData, baseData, canonBar, userData.currentCanonDataIndex);
+        SetContactGrass();
+
+        CreateCanon(canonData, baseData, canonBar);
         CreateBase(baseData);
         SetMaterial(gameObject, playerMaterial);
     }
@@ -87,8 +92,7 @@ public partial class PlayerCore : MonoBehaviour
         _stateMachine.Start<PlayerIdleState>();
     }
 
-
-    private void CreateCanon(CanonData canonData, BaseData baseData, GameObject canonBar, int canonDataIndex)
+    private void CreateCanon(CanonData canonData, BaseData baseData, GameObject canonBar)
     {
         _canonObj = Instantiate(canonData.canonObj, transform);
         _canonObj.transform.localPosition = baseData.CanonPos;
@@ -142,6 +146,20 @@ public partial class PlayerCore : MonoBehaviour
             mesh.material = playerMaterial;
             mesh.material.color = GameCommonData.PlayerColor;
         }
+    }
+
+    private void SetContactGrass()
+    {
+        var newObj = new GameObject("contactGrass");
+        newObj.transform.SetParent(transform);
+        newObj.transform.localPosition = Vector3.zero;
+        newObj.transform.localScale = Vector3.one;
+        var sphereCollider = newObj.AddComponent<SphereCollider>();
+        sphereCollider.radius = 3;
+        sphereCollider.isTrigger = true;
+        var rigid = newObj.AddComponent<Rigidbody>();
+        rigid.isKinematic = true;
+        newObj.AddComponent<ContactGrass>();
     }
 
     private void DecideCanonType(CanonData canonData, GameObject canonObj)
