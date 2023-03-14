@@ -15,6 +15,7 @@ namespace Data
         public static readonly string EnemyShellTag = "EnemyShell";
         public static readonly string GrassTag = "Grass";
         public static readonly string BeamTag = "Beam";
+        public static readonly string PlayerShellPoolTag = "PlayerShellPool";
         public static readonly string EnemyDataKey = "EnemyDatum";
         public static readonly string CanonDataKey = "CanonDatum";
         public static readonly string BaseDataKey = "BaseDatum";

@@ -11,6 +11,8 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
     [SerializeField] private Material enemyMaterial;
     [SerializeField] private ExternalBehavior externalBehavior;
     [SerializeField] private GameObject hpBar;
+    [SerializeField] private LayerMask playerLayerMask;
+    [SerializeField] private GameObject targetMarker;
     private const float ColliderRadius = 1f;
     private const float StoppingDistance = 15f;
     private readonly Vector3 _colliderCenter = new(0, 0.5f, 0);
@@ -95,6 +97,9 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         col.center = _colliderCenter;
         col.radius = ColliderRadius;
         col.isTrigger = true;
+        var col2 = enemy.AddComponent<SphereCollider>();
+        col2.center = _colliderCenter;
+        col2.radius = ColliderRadius;
     }
 
     private void SetNavMeshAgent(GameObject enemy)
@@ -155,7 +160,8 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         }
 
         var iInitialize = canonMoveBase.GetComponent<IInitialize>();
-        if (canonData.canonKinds == Data.CanonType.BeamType && iInitialize != null)
+        if ((canonData.canonKinds == Data.CanonType.BeamType || canonData.canonKinds == Data.CanonType.FlameType) &&
+            iInitialize != null)
         {
             iInitialize.Initialize(false);
         }

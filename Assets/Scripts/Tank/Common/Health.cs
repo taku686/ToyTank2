@@ -7,10 +7,7 @@ using UnityEngine.UI;
 public class Health : MonoBehaviour
 {
     public bool isBurning;
-
-    [FormerlySerializedAs("_burnEffectSc")]
     public BurnEffect burnEffectSc;
-
     public readonly Subject<bool> IsAlive = new();
     public ReadOnlyReactiveProperty<float> Hp => _hp.ToReadOnlyReactiveProperty();
     public Slider HpBar => _hpBar;
