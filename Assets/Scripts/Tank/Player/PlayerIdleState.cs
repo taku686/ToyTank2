@@ -16,8 +16,10 @@ public partial class PlayerCore
         private BaseData _baseData;
         private PlayerHealth _health;
         private Action _pointerUpCallBack;
+
         private bool _hasShotStopMethod;
-        private const string CanonJoystickName = "CanonMove";
+
+        //  private const string CanonJoystickName = "CanonMove";
         private CancellationTokenSource _cts;
         private const float DeadHp = 0f;
 
@@ -31,7 +33,7 @@ public partial class PlayerCore
             _cts = new CancellationTokenSource();
             _cts.RegisterRaiseCancelOnDestroy(Owner.gameObject);
             SetHpSubscribe(_health);
-            DetectEventTrigger(_userData);
+            DetectEventTrigger();
         }
 
         protected override void OnExit(State nextState)
@@ -67,11 +69,23 @@ public partial class PlayerCore
             }
         }
 
+        protected override void OnTriggerStay(Collider other)
+        {
+            if (other.CompareTag(GameCommonData.BeamTag))
+            {
+                var hitEffect = other.GetComponent<HitEffect>();
+                var damage = hitEffect.canonData.damage * Time.fixedDeltaTime;
+                _health.OnDamage(damage);
+            }
+        }
+
         private void OnDragUltimateJoystick()
         {
             if (Owner._canonBar.IsFire())
             {
-                Owner._iShot.Shot(Owner._shellManager.GetPlayerShell(ShellPoolTag, _userData.currentCanonDataIndex),
+                Owner._iShot.Shot(
+                    Owner._shellManager.GetPlayerShell(GameCommonData.PlayerShellPoolTag,
+                        _userData.currentCanonDataIndex),
                     Owner._currentCanon);
             }
             else if (!Owner._canonBar.IsFire() && Owner._iShotStop != null)
@@ -81,7 +95,8 @@ public partial class PlayerCore
 
             if (Owner._iTargetMarker != null)
             {
-                Owner._iTargetMarker.MoveTargetMarker(Owner._targetMarker, CanonJoystickName, Owner._currentCanon.Range,
+                Owner._iTargetMarker.MoveTargetMarker(Owner._targetMarker, GameCommonData.CanonJoystickName,
+                    Owner._currentCanon.Range,
                     Owner.transform);
             }
         }
@@ -90,7 +105,9 @@ public partial class PlayerCore
         {
             if (!_hasShotStopMethod)
             {
-                Owner._iShot.Shot(Owner._shellManager.GetPlayerShell(ShellPoolTag, _userData.currentCanonDataIndex),
+                Owner._iShot.Shot(
+                    Owner._shellManager.GetPlayerShell(GameCommonData.PlayerShellPoolTag,
+                        _userData.currentCanonDataIndex),
                     Owner._currentCanon);
             }
             else if (_hasShotStopMethod)
@@ -99,7 +116,7 @@ public partial class PlayerCore
             }
         }
 
-        private void DetectEventTrigger(UserData userData)
+        private void DetectEventTrigger()
         {
             if (Owner._currentCanon.CanonKinds == Data.CanonType.BeamType ||
                 Owner._currentCanon.CanonKinds == Data.CanonType.MachineGunType ||

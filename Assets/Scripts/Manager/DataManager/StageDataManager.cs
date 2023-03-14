@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class StageDataManager : MonoBehaviour
 {
-    public List<StageData> stageDatum = new();
+    [SerializeField] private List<StageData> _stageDatum = new();
     private static StageDataManager _instance;
     public static StageDataManager Instance => _instance;
     private int _currentStage = 2;
@@ -29,16 +29,27 @@ public class StageDataManager : MonoBehaviour
 
     public StageData GetStageData(int index)
     {
-        return stageDatum.FirstOrDefault(x => x.stage == index);
+        return _stageDatum.FirstOrDefault(x => x.stage == index);
     }
 
     public StageData GetCurrentStageData()
     {
-        return stageDatum.FirstOrDefault(x => x.stage == _currentStage);
+        return _stageDatum.FirstOrDefault(x => x.stage == _currentStage);
     }
 
     public void SetCurrentStage(int stageIndex)
     {
         _currentStage = stageIndex;
+    }
+
+    public void AddStageData(StageData stageData)
+    {
+        _stageDatum.Add(stageData);
+    }
+
+    public void DebugSetStageData()
+    {
+        _stageDatum[0].enemyDatum[0] = EnemyData.TestEnemyData();
+        _stageDatum[0].createPoses[0] = CreatePos.UpperCenterCenter;
     }
 }

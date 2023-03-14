@@ -22,6 +22,7 @@ public class StageGrid : MonoBehaviour
 
     private async UniTask OnClickSceneTransition()
     {
+        Debug.Log(stageNum);
         StageDataManager.Instance.SetCurrentStage(stageNum);
         await SceneTransition.Instance.Transition(GameCommonData.BattleScene);
     }

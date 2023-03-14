@@ -91,6 +91,15 @@ public class StateMachine<TOwner>
         protected virtual void OnTriggerEnter(Collider other)
         {
         }
+
+        internal void TriggerStay(Collider other)
+        {
+            OnTriggerStay(other);
+        }
+
+        protected virtual void OnTriggerStay(Collider other)
+        {
+        }
     }
 
     /// <summary>
@@ -111,7 +120,7 @@ public class StateMachine<TOwner>
     public State CurrentState { get; private set; }
 
     // ステートリスト
-    private LinkedList<State> states = new LinkedList<State>();
+    private LinkedList<State> states = new();
 
     /// <summary>
     /// ステートマシンを初期化する
@@ -232,6 +241,11 @@ public class StateMachine<TOwner>
     public void OnTriggerEnter(Collider other)
     {
         CurrentState.TriggerEnter(other);
+    }
+
+    public void OnTriggerStay(Collider other)
+    {
+        CurrentState.TriggerStay(other);
     }
 
     /// <summary>

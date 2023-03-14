@@ -53,4 +53,6 @@ public class ShellBase : MonoBehaviour
 public interface IInitialize
 {
     void Initialize(string poolTag);
+
+    void Initialize(bool isPlayer);
 }
