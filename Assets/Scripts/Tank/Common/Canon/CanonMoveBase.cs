@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CanonMoveBase : MonoBehaviour
 {
-    //private const string JoystickName = "CanonMove";
     protected const string FireTrigger = "Fire";
     protected Transform ShotPos;
     protected Animator Animator;
