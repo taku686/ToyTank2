@@ -10,10 +10,10 @@ public class CanonType : CanonMoveBase, IShot, ITargetMarker
 
     public void CreateTargetMarker(ref Transform targetMarker, GameObject targetMarkerObj, Transform player)
     {
-        if (targetMarker == null)
+        /*if (targetMarker == null)
         {
             targetMarker = targetMarkerObj.transform;
-        }
+        }*/
 
         targetMarker = Instantiate(targetMarkerObj).transform;
         var transform1 = targetMarker.transform;
@@ -35,6 +35,20 @@ public class CanonType : CanonMoveBase, IShot, ITargetMarker
             targetMarker.position = new Vector3(hor, 0, vert) * range +
                                     new Vector3(position.x, 0.5f, position.z);
         }
+    }
+
+    public void MoveTargetMarker(Transform targetMarker, float range, Transform target)
+    {
+        var dis = Vector3.Distance(target.position, transform.position);
+        if (dis > range)
+        {
+            var position = transform.position;
+            targetMarker.position = new Vector3(position.x, 0.5f, position.z);
+            return;
+        }
+
+        var position1 = target.position;
+        targetMarker.position = new Vector3(position1.x, 0.5f, position1.z);
     }
 
     public void Shot(List<ShellBase> shell, CanonData canonData)

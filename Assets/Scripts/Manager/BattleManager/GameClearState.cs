@@ -8,7 +8,7 @@ public partial class BattleCore
     public class GameClearState : State
     {
         private BattleUIView _battleUIView;
-
+        private const int NextStageCondition = 1;
 
         protected override void OnEnter(State prevState)
         {
@@ -22,9 +22,9 @@ public partial class BattleCore
             var health = Owner._playerManager.Health;
             var playFabUserData = Owner.playFabUserData;
             clearUIView.gameObject.SetActive(true);
+            await UpdateUserStageData(playFabUserData);
             InitializeButton(clearUIView);
             SetStar(stars, health);
-            await UpdateUserStageData(playFabUserData);
         }
 
         private void InitializeButton(GameClearView gameClearView)
@@ -64,15 +64,13 @@ public partial class BattleCore
         {
             var maxStage = UserDataManager.Instance.GetUserData().maxStage;
             var currentStage = StageDataManager.Instance.CurrentStage;
-            if (maxStage <= currentStage)
+            if (currentStage - maxStage == NextStageCondition)
             {
-                return;
+                var userData = UserDataManager.Instance.GetUserData();
+                userData.maxStage = currentStage;
+                UserDataManager.Instance.SetUserData(userData);
+                await playFabUserData.UpdateUserData(userData);
             }
-
-            var userData = UserDataManager.Instance.GetUserData();
-            userData.maxStage = currentStage;
-            UserDataManager.Instance.SetUserData(userData);
-            await playFabUserData.UpdateUserData(userData);
         }
 
         private void OnClickPhaseTransition()

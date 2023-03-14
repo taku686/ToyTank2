@@ -36,6 +36,8 @@ namespace Data
         public static readonly string MainStoreKey = "Main";
         public static readonly string RealMoneyKey = "RM";
         public static readonly string CanonJoystickName = "CanonMove";
+        public static readonly string TrackingCanonLayer = "TrackingCanon";
+        public static readonly string ShellLayer = "Shell";
 
         public static Color GetEnemyColor(int index)
         {

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class BaseData 
+public class BaseData
 {
     public string name;
     public int baseObjIndex;

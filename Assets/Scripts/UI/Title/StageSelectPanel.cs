@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Data;
@@ -7,33 +6,39 @@ using UI;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StageSelectGrid : MonoBehaviour
+public class StageSelectPanel : MonoBehaviour
 {
     [SerializeField] private RectTransform parent;
     [SerializeField] private GameObject grid;
     [SerializeField] private GameObject disableGrid;
     [SerializeField] private TextMeshProUGUI pageText;
     [SerializeField] private Button nextButton;
-
     [SerializeField] private Button prevButton;
-
-    /*private StageDataManager _stageDataManager;
-    private UserDataManager _userDataManager;*/
     private UIAnimation _uiAnimation;
     private readonly List<GameObject> _grids = new();
-    private const int MaxStageCountPerPage = 8;
+    private const int MaxStageCountPerPage = 12;
     private int _currentPage = 1;
 
     private int PlayerMaxStage => UserDataManager.Instance.GetUserData().maxStage;
 
-    //private int MaxStage => _stageDataManager.stageDatum.Count;
-    //ToDo ???f?[?^
-    private int MaxStage => 45;
-    private int MaxPage => MaxStage / MaxStageCountPerPage;
+    //todo ‰¼‚Ì’l
+    private int MaxStage => 50;
+
+    private int MaxPage(int maxPage)
+    {
+        return (int)Mathf.Ceil(maxPage / (float)MaxStageCountPerPage);
+    }
 
     public void Initialize(UIAnimation uiAnimation)
     {
         _uiAnimation = uiAnimation;
+        InitializeButton();
+    }
+
+    private void InitializeButton()
+    {
+        nextButton.onClick.RemoveAllListeners();
+        prevButton.onClick.RemoveAllListeners();
         nextButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickNextButton()));
         prevButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickPrevButton()));
     }
@@ -41,18 +46,20 @@ public class StageSelectGrid : MonoBehaviour
     public void CreateGrids()
     {
         SetPageText();
-        pageText.text = _currentPage + " / " + MaxPage;
         var modifiedPlayerMaxStage = PlayerMaxStage + 1;
-        var createGridCount = _currentPage * MaxStageCountPerPage <= modifiedPlayerMaxStage
+        var createActiveGridCount = _currentPage * MaxStageCountPerPage <= modifiedPlayerMaxStage
             ? MaxStageCountPerPage
             : modifiedPlayerMaxStage - (_currentPage - 1) * MaxStageCountPerPage;
-        for (int i = 0; i < MaxStageCountPerPage; i++)
+        var createGridCount = _currentPage * MaxStageCountPerPage <= MaxStage
+            ? MaxStageCountPerPage
+            : MaxStage % MaxStageCountPerPage;
+        for (int i = 0; i < createGridCount; i++)
         {
-            if (createGridCount > i)
+            if (createActiveGridCount > i)
             {
                 var obj = Instantiate(grid, parent);
                 var text = obj.GetComponentInChildren<TextMeshProUGUI>();
-                var stageNum = i + 1;
+                var stageNum = (_currentPage - 1) * MaxStageCountPerPage + i + 1;
                 text.text = stageNum.ToString();
                 var stageGridSc = obj.AddComponent<StageGrid>();
                 stageGridSc.Initialize(stageNum);
@@ -74,7 +81,7 @@ public class StageSelectGrid : MonoBehaviour
         await _uiAnimation.Click(nextButton.transform, GameCommonData.ClickDuration);
         DestroyGrids();
         _currentPage++;
-        if (_currentPage > MaxPage)
+        if (_currentPage > MaxPage(MaxStage))
         {
             _currentPage = 1;
         }
@@ -89,7 +96,7 @@ public class StageSelectGrid : MonoBehaviour
         _currentPage--;
         if (_currentPage < 1)
         {
-            _currentPage = MaxPage;
+            _currentPage = MaxPage(MaxStage);
         }
 
         CreateGrids();
@@ -97,7 +104,7 @@ public class StageSelectGrid : MonoBehaviour
 
     private void SetPageText()
     {
-        pageText.text = _currentPage + " / " + MaxPage;
+        pageText.text = _currentPage + " / " + MaxPage(MaxStage);
     }
 
     public void DestroyGrids()
