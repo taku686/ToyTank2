@@ -52,9 +52,6 @@ public class PlayFabTitleData : MonoBehaviour
         {
             EnemyDataManager.Instance.AddEnemyData(enemyData);
         }
-        
-        //todo Ç†Ç∆Ç≈è¡Ç∑
-        EnemyDataManager.Instance.TestSetEnemyData();
     }
 
     private void SetStageData(StageData[] stageDatum)
@@ -80,9 +77,6 @@ public class PlayFabTitleData : MonoBehaviour
 
             StageDataManager.Instance.AddStageData(stageData);
         }
-
-        //todo Ç†Ç∆Ç≈è¡Ç∑
-        DebugData();
     }
 
     private void DebugData()
