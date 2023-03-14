@@ -70,6 +70,7 @@ public class ShellManager : MonoBehaviour
     private ShellBase CreateShell(CanonData canonData, Transform parent)
     {
         GameObject shell = Instantiate(canonData.shellObj, parent);
+        //shell.layer = LayerMask.NameToLayer(GameCommonData.ShellLayer);
         DetectShellType(canonData, shell);
         return shell.GetComponent<ShellBase>();
     }

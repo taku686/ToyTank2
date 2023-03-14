@@ -63,7 +63,7 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
 
     private void SetComponent(GameObject enemy, EnemyData enemyData, Transform enemyTransform)
     {
-        SetHealth(enemy, hpBar, enemyData, enemyTransform);
+        SetHealth(hpBar, enemyData, enemyTransform);
         SetRigidbody(enemy);
         SetCollider(enemy);
         SetNavMeshAgent(enemy);
@@ -71,16 +71,23 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         SetEnemyCore(enemy, enemyData);
     }
 
-    private void SetHealth(GameObject enemy, GameObject hpBarObj, EnemyData enemyData, Transform enemyTransform)
+    private void SetHealth(GameObject hpBarObj, EnemyData enemyData, Transform enemyTransform)
     {
+        var healthObj = new GameObject();
+        healthObj.transform.SetParent(enemyTransform);
+        healthObj.transform.localPosition = Vector3.zero;
+        var col = healthObj.AddComponent<SphereCollider>();
+        col.center = _colliderCenter;
+        col.radius = ColliderRadius;
+        col.isTrigger = true;
         var obj = Instantiate(hpBarObj, enemyTransform);
         var slider = obj.GetComponentInChildren<Slider>();
         var hpBarSc = obj.GetComponentInChildren<HpBar>();
         obj.transform.localPosition = _hpBarPos;
         hpBarSc.Initialize();
-        var health = enemy.AddComponent<EnemyHealth>();
+        var health = healthObj.AddComponent<EnemyHealth>();
         enemyHealths.Add(health);
-        var hp = enemyData.baseData.hp;
+        var hp = enemyData.baseData.hp * enemyData.hpRate;
         health.Initialize(hp, slider);
     }
 
@@ -93,10 +100,6 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
 
     private void SetCollider(GameObject enemy)
     {
-        var col = enemy.AddComponent<SphereCollider>();
-        col.center = _colliderCenter;
-        col.radius = ColliderRadius;
-        col.isTrigger = true;
         var col2 = enemy.AddComponent<SphereCollider>();
         col2.center = _colliderCenter;
         col2.radius = ColliderRadius;
@@ -172,6 +175,6 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
     private void SetEnemyCore(GameObject enemy, EnemyData enemyData)
     {
         var enemyCore = enemy.AddComponent<EnemyCore>();
-        enemyCore.Initialize(enemyData);
+        enemyCore.Initialize(enemyData, targetMarker);
     }
 }

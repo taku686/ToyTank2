@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using Data;
 using UnityEngine;
 
 public class CanonMoveBase : MonoBehaviour
 {
-    //private const string JoystickName = "CanonMove";
     protected const string FireTrigger = "Fire";
     protected Transform ShotPos;
     protected Animator Animator;
@@ -63,4 +61,5 @@ public interface ITargetMarker
     void CreateTargetMarker(ref Transform targetMarker, GameObject targetMarkerObj, Transform player);
 
     void MoveTargetMarker(Transform targetMarker, string controllerName, float range, Transform player);
+    void MoveTargetMarker(Transform targetMarker, float range, Transform target);
 }

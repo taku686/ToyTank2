@@ -13,7 +13,6 @@ namespace Manager.TitleManager
         public class MainState : State
         {
             private MainView _mainView;
-            private MainManager _mainManager;
             private UIAnimation _uiAnimation;
             private Transform _playerPos;
 
@@ -31,12 +30,9 @@ namespace Manager.TitleManager
             private void Initialize()
             {
                 _uiAnimation = Owner.uiAnimation;
-                _mainManager = Owner.mainManager;
                 _mainView = Owner.mainView;
                 _playerPos = Owner.playerPos;
-                _mainManager.stageSelectGrid.Initialize(_uiAnimation);
                 _mainView.settingPanel.SetActive(false);
-                _mainView.stageSelectPanel.SetActive(false);
                 _mainView.platformObj.SetActive(true);
                 SetupTank();
             }
@@ -44,13 +40,10 @@ namespace Manager.TitleManager
             private void InitializeButton()
             {
                 _mainView.battleButton.onClick.RemoveAllListeners();
-                _mainView.stageSelectCloseButton.onClick.RemoveAllListeners();
                 _mainView.shopButton.onClick.RemoveAllListeners();
                 _mainView.plantButton.onClick.RemoveAllListeners();
                 _mainView.battleButton.onClick.AddListener(() =>
                     UniTask.Void(async () => await OnClickOpenStageSelectPanel()));
-                _mainView.stageSelectCloseButton.onClick.AddListener(() =>
-                    UniTask.Void(async () => await OnClickCloseStageSelectPanel()));
                 _mainView.shopButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickShopButton()));
                 _mainView.plantButton.onClick.AddListener(() => UniTask.Void(async () => await OnClickPlantButton()));
             }
@@ -67,23 +60,11 @@ namespace Manager.TitleManager
             private async UniTask OnClickOpenStageSelectPanel()
             {
                 var battleButton = _mainView.battleButton.transform;
-                var panel = _mainView.stageSelectPanel.transform;
-                _mainManager.stageSelectGrid.CreateGrids();
                 await _uiAnimation.Click(battleButton, GameCommonData.ClickDuration);
-                panel.localScale = Vector3.zero;
-                panel.gameObject.SetActive(true);
-                await _uiAnimation.Open(panel, GameCommonData.OpenDuration);
+                Owner.SwitchPhaseGameObject((int)Event.StageSelect);
+                Owner._stateMachine.Dispatch((int)Event.StageSelect);
             }
 
-            private async UniTask OnClickCloseStageSelectPanel()
-            {
-                var panel = _mainView.stageSelectPanel.transform;
-                var closeButton = _mainView.stageSelectCloseButton.transform;
-                await _uiAnimation.Click(closeButton, GameCommonData.ClickDuration);
-                await _uiAnimation.Close(panel, GameCommonData.CloseDuration);
-                panel.gameObject.SetActive(false);
-                _mainManager.stageSelectGrid.DestroyGrids();
-            }
 
             private async UniTask OnClickShopButton()
             {

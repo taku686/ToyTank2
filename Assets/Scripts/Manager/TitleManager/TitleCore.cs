@@ -11,7 +11,6 @@ namespace Manager.TitleManager
     public partial class TitleCore : MonoBehaviour
     {
         [SerializeField] private LoginManager loginManager;
-        [SerializeField] private MainManager mainManager;
         [SerializeField] private PlayFabShopManager playFabShopManager;
         [SerializeField] private PlayFabCatalogManager playFabCatalogManager;
         [SerializeField] private PlayFabUserData playFabUserData;
@@ -19,6 +18,7 @@ namespace Manager.TitleManager
         [SerializeField] private MainView mainView;
         [SerializeField] private PlantView plantView;
         [SerializeField] private ShopView shopView;
+        [SerializeField] private StageSelectView stageSelectView;
         [SerializeField] private Transition transition;
         [SerializeField] private UIAnimation uiAnimation;
         [SerializeField] private Transform playerPos;
@@ -36,7 +36,8 @@ namespace Manager.TitleManager
             Login,
             Main,
             Plant,
-            Shop
+            Shop,
+            StageSelect,
         }
 
         private void Start()
@@ -73,6 +74,7 @@ namespace Manager.TitleManager
             _stateMachine.AddTransition<LoginState, MainState>((int)Event.Main);
             _stateMachine.AddTransition<MainState, PlantState>((int)Event.Plant);
             _stateMachine.AddTransition<MainState, ShopState>((int)Event.Shop);
+            _stateMachine.AddTransition<MainState, StageSelectState>((int)Event.StageSelect);
             _stateMachine.AddAnyTransition<MainState>((int)Event.Main);
             GameCommonData.IsInitialize = true;
         }
