@@ -96,9 +96,10 @@ public partial class EnemyCore
 
         private void Shot(CanonData canonData)
         {
-            if (canonData.canonKinds == Data.CanonType.BeamType)
+            if (canonData.canonKinds is Data.CanonType.BeamType or Data.CanonType.MachineGunType
+                or Data.CanonType.FlameType)
             {
-                BeamShot(canonData);
+                PersistentShot(canonData);
             }
             else
             {
@@ -106,17 +107,15 @@ public partial class EnemyCore
                 if (_shotTimer >= _interval)
                 {
                     _shotTimer = 0f;
-                    _interval = _enemyData.shotInterval + Random.Range(0f, MaxRandomValue);
+                    _interval = _enemyData.shotInterval + Random.Range(1f, MaxRandomValue);
                     _iShot.Shot(_shellManager.GetEnemyShell(ShellPoolTag, canonData), canonData);
                 }
             }
         }
 
-        private void BeamShot(CanonData canonData)
+        private void PersistentShot(CanonData canonData)
         {
-            var targetDistance = Vector3.Distance(Owner.transform.position, _playerTransform.position);
-            var shotRange = canonData.range;
-            if (targetDistance <= shotRange)
+            if (IsWithinRange(canonData))
             {
                 _iShot.Shot(_shellManager.GetEnemyShell(ShellPoolTag, canonData), canonData);
             }
@@ -124,6 +123,13 @@ public partial class EnemyCore
             {
                 _iShotStop.ShotStop();
             }
+        }
+
+        private bool IsWithinRange(CanonData canonData)
+        {
+            var targetDistance = Vector3.Distance(Owner.transform.position, _playerTransform.position);
+            var shotRange = canonData.range;
+            return targetDistance <= shotRange;
         }
 
         private void MoveTargetMarker(CanonData canonData)

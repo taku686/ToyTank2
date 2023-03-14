@@ -16,10 +16,7 @@ public partial class PlayerCore
         private BaseData _baseData;
         private PlayerHealth _health;
         private Action _pointerUpCallBack;
-
         private bool _hasShotStopMethod;
-
-        //  private const string CanonJoystickName = "CanonMove";
         private CancellationTokenSource _cts;
         private const float DeadHp = 0f;
 

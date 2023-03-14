@@ -61,7 +61,7 @@ public partial class EnemyCore : MonoBehaviour
     {
         SetCanon(canonData);
         SetShellManager(canonData);
-        enemyHealth = gameObject.GetComponent<EnemyHealth>();
+        enemyHealth = gameObject.GetComponentInChildren<EnemyHealth>();
     }
 
     private void SetCanon(CanonData canonData)
