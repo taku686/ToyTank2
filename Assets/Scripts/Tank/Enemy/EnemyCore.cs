@@ -10,7 +10,7 @@ public partial class EnemyCore : MonoBehaviour
     private ITargetMarker _iTargetMarker;
     private ISetLayerMask _iSetLayerMask;
     private LayerMask _enemyLayerMask;
-    private Transform _targetMarker;
+    private Transform _targetMarkerTransform;
     private Transform _playerTransform;
     private ShellManager _shellManager;
     private EnemyData _enemyData;
@@ -29,11 +29,13 @@ public partial class EnemyCore : MonoBehaviour
         _stateMachine.Update();
     }
 
-    public void Initialize(EnemyData enemyData)
+    public void Initialize(EnemyData enemyData, GameObject targetMarker)
     {
         _enemyData = enemyData;
         _canonData = enemyData.canonData;
         _baseData = enemyData.baseData;
+        _targetMarkerObj = targetMarker;
+        _targetMarkerTransform = targetMarker.transform;
         InitializeComponent(_canonData);
         InitializeState();
     }
@@ -70,7 +72,7 @@ public partial class EnemyCore : MonoBehaviour
         _iTargetMarker = _canonMoveBase.GetComponent<ITargetMarker>();
         _iSetLayerMask = _canonMoveBase.GetComponent<ISetLayerMask>();
         var iInitialize = _canonMoveBase.GetComponent<IInitialize>();
-        _iTargetMarker?.CreateTargetMarker(ref _targetMarker, _targetMarkerObj, transform);
+        _iTargetMarker?.CreateTargetMarker(ref _targetMarkerTransform, _targetMarkerObj, transform);
         _iSetLayerMask?.SetLayerMask(_enemyLayerMask);
         if (canonData.canonKinds != Data.CanonType.BeamType)
         {

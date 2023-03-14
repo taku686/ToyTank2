@@ -14,6 +14,7 @@ public partial class EnemyCore
         private CanonMoveBase _canonMoveBase;
         private IShot _iShot;
         private IShotStop _iShotStop;
+        private ITargetMarker _iTargetMarker;
         private Transform _playerTransform;
         private ShellManager _shellManager;
         private CanonData _canonData;
@@ -37,6 +38,7 @@ public partial class EnemyCore
 
             _canonMoveBase.AutomaticallyRotate(_playerTransform);
             Shot(_canonData);
+            MoveTargetMarker(_canonData);
         }
 
         protected override void OnTriggerEnter(Collider other)
@@ -67,6 +69,7 @@ public partial class EnemyCore
             _canonData = Owner._canonData;
             _enemyData = Owner._enemyData;
             _enemyHealth = Owner.enemyHealth;
+            _iTargetMarker = Owner._iTargetMarker;
             SetEnemyHealthSubscribe(_enemyHealth);
         }
 
@@ -121,6 +124,16 @@ public partial class EnemyCore
             {
                 _iShotStop.ShotStop();
             }
+        }
+
+        private void MoveTargetMarker(CanonData canonData)
+        {
+            if (_iTargetMarker == null)
+            {
+                return;
+            }
+
+            _iTargetMarker.MoveTargetMarker(Owner._targetMarkerTransform, canonData.range, _playerTransform);
         }
 
         private void SetEnemyHealthSubscribe(EnemyHealth enemyHealth)

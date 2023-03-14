@@ -80,7 +80,7 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         hpBarSc.Initialize();
         var health = enemy.AddComponent<EnemyHealth>();
         enemyHealths.Add(health);
-        var hp = enemyData.baseData.hp;
+        var hp = enemyData.baseData.hp * enemyData.hpRate;
         health.Initialize(hp, slider);
     }
 
@@ -172,6 +172,6 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
     private void SetEnemyCore(GameObject enemy, EnemyData enemyData)
     {
         var enemyCore = enemy.AddComponent<EnemyCore>();
-        enemyCore.Initialize(enemyData);
+        enemyCore.Initialize(enemyData, targetMarker);
     }
 }

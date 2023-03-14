@@ -20,7 +20,6 @@ public class EnemyDataManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-
         DontDestroyOnLoad(gameObject);
     }
 
