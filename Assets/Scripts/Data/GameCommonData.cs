@@ -30,7 +30,6 @@ namespace Data
         public static readonly float CloseDuration = 0.5f;
         public static readonly float OpenDuration = 1.0f;
         public static readonly Color PlayerColor = Color.white;
-        public static readonly string AdUnitId = "ca-app-pub-3759795642939239/4324583739";
         public static readonly string NonConsumable = "NonConsumable";
         public static readonly string RemoveAdsItem = "removeads";
         public static readonly string MainStoreKey = "Main";
