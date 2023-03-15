@@ -8,6 +8,7 @@ public class PlayFabAdsManager : MonoBehaviour
     private InterstitialAd _interstitialAd;
     private bool _isLoadComplete;
     private bool _isAdFinish;
+    public static readonly string AdUnitId = "ca-app-pub-3759795642939239/4324583739";
 
     //debug
     public BattleUIView battleUIView;
@@ -32,8 +33,6 @@ public class PlayFabAdsManager : MonoBehaviour
     {
         MobileAds.Initialize((InitializationStatus initStatus) =>
         {
-            // This callback is called once the MobileAds SDK is initialized.
-            Debug.Log("L‰Šú‰»Š®—¹");
             LoadInterstitialAd();
         });
     }
@@ -58,7 +57,7 @@ public class PlayFabAdsManager : MonoBehaviour
             .Build();
 
         // send the request to load the ad.
-        InterstitialAd.Load(GameCommonData.AdUnitId, adRequest,
+        InterstitialAd.Load(AdUnitId, adRequest,
             (ad, error) =>
             {
                 // if error is not null, the load request failed.
