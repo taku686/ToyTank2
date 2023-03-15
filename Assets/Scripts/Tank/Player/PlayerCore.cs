@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 public partial class PlayerCore : MonoBehaviour
 {
-    private const string JoystickTag = "CanonJoystick";
-    private const string ShellPoolTag = "PlayerShellPool";
+    private const string JoystickName = "CanonJoystick";
+
+    // private const string ShellPoolTag = "PlayerShellPool";
     private StateMachine<PlayerCore> _stateMachine;
     private BaseMove _baseMove;
     private UserData _userData;
@@ -70,7 +71,7 @@ public partial class PlayerCore : MonoBehaviour
         var canonData = CanonDataManager.Instance.GetCanonData(_userData.currentCanonDataIndex);
         _shellManager = GameObject.FindGameObjectWithTag(GameCommonData.ShellManagerTag).GetComponent<ShellManager>();
 
-        GameObject joystick = GameObject.FindGameObjectWithTag(JoystickTag);
+        GameObject joystick = GameObject.FindGameObjectWithTag(JoystickName);
         _ultimateJoystick = joystick.GetComponent<UltimateJoystick>();
 
         var hpBarObj = Instantiate(hpBar, transform);
@@ -130,7 +131,7 @@ public partial class PlayerCore : MonoBehaviour
         _baseObj = Instantiate(baseData.BaseObj, transform);
         _baseObj.transform.localPosition = Vector3.zero;
         _baseMove = gameObject.AddComponent<BaseMove>();
-        _baseMove.InitializeCharacterController();
+        _baseMove.Initialize();
     }
 
 
@@ -221,7 +222,8 @@ public partial class PlayerCore : MonoBehaviour
             _iSetLayerMask.SetLayerMask(_enemyLayerMask);
         }
 
-        if (canonData.canonKinds == Data.CanonType.BeamType && iInitialize != null)
+        if ((canonData.canonKinds == Data.CanonType.BeamType || canonData.canonKinds == Data.CanonType.FlameType) &&
+            iInitialize != null)
         {
             iInitialize.Initialize(true);
         }

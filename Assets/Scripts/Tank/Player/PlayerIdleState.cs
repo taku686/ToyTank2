@@ -17,7 +17,6 @@ public partial class PlayerCore
         private PlayerHealth _health;
         private Action _pointerUpCallBack;
         private bool _hasShotStopMethod;
-        private const string CanonJoystickName = "CanonMove";
         private CancellationTokenSource _cts;
         private const float DeadHp = 0f;
 
@@ -73,9 +72,6 @@ public partial class PlayerCore
             {
                 var hitEffect = other.GetComponent<HitEffect>();
                 var damage = hitEffect.canonData.damage * Time.fixedDeltaTime;
-                /*Debug.Log("canonDamage" + hitEffect.canonData.damage);
-                Debug.Log("fixedTime" + Time.fixedTime);
-                Debug.Log(damage);*/
                 _health.OnDamage(damage);
             }
         }
@@ -84,7 +80,9 @@ public partial class PlayerCore
         {
             if (Owner._canonBar.IsFire())
             {
-                Owner._iShot.Shot(Owner._shellManager.GetPlayerShell(ShellPoolTag, _userData.currentCanonDataIndex),
+                Owner._iShot.Shot(
+                    Owner._shellManager.GetPlayerShell(GameCommonData.PlayerShellPoolTag,
+                        _userData.currentCanonDataIndex),
                     Owner._currentCanon);
             }
             else if (!Owner._canonBar.IsFire() && Owner._iShotStop != null)
@@ -94,7 +92,8 @@ public partial class PlayerCore
 
             if (Owner._iTargetMarker != null)
             {
-                Owner._iTargetMarker.MoveTargetMarker(Owner._targetMarker, CanonJoystickName, Owner._currentCanon.Range,
+                Owner._iTargetMarker.MoveTargetMarker(Owner._targetMarker, GameCommonData.CanonJoystickName,
+                    Owner._currentCanon.Range,
                     Owner.transform);
             }
         }
@@ -103,7 +102,9 @@ public partial class PlayerCore
         {
             if (!_hasShotStopMethod)
             {
-                Owner._iShot.Shot(Owner._shellManager.GetPlayerShell(ShellPoolTag, _userData.currentCanonDataIndex),
+                Owner._iShot.Shot(
+                    Owner._shellManager.GetPlayerShell(GameCommonData.PlayerShellPoolTag,
+                        _userData.currentCanonDataIndex),
                     Owner._currentCanon);
             }
             else if (_hasShotStopMethod)

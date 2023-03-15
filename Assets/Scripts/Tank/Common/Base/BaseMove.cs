@@ -17,7 +17,13 @@ public class BaseMove : MonoBehaviour
     private CharacterController _characterController;
     Vector3 _dir = Vector3.zero;
 
-    public void InitializeCharacterController()
+
+    public void Initialize()
+    {
+        InitializeCharacterController();
+        InitializeRigid();
+    }
+    private void InitializeCharacterController()
     {
         _characterController = gameObject.AddComponent<CharacterController>();
         _characterController.slopeLimit = SlopeLimit;
@@ -28,12 +34,18 @@ public class BaseMove : MonoBehaviour
         _characterController.center = _center;
     }
 
+    private void InitializeRigid()
+    {
+        _rigidbody = gameObject.AddComponent<Rigidbody>();
+        _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+    }
+
     public void Move(float speed)
     {
         float hor;
         float vert;
 
-        /*if (Application.platform == RuntimePlatform.Android)
+        if (Application.platform == RuntimePlatform.Android)
         {
             hor = -UltimateJoystick.GetHorizontalAxis(JoystickName);
             vert = -UltimateJoystick.GetVerticalAxis(JoystickName);
@@ -42,9 +54,9 @@ public class BaseMove : MonoBehaviour
         {
             hor = -Input.GetAxis("Horizontal");
             vert = -Input.GetAxis("Vertical");
-        }*/
-        hor = -UltimateJoystick.GetHorizontalAxis(JoystickName);
-        vert = -UltimateJoystick.GetVerticalAxis(JoystickName);
+        }
+        /*hor = -UltimateJoystick.GetHorizontalAxis(JoystickName);
+        vert = -UltimateJoystick.GetVerticalAxis(JoystickName);*/
 
         if (_characterController.isGrounded)
         {

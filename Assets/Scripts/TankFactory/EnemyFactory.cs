@@ -11,6 +11,8 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
     [SerializeField] private Material enemyMaterial;
     [SerializeField] private ExternalBehavior externalBehavior;
     [SerializeField] private GameObject hpBar;
+    [SerializeField] private LayerMask playerLayerMask;
+    [SerializeField] private GameObject targetMarker;
     private const float ColliderRadius = 1f;
     private const float StoppingDistance = 15f;
     private readonly Vector3 _colliderCenter = new(0, 0.5f, 0);
@@ -23,7 +25,8 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         var enemy = new GameObject
         {
             name = level + "_" + version,
-            tag = GameCommonData.EnemyTag
+            tag = GameCommonData.EnemyTag,
+            layer = LayerMask.NameToLayer(GameCommonData.EnemyLayer)
         };
         var enemyTransform = enemy.transform;
         enemyTransform.position = createPos.position;
@@ -61,7 +64,7 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
 
     private void SetComponent(GameObject enemy, EnemyData enemyData, Transform enemyTransform)
     {
-        SetHealth(enemy, hpBar, enemyData, enemyTransform);
+        SetHealth(hpBar, enemyData, enemyTransform);
         SetRigidbody(enemy);
         SetCollider(enemy);
         SetNavMeshAgent(enemy);
@@ -69,16 +72,28 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         SetEnemyCore(enemy, enemyData);
     }
 
-    private void SetHealth(GameObject enemy, GameObject hpBarObj, EnemyData enemyData, Transform enemyTransform)
+    private void SetHealth(GameObject hpBarObj, EnemyData enemyData, Transform enemyTransform)
     {
+        var healthObj = new GameObject
+        {
+            name = "Health",
+            layer = LayerMask.NameToLayer(GameCommonData.EnemyLayer)
+        };
+        healthObj.transform.SetParent(enemyTransform);
+        healthObj.transform.localPosition = Vector3.zero;
+        var col = healthObj.AddComponent<SphereCollider>();
+        col.center = _colliderCenter;
+        col.radius = ColliderRadius;
+        col.isTrigger = true;
         var obj = Instantiate(hpBarObj, enemyTransform);
+        obj.layer = LayerMask.NameToLayer(GameCommonData.EnemyLayer);
         var slider = obj.GetComponentInChildren<Slider>();
         var hpBarSc = obj.GetComponentInChildren<HpBar>();
         obj.transform.localPosition = _hpBarPos;
         hpBarSc.Initialize();
-        var health = enemy.AddComponent<EnemyHealth>();
+        var health = healthObj.AddComponent<EnemyHealth>();
         enemyHealths.Add(health);
-        var hp = enemyData.baseData.hp;
+        var hp = enemyData.baseData.hp * enemyData.hpRate;
         health.Initialize(hp, slider);
     }
 
@@ -91,10 +106,9 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
 
     private void SetCollider(GameObject enemy)
     {
-        var col = enemy.AddComponent<SphereCollider>();
-        col.center = _colliderCenter;
-        col.radius = ColliderRadius;
-        col.isTrigger = true;
+        var col2 = enemy.AddComponent<SphereCollider>();
+        col2.center = _colliderCenter;
+        col2.radius = ColliderRadius;
     }
 
     private void SetNavMeshAgent(GameObject enemy)
@@ -155,7 +169,8 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         }
 
         var iInitialize = canonMoveBase.GetComponent<IInitialize>();
-        if (canonData.canonKinds == Data.CanonType.BeamType && iInitialize != null)
+        if ((canonData.canonKinds == Data.CanonType.BeamType || canonData.canonKinds == Data.CanonType.FlameType) &&
+            iInitialize != null)
         {
             iInitialize.Initialize(false);
         }
@@ -166,6 +181,6 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
     private void SetEnemyCore(GameObject enemy, EnemyData enemyData)
     {
         var enemyCore = enemy.AddComponent<EnemyCore>();
-        enemyCore.Initialize(enemyData);
+        enemyCore.Initialize(enemyData, targetMarker);
     }
 }

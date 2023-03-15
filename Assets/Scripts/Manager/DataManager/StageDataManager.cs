@@ -51,6 +51,5 @@ public class StageDataManager : MonoBehaviour
     {
         _stageDatum[0].enemyDatum[0] = EnemyData.TestEnemyData();
         _stageDatum[0].createPoses[0] = CreatePos.UpperCenterCenter;
-        //  _stageDatum.Add(StageData.TestData());
     }
 }

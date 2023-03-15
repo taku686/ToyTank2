@@ -49,11 +49,11 @@ public class TrackingShell : ShellBase, IInitialize
         throw new System.NotImplementedException();
     }
 
-    public void SetProperty(float range, float shellSpeed, Transform target)
+    public void SetProperty(CanonData canonData, Transform targetTransform)
     {
-        _maxDistance = range;
-        _velocity = shellSpeed;
-        this.target = target;
+        _maxDistance = canonData.range;
+        _velocity = canonData.bulletSpeed;
+        target = targetTransform;
     }
 
     protected override void Sleep()
@@ -66,16 +66,24 @@ public class TrackingShell : ShellBase, IInitialize
     {
         if (target == null)
         {
-            transform.position = Vector3.MoveTowards(this.transform.position,
-                transform.position + transform.forward * _maxDistance, Time.deltaTime * _velocity);
+            var transform1 = transform;
+            var position = transform1.position;
+            position = Vector3.MoveTowards(position,
+                position + transform1.forward * _maxDistance, Time.deltaTime * _velocity);
+            transform.position = position;
         }
         else
         {
-            transform.rotation = Quaternion.Lerp(transform.rotation,
-                Quaternion.LookRotation(new Vector3(target.position.x, this.transform.position.y, target.position.z) -
-                                        transform.position), Time.deltaTime * _rotationSpeed);
-            _step = transform.forward * Time.deltaTime * _velocity;
-            transform.position += _step;
+            var transform1 = transform;
+            var position = transform1.position;
+            Transform transform2;
+            var position1 = target.position;
+            (transform2 = transform).rotation = Quaternion.Lerp(transform1.rotation,
+                Quaternion.LookRotation(new Vector3(position1.x, position.y, position1.z) -
+                                        position), Time.deltaTime * _rotationSpeed);
+            _step = transform2.forward * Time.deltaTime * _velocity;
+            position += _step;
+            transform2.position = position;
         }
     }
 }

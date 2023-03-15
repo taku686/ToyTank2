@@ -1,12 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
 
 public class CanonMoveBase : MonoBehaviour
 {
-    private const string JoystickName = "CanonMove";
     protected const string FireTrigger = "Fire";
-    protected string PoolTag;
     protected Transform ShotPos;
     protected Animator Animator;
 
@@ -22,12 +20,13 @@ public class CanonMoveBase : MonoBehaviour
         ShotPos.name = "ShotPos";
         ShotPos.transform.parent = transform;
         ShotPos.localPosition = shotPos;
+        ShotPos.localEulerAngles = Vector3.zero;
     }
 
     public void ManuallyRotate()
     {
-        float hor = -UltimateJoystick.GetHorizontalAxis(JoystickName);
-        float vert = -UltimateJoystick.GetVerticalAxis(JoystickName);
+        float hor = -UltimateJoystick.GetHorizontalAxis(GameCommonData.CanonJoystickName);
+        float vert = -UltimateJoystick.GetVerticalAxis(GameCommonData.CanonJoystickName);
         if (hor != 0 || vert != 0)
         {
             var direction = new Vector3(hor, 0, vert);
@@ -62,4 +61,5 @@ public interface ITargetMarker
     void CreateTargetMarker(ref Transform targetMarker, GameObject targetMarkerObj, Transform player);
 
     void MoveTargetMarker(Transform targetMarker, string controllerName, float range, Transform player);
+    void MoveTargetMarker(Transform targetMarker, float range, Transform target);
 }

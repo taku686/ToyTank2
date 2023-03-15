@@ -1,3 +1,4 @@
+using Data;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -38,6 +39,7 @@ public class PlayerManager : MonoBehaviour
         {
             name = Name,
             tag = Name,
+            layer = LayerMask.NameToLayer(GameCommonData.PLayerLayer),
             transform =
             {
                 position = generatePos.position,
