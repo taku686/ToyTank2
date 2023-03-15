@@ -25,7 +25,8 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         var enemy = new GameObject
         {
             name = level + "_" + version,
-            tag = GameCommonData.EnemyTag
+            tag = GameCommonData.EnemyTag,
+            layer = LayerMask.NameToLayer(GameCommonData.EnemyLayer)
         };
         var enemyTransform = enemy.transform;
         enemyTransform.position = createPos.position;
@@ -73,7 +74,11 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
 
     private void SetHealth(GameObject hpBarObj, EnemyData enemyData, Transform enemyTransform)
     {
-        var healthObj = new GameObject();
+        var healthObj = new GameObject
+        {
+            name = "Health",
+            layer = LayerMask.NameToLayer(GameCommonData.EnemyLayer)
+        };
         healthObj.transform.SetParent(enemyTransform);
         healthObj.transform.localPosition = Vector3.zero;
         var col = healthObj.AddComponent<SphereCollider>();
@@ -81,6 +86,7 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         col.radius = ColliderRadius;
         col.isTrigger = true;
         var obj = Instantiate(hpBarObj, enemyTransform);
+        obj.layer = LayerMask.NameToLayer(GameCommonData.EnemyLayer);
         var slider = obj.GetComponentInChildren<Slider>();
         var hpBarSc = obj.GetComponentInChildren<HpBar>();
         obj.transform.localPosition = _hpBarPos;
