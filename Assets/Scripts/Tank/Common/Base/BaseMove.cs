@@ -45,7 +45,7 @@ public class BaseMove : MonoBehaviour
         float hor;
         float vert;
 
-        if (Application.platform == RuntimePlatform.Android)
+        /*if (Application.platform == RuntimePlatform.Android)
         {
             hor = -UltimateJoystick.GetHorizontalAxis(JoystickName);
             vert = -UltimateJoystick.GetVerticalAxis(JoystickName);
@@ -54,9 +54,9 @@ public class BaseMove : MonoBehaviour
         {
             hor = -Input.GetAxis("Horizontal");
             vert = -Input.GetAxis("Vertical");
-        }
-        /*hor = -UltimateJoystick.GetHorizontalAxis(JoystickName);
-        vert = -UltimateJoystick.GetVerticalAxis(JoystickName);*/
+        }*/
+        hor = -UltimateJoystick.GetHorizontalAxis(JoystickName);
+        vert = -UltimateJoystick.GetVerticalAxis(JoystickName);
 
         if (_characterController.isGrounded)
         {

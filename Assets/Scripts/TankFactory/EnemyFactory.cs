@@ -67,8 +67,8 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         SetRigidbody(enemy);
         SetCollider(enemy);
         SetNavMeshAgent(enemy);
-        SetBehaviorTree(enemy);
-        SetEnemyCore(enemy, enemyData);
+        SetBehaviorTree(enemy, out var behaviorTree);
+        SetEnemyCore(enemy, enemyData, behaviorTree);
     }
 
     private void SetHealth(GameObject hpBarObj, EnemyData enemyData, Transform enemyTransform)
@@ -116,9 +116,9 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         navMesh.stoppingDistance = StoppingDistance;
     }
 
-    private void SetBehaviorTree(GameObject enemy)
+    private void SetBehaviorTree(GameObject enemy, out BehaviorTree behaviorTree)
     {
-        var behaviorTree = enemy.AddComponent<BehaviorTree>();
+        behaviorTree = enemy.AddComponent<BehaviorTree>();
         behaviorTree.ExternalBehavior = externalBehavior;
     }
 
@@ -177,9 +177,9 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         canonMoveBase.CreateShotPos(canonData.ShotPos);
     }
 
-    private void SetEnemyCore(GameObject enemy, EnemyData enemyData)
+    private void SetEnemyCore(GameObject enemy, EnemyData enemyData, BehaviorTree behaviorTree)
     {
         var enemyCore = enemy.AddComponent<EnemyCore>();
-        enemyCore.Initialize(enemyData, targetMarker);
+        enemyCore.Initialize(enemyData, targetMarker, behaviorTree);
     }
 }

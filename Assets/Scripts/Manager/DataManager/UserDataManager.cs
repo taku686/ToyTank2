@@ -50,7 +50,7 @@ public class UserDataManager : MonoBehaviour
             currentCanonDataIndex = 0,
             availableBaseLists = new List<int> { 0 },
             availableCanonList = new List<int> { 0 },
-            maxStage = 1,
+            maxStage = 0,
             currentEquippedCanonList = new List<int>(3) { 0, 0, 0 }
         };
 
