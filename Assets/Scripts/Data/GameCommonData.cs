@@ -5,7 +5,8 @@ namespace Data
     public static class GameCommonData
     {
         public static bool IsInitialize;
-        public static readonly string TitleId = "1589D";
+
+        //  public static readonly string TitleId = "1589D";
         public static readonly string TankMaterialName = "Tank (Instance)";
         public static readonly string ShellManagerTag = "ShellManager";
         public static readonly string PlayerTag = "Player";
@@ -16,6 +17,7 @@ namespace Data
         public static readonly string GrassTag = "Grass";
         public static readonly string BeamTag = "Beam";
         public static readonly string PlayerShellPoolTag = "PlayerShellPool";
+        public static readonly string EnemyShellPoolTag = "EnemyShellPool";
         public static readonly string EnemyDataKey = "EnemyDatum";
         public static readonly string CanonDataKey = "CanonDatum";
         public static readonly string BaseDataKey = "BaseDatum";
@@ -30,7 +32,6 @@ namespace Data
         public static readonly float CloseDuration = 0.5f;
         public static readonly float OpenDuration = 1.0f;
         public static readonly Color PlayerColor = Color.white;
-        public static readonly string AdUnitId = "ca-app-pub-3759795642939239/4324583739";
         public static readonly string NonConsumable = "NonConsumable";
         public static readonly string RemoveAdsItem = "removeads";
         public static readonly string MainStoreKey = "Main";
@@ -38,6 +39,9 @@ namespace Data
         public static readonly string CanonJoystickName = "CanonMove";
         public static readonly string TrackingCanonLayer = "TrackingCanon";
         public static readonly string ShellLayer = "Shell";
+        public static readonly string EnemyLayer = "Enemy";
+        public static readonly string PLayerLayer = "Player";
+        public static readonly string DynamicVariablesPlayer = "Player";
 
         public static Color GetEnemyColor(int index)
         {

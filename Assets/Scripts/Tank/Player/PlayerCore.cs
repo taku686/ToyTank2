@@ -131,7 +131,7 @@ public partial class PlayerCore : MonoBehaviour
         _baseObj = Instantiate(baseData.BaseObj, transform);
         _baseObj.transform.localPosition = Vector3.zero;
         _baseMove = gameObject.AddComponent<BaseMove>();
-        _baseMove.InitializeCharacterController();
+        _baseMove.Initialize();
     }
 
 

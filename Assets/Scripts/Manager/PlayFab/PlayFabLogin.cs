@@ -25,7 +25,7 @@ namespace Manager.PlayFab
 
         public void Initialize()
         {
-            PlayFabSettings.staticSettings.TitleId = GameCommonData.TitleId;
+            PlayFabSettings.staticSettings.TitleId = "1589D";
         }
 
         public async UniTask<bool> TryLoginWithGoogle()
@@ -57,7 +57,7 @@ namespace Manager.PlayFab
             await playFabUserData.SetUserData(userData);
             playFabUserData.SetInventory(inventoryData);
             await playFabCatalogManager.GetCatalogItems();
-            await playFabShopManager.Initialize(playFabCatalogManager, playFabUserData);
+            await playFabShopManager.Initialize(playFabCatalogManager, playFabUserData, this);
         }
     }
 }
