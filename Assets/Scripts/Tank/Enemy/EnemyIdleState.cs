@@ -9,7 +9,6 @@ public partial class EnemyCore
 {
     public class EnemyIdleState : State
     {
-        private const string ShellPoolTag = "EnemyShellPool";
         private const float MaxRandomValue = 3f;
         private CanonMoveBase _canonMoveBase;
         private IShot _iShot;
@@ -22,6 +21,7 @@ public partial class EnemyCore
         private float _shotTimer;
         private float _interval;
         private EnemyHealth _enemyHealth;
+        private BehaviorTree _behaviorTree;
 
         protected override void OnEnter(State prevState)
         {
@@ -70,6 +70,7 @@ public partial class EnemyCore
             _enemyData = Owner._enemyData;
             _enemyHealth = Owner.enemyHealth;
             _iTargetMarker = Owner._iTargetMarker;
+            _behaviorTree = Owner._behaviorTree;
             SetEnemyHealthSubscribe(_enemyHealth);
         }
 
@@ -80,18 +81,18 @@ public partial class EnemyCore
                 return;
             }
 
-            if (GlobalVariables.Instance == null)
+            /*if (GlobalVariables.Instance == null)
+            {
+                return;
+            }*/
+
+            var player = (SharedGameObject)_behaviorTree.GetVariable(GameCommonData.DynamicVariablesPlayer);
+            if (player.Value == null)
             {
                 return;
             }
 
-            var player = (GameObject)GlobalVariables.Instance.GetVariable(GameCommonData.PlayerVariables).GetValue();
-            if (player == null)
-            {
-                return;
-            }
-
-            _playerTransform = player.transform;
+            _playerTransform = player.Value.transform;
         }
 
         private void Shot(CanonData canonData)
@@ -108,7 +109,7 @@ public partial class EnemyCore
                 {
                     _shotTimer = 0f;
                     _interval = _enemyData.shotInterval + Random.Range(1f, MaxRandomValue);
-                    _iShot.Shot(_shellManager.GetEnemyShell(ShellPoolTag, canonData), canonData);
+                    _iShot.Shot(_shellManager.GetEnemyShell(GameCommonData.EnemyShellPoolTag, canonData), canonData);
                 }
             }
         }
@@ -117,7 +118,7 @@ public partial class EnemyCore
         {
             if (IsWithinRange(canonData))
             {
-                _iShot.Shot(_shellManager.GetEnemyShell(ShellPoolTag, canonData), canonData);
+                _iShot.Shot(_shellManager.GetEnemyShell(GameCommonData.EnemyShellPoolTag, canonData), canonData);
             }
             else
             {
