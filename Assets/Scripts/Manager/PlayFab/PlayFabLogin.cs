@@ -25,7 +25,7 @@ namespace Manager.PlayFab
 
         public void Initialize()
         {
-            PlayFabSettings.staticSettings.TitleId = GameCommonData.TitleId;
+            PlayFabSettings.staticSettings.TitleId = "1589D";
         }
 
         public async UniTask<bool> TryLoginWithGoogle()

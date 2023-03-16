@@ -5,7 +5,8 @@ namespace Data
     public static class GameCommonData
     {
         public static bool IsInitialize;
-        public static readonly string TitleId = "1589D";
+
+        //  public static readonly string TitleId = "1589D";
         public static readonly string TankMaterialName = "Tank (Instance)";
         public static readonly string ShellManagerTag = "ShellManager";
         public static readonly string PlayerTag = "Player";
@@ -37,6 +38,8 @@ namespace Data
         public static readonly string CanonJoystickName = "CanonMove";
         public static readonly string TrackingCanonLayer = "TrackingCanon";
         public static readonly string ShellLayer = "Shell";
+        public static readonly string EnemyLayer = "Enemy";
+        public static readonly string PLayerLayer = "Player";
 
         public static Color GetEnemyColor(int index)
         {

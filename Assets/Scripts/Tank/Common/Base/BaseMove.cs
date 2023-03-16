@@ -17,7 +17,13 @@ public class BaseMove : MonoBehaviour
     private CharacterController _characterController;
     Vector3 _dir = Vector3.zero;
 
-    public void InitializeCharacterController()
+
+    public void Initialize()
+    {
+        InitializeCharacterController();
+        InitializeRigid();
+    }
+    private void InitializeCharacterController()
     {
         _characterController = gameObject.AddComponent<CharacterController>();
         _characterController.slopeLimit = SlopeLimit;
@@ -26,6 +32,12 @@ public class BaseMove : MonoBehaviour
         _characterController.radius = Radius;
         _characterController.height = Height;
         _characterController.center = _center;
+    }
+
+    private void InitializeRigid()
+    {
+        _rigidbody = gameObject.AddComponent<Rigidbody>();
+        _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     public void Move(float speed)

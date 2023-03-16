@@ -11,13 +11,12 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
     [SerializeField] private Material enemyMaterial;
     [SerializeField] private ExternalBehavior externalBehavior;
     [SerializeField] private GameObject hpBar;
-    [SerializeField] private LayerMask playerLayerMask;
     [SerializeField] private GameObject targetMarker;
     private const float ColliderRadius = 1f;
-    private const float StoppingDistance = 15f;
+    private const float StoppingDistance = 0f;
     private readonly Vector3 _colliderCenter = new(0, 0.5f, 0);
     private readonly Vector3 _hpBarPos = new(0, 3.3f, 0);
-    public List<EnemyHealth> enemyHealths = new();
+    [HideInInspector] public List<EnemyHealth> enemyHealths = new();
 
     public GameObject CreateEnemy(int level, int version, Transform createPos)
     {
@@ -25,7 +24,8 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         var enemy = new GameObject
         {
             name = level + "_" + version,
-            tag = GameCommonData.EnemyTag
+            tag = GameCommonData.EnemyTag,
+            layer = LayerMask.NameToLayer(GameCommonData.EnemyLayer)
         };
         var enemyTransform = enemy.transform;
         enemyTransform.position = createPos.position;
@@ -73,7 +73,11 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
 
     private void SetHealth(GameObject hpBarObj, EnemyData enemyData, Transform enemyTransform)
     {
-        var healthObj = new GameObject();
+        var healthObj = new GameObject
+        {
+            name = "Health",
+            layer = LayerMask.NameToLayer(GameCommonData.EnemyLayer)
+        };
         healthObj.transform.SetParent(enemyTransform);
         healthObj.transform.localPosition = Vector3.zero;
         var col = healthObj.AddComponent<SphereCollider>();
@@ -81,6 +85,7 @@ public class EnemyFactory : MonoBehaviour, ITankFactory
         col.radius = ColliderRadius;
         col.isTrigger = true;
         var obj = Instantiate(hpBarObj, enemyTransform);
+        obj.layer = LayerMask.NameToLayer(GameCommonData.EnemyLayer);
         var slider = obj.GetComponentInChildren<Slider>();
         var hpBarSc = obj.GetComponentInChildren<HpBar>();
         obj.transform.localPosition = _hpBarPos;

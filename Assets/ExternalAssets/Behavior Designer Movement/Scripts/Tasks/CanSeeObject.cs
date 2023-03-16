@@ -214,6 +214,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Movement
                 }
                 else if (!string.IsNullOrEmpty(targetTag.Value))
                 {
+                    //Debug.Log("É^ÉOÇ†ÇË");
                     // If the target tag is not null then determine if there are any objects within sight based on the tag
                     GameObject objectFound = null;
                     float minAngle = Mathf.Infinity;
@@ -227,6 +228,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Movement
                                 out angle, ignoreLayerMask, useTargetBone.Value, targetBone, drawDebugRay.Value)) !=
                             null)
                         {
+                            Debug.Log("î≠å©ÇµÇΩ");
                             // This object is within sight. Set it to the objectFound GameObject if the angle is less than any of the other objects
                             if (angle < minAngle)
                             {
@@ -236,6 +238,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Movement
                         }
                     }
 
+                    Debug.Log(objectFound);
                     returnedObject.Value = objectFound;
                 }
                 else
