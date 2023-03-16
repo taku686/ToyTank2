@@ -57,7 +57,7 @@ namespace Manager.PlayFab
             await playFabUserData.SetUserData(userData);
             playFabUserData.SetInventory(inventoryData);
             await playFabCatalogManager.GetCatalogItems();
-            await playFabShopManager.Initialize(playFabCatalogManager, playFabUserData);
+            await playFabShopManager.Initialize(playFabCatalogManager, playFabUserData, this);
         }
     }
 }

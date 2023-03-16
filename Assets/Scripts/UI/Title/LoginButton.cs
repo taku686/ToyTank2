@@ -16,9 +16,4 @@ public class LoginButton : MonoBehaviour
             .SetEase(Ease.OutQuart)
             .SetLoops(-1, LoopType.Restart);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
 }

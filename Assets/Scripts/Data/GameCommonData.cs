@@ -17,6 +17,7 @@ namespace Data
         public static readonly string GrassTag = "Grass";
         public static readonly string BeamTag = "Beam";
         public static readonly string PlayerShellPoolTag = "PlayerShellPool";
+        public static readonly string EnemyShellPoolTag = "EnemyShellPool";
         public static readonly string EnemyDataKey = "EnemyDatum";
         public static readonly string CanonDataKey = "CanonDatum";
         public static readonly string BaseDataKey = "BaseDatum";
@@ -40,6 +41,7 @@ namespace Data
         public static readonly string ShellLayer = "Shell";
         public static readonly string EnemyLayer = "Enemy";
         public static readonly string PLayerLayer = "Player";
+        public static readonly string DynamicVariablesPlayer = "Player";
 
         public static Color GetEnemyColor(int index)
         {

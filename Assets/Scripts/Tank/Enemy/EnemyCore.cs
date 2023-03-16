@@ -1,3 +1,4 @@
+using BehaviorDesigner.Runtime;
 using Data;
 using UnityEngine;
 
@@ -17,7 +18,8 @@ public partial class EnemyCore : MonoBehaviour
     private CanonData _canonData;
     private BaseData _baseData;
     private GameObject _targetMarkerObj;
-    public EnemyHealth enemyHealth;
+    private BehaviorTree _behaviorTree;
+    [HideInInspector] public EnemyHealth enemyHealth;
 
     private enum Event
     {
@@ -29,13 +31,14 @@ public partial class EnemyCore : MonoBehaviour
         _stateMachine.Update();
     }
 
-    public void Initialize(EnemyData enemyData, GameObject targetMarker)
+    public void Initialize(EnemyData enemyData, GameObject targetMarker, BehaviorTree behaviorTree)
     {
         _enemyData = enemyData;
         _canonData = enemyData.canonData;
         _baseData = enemyData.baseData;
         _targetMarkerObj = targetMarker;
         _targetMarkerTransform = targetMarker.transform;
+        _behaviorTree = behaviorTree;
         InitializeComponent(_canonData);
         InitializeState();
     }
