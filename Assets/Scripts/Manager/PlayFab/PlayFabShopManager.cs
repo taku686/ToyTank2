@@ -16,8 +16,10 @@ namespace Manager.PlayFab
         private IStoreController _storeController;
         private IExtensionProvider _extensionProvider;
         private PlayFabUserData _playFabUserData;
+        private PlayFabLogin _playFabLogin;
 
-        public async UniTask Initialize(PlayFabCatalogManager playFabCatalogManager, PlayFabUserData playFabUserData)
+        public async UniTask Initialize(PlayFabCatalogManager playFabCatalogManager, PlayFabUserData playFabUserData,
+            PlayFabLogin playFabLogin)
         {
             if (_isInitialized)
             {
@@ -25,6 +27,8 @@ namespace Manager.PlayFab
             }
 
             _playFabUserData = playFabUserData;
+            _playFabLogin = playFabLogin;
+
             var options = new InitializationOptions();
             await UnityServices.InitializeAsync(options);
             _isInitialized = true;
@@ -40,6 +44,7 @@ namespace Manager.PlayFab
 
         public async UniTask<bool> TryPurchaseItem(string itemName, string virtualCurrencyKey, int price)
         {
+            await _playFabLogin.TryLoginWithGoogle();
             var request = new PurchaseItemRequest
             {
                 ItemId = itemName,
