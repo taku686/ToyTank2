@@ -17,6 +17,7 @@ namespace Manager.PlayFab
         private IExtensionProvider _extensionProvider;
         private PlayFabUserData _playFabUserData;
         private PlayFabLogin _playFabLogin;
+        private Action _purchaseErrorAction;
 
         public async UniTask Initialize(PlayFabCatalogManager playFabCatalogManager, PlayFabUserData playFabUserData,
             PlayFabLogin playFabLogin)
@@ -42,6 +43,11 @@ namespace Manager.PlayFab
             UnityPurchasing.Initialize(this, _builder);
         }
 
+        public void SetPurchaseErrorAction(Action action)
+        {
+            _purchaseErrorAction = action;
+        }
+
         public async UniTask<bool> TryPurchaseItem(string itemName, string virtualCurrencyKey, int price)
         {
             await _playFabLogin.TryLoginWithGoogle();
@@ -57,6 +63,11 @@ namespace Manager.PlayFab
             _storeController.InitiatePurchase(itemName);
             if (result.Error != null)
             {
+                if (_purchaseErrorAction != null)
+                {
+                    _purchaseErrorAction.Invoke();
+                }
+
                 Debug.Log(result.Error.GenerateErrorReport());
                 return false;
             }
@@ -122,6 +133,12 @@ namespace Manager.PlayFab
 
         public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
         {
+            if (_purchaseErrorAction == null)
+            {
+                return;
+            }
+
+            _purchaseErrorAction.Invoke();
         }
 
         public void OnInitialized(IStoreController controller, IExtensionProvider extensions)

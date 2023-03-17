@@ -7,8 +7,8 @@ public partial class PlayerCore
     {
         protected override void OnEnter(State prevState)
         {
-            var baseData = BaseDataManager.Instance.GetBaseData(Owner._userData.currentBaseDataIndex);
-            var canonData = CanonDataManager.Instance.GetCanonData(Owner._userData.currentCanonDataIndex);
+            var baseData = BaseDataManager.Instance.GetBaseData(Owner._currentBaseData.baseObjIndex);
+            var canonData = CanonDataManager.Instance.GetCanonData(Owner._currentCanonData.index);
             if (Owner._targetMarker != null)
             {
                 Destroy(Owner._targetMarker.gameObject);
@@ -19,7 +19,6 @@ public partial class PlayerCore
 
         protected override void OnUpdate()
         {
-            Debug.Log("Update canon switch");
             Owner._stateMachine.Dispatch((int)Event.Idle);
         }
     }

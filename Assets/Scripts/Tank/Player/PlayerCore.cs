@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Data;
 using Tank.Player;
@@ -7,12 +6,12 @@ using UnityEngine.UI;
 
 public partial class PlayerCore : MonoBehaviour
 {
-    private const string JoystickName = "CanonJoystick";
-
-    // private const string ShellPoolTag = "PlayerShellPool";
+    private const string JoystickObjName = "CanonJoystick";
     private StateMachine<PlayerCore> _stateMachine;
+
     private BaseMove _baseMove;
-    private UserData _userData;
+
+    // private UserData _userData;
     private CanonMoveBase _canonMoveBase;
     private ShellManager _shellManager;
     private UltimateJoystick _ultimateJoystick;
@@ -24,7 +23,8 @@ public partial class PlayerCore : MonoBehaviour
     private LayerMask _enemyLayerMask;
     private Transform _targetMarker;
     private GameObject _targetMarkerObj;
-    private CanonData _currentCanon;
+    private CanonData _currentCanonData;
+    private BaseData _currentBaseData;
     private GameObject _canonObj;
     private GameObject _baseObj;
     private PlayerHealth _health;
@@ -63,15 +63,14 @@ public partial class PlayerCore : MonoBehaviour
     private void InitializeComponent(UserData userData, Transform targetMarker, GameObject canonBar,
         GameObject hpBar, LayerMask enemyLayer, Material playerMaterial)
     {
-        _userData = userData;
         _targetMarkerObj = targetMarker.gameObject;
         _enemyLayerMask = enemyLayer;
 
-        var baseData = BaseDataManager.Instance.GetBaseData(_userData.currentBaseDataIndex);
-        var canonData = CanonDataManager.Instance.GetCanonData(_userData.currentCanonDataIndex);
+        var baseData = BaseDataManager.Instance.GetBaseData(userData.currentBaseDataIndex);
+        var canonData = CanonDataManager.Instance.GetCanonData(userData.currentCanonDataIndex);
         _shellManager = GameObject.FindGameObjectWithTag(GameCommonData.ShellManagerTag).GetComponent<ShellManager>();
 
-        GameObject joystick = GameObject.FindGameObjectWithTag(JoystickName);
+        GameObject joystick = GameObject.FindGameObjectWithTag(JoystickObjName);
         _ultimateJoystick = joystick.GetComponent<UltimateJoystick>();
 
         var hpBarObj = Instantiate(hpBar, transform);
@@ -102,7 +101,7 @@ public partial class PlayerCore : MonoBehaviour
         _canonObj = Instantiate(canonData.canonObj, transform);
         _canonObj.transform.localPosition = baseData.CanonPos;
         DecideCanonType(canonData, _canonObj);
-        _currentCanon = canonData;
+        _currentCanonData = canonData;
         _canonBar = Instantiate(canonBar, transform).GetComponentInChildren<CanonBar>();
         _canonBar.Initialize(canonData.FireTime, canonData.ReloadTime);
     }
@@ -128,6 +127,7 @@ public partial class PlayerCore : MonoBehaviour
             _baseObj = new GameObject();
         }
 
+        _currentBaseData = baseData;
         _baseObj = Instantiate(baseData.BaseObj, transform);
         _baseObj.transform.localPosition = Vector3.zero;
         _baseMove = gameObject.AddComponent<BaseMove>();
@@ -137,9 +137,10 @@ public partial class PlayerCore : MonoBehaviour
 
     public void ChangeCanon(CanonData canonData)
     {
-        _userData.currentCanonDataIndex = canonData.index;
+        //  _userData.currentCanonDataIndex = canonData.index;
+        //  _currentCanon = canonData;
         _canonBar.Initialize(canonData.FireTime, canonData.ReloadTime);
-        _currentCanon = canonData;
+        _currentCanonData = canonData;
         _stateMachine.Dispatch((int)Event.CanonChanging);
     }
 

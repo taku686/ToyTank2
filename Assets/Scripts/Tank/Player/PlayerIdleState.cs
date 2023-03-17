@@ -24,7 +24,7 @@ public partial class PlayerCore
         {
             _baseMove = Owner._baseMove;
             _canonMoveBase = Owner._canonMoveBase;
-            _userData = Owner._userData;
+            _userData = UserDataManager.Instance.GetUserData();
             _baseData = BaseDataManager.Instance.GetBaseData(_userData.currentBaseDataIndex);
             _health = Owner._health;
             _cts = new CancellationTokenSource();
@@ -83,7 +83,7 @@ public partial class PlayerCore
                 Owner._iShot.Shot(
                     Owner._shellManager.GetPlayerShell(GameCommonData.PlayerShellPoolTag,
                         _userData.currentCanonDataIndex),
-                    Owner._currentCanon);
+                    Owner._currentCanonData);
             }
             else if (!Owner._canonBar.IsFire() && Owner._iShotStop != null)
             {
@@ -93,7 +93,7 @@ public partial class PlayerCore
             if (Owner._iTargetMarker != null)
             {
                 Owner._iTargetMarker.MoveTargetMarker(Owner._targetMarker, GameCommonData.CanonJoystickName,
-                    Owner._currentCanon.Range,
+                    Owner._currentCanonData.Range,
                     Owner.transform);
             }
         }
@@ -105,7 +105,7 @@ public partial class PlayerCore
                 Owner._iShot.Shot(
                     Owner._shellManager.GetPlayerShell(GameCommonData.PlayerShellPoolTag,
                         _userData.currentCanonDataIndex),
-                    Owner._currentCanon);
+                    Owner._currentCanonData);
             }
             else if (_hasShotStopMethod)
             {
@@ -115,9 +115,9 @@ public partial class PlayerCore
 
         private void DetectEventTrigger()
         {
-            if (Owner._currentCanon.CanonKinds == Data.CanonType.BeamType ||
-                Owner._currentCanon.CanonKinds == Data.CanonType.MachineGunType ||
-                Owner._currentCanon.CanonKinds == Data.CanonType.FlameType)
+            if (Owner._currentCanonData.CanonKinds == Data.CanonType.BeamType ||
+                Owner._currentCanonData.CanonKinds == Data.CanonType.MachineGunType ||
+                Owner._currentCanonData.CanonKinds == Data.CanonType.FlameType)
             {
                 _hasShotStopMethod = true;
                 _pointerUpCallBack = OnPointerUp;

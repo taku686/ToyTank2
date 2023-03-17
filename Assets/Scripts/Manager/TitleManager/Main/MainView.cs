@@ -6,7 +6,6 @@ namespace Manager.TitleManager.Main
     public class MainView : MonoBehaviour
     {
         public GameObject settingPanel;
-        public GameObject platformObj;
         public Button battleButton;
         public Button settingButton;
         public Button settingCloseButton;
