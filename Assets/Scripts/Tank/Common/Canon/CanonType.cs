@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -10,11 +11,6 @@ public class CanonType : CanonMoveBase, IShot, ITargetMarker
 
     public void CreateTargetMarker(ref Transform targetMarker, GameObject targetMarkerObj, Transform player)
     {
-        /*if (targetMarker == null)
-        {
-            targetMarker = targetMarkerObj.transform;
-        }*/
-
         targetMarker = Instantiate(targetMarkerObj).transform;
         var transform1 = targetMarker.transform;
         transform1.parent = null;
@@ -66,27 +62,8 @@ public class CanonType : CanonMoveBase, IShot, ITargetMarker
     {
     }
 
-    /*private Vector3 CalculateVelocity(Vector3 pointA, Vector3 pointB, float angle)
+    private void OnDestroy()
     {
-        // 射出角をラジアンに変換
-        float rad = angle * Mathf.PI / 180;
-
-        // 水平方向の距離x
-        float x = Vector2.Distance(new Vector2(pointA.x, pointA.z), new Vector2(pointB.x, pointB.z));
-
-        // 垂直方向の距離y
-        float y = pointA.y - pointB.y;
-
-        // 斜方投射の公式を初速度について解く
-        float speed = Mathf.Sqrt(-Physics.gravity.y * Mathf.Pow(x, 2) /
-                                 (2 * Mathf.Pow(Mathf.Cos(rad), 2) * (x * Mathf.Tan(rad) + y)));
-
-        if (float.IsNaN(speed))
-        {
-            // 条件を満たす初速を算出できなければVector3.zeroを返す
-            return Vector3.zero;
-        }
-
-        return (new Vector3(pointB.x - pointA.x, x * Mathf.Tan(rad), pointB.z - pointA.z).normalized * speed);
-    }*/
+        Destroy(_targetMarker.gameObject);
+    }
 }
