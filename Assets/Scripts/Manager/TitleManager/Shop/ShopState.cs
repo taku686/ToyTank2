@@ -29,7 +29,7 @@ namespace Manager.TitleManager
                 _playFabShopManager = Owner.playFabShopManager;
                 _shopView = Owner.shopView;
                 _uiAnimation = Owner.uiAnimation;
-                _shopView.errorPanel.SetActive(false);
+                _shopView.Initialize();
             }
 
             private void InitializeButton()
@@ -75,12 +75,15 @@ namespace Manager.TitleManager
                 var errorPanel = _shopView.errorPanel.transform;
                 await _uiAnimation.Close(errorPanel, GameCommonData.CloseDuration);
                 _shopView.errorPanel.SetActive(false);
+                _shopView.infoText.enabled = false;
             }
 
             private async UniTask OpenErrorPanel()
             {
                 var errorPanel = _shopView.errorPanel.transform;
+                var infoText = _shopView.infoText;
                 errorPanel.gameObject.SetActive(true);
+                infoText.enabled = true;
                 errorPanel.localScale = Vector3.zero;
                 await _uiAnimation.Open(errorPanel, GameCommonData.ClickDuration);
             }
