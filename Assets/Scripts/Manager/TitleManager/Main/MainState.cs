@@ -22,18 +22,12 @@ namespace Manager.TitleManager
                 InitializeButton();
             }
 
-            protected override void OnExit(State nextState)
-            {
-                _mainView.platformObj.SetActive(false);
-            }
-
             private void Initialize()
             {
                 _uiAnimation = Owner.uiAnimation;
                 _mainView = Owner.mainView;
                 _playerPos = Owner.playerPos;
                 _mainView.settingPanel.SetActive(false);
-                _mainView.platformObj.SetActive(true);
                 SetupTank();
             }
 

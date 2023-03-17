@@ -16,6 +16,7 @@ namespace Manager.TitleManager
             private PlayFabShopManager _playFabShopManager;
             private ShopView _shopView;
             private UIAnimation _uiAnimation;
+            private const string Explanation = "This item is already purchased.";
 
             protected override void OnEnter(State prevState)
             {
@@ -30,6 +31,9 @@ namespace Manager.TitleManager
                 _shopView = Owner.shopView;
                 _uiAnimation = Owner.uiAnimation;
                 _shopView.Initialize();
+
+                var purchaseErrorAction = UniTask.Action(async () => OpenErrorPanel().Forget());
+                _playFabShopManager.SetPurchaseErrorAction(purchaseErrorAction);
             }
 
             private void InitializeButton()
@@ -55,17 +59,14 @@ namespace Manager.TitleManager
                 await _uiAnimation.Click(_shopView.adRemoveButton.transform, GameCommonData.ClickDuration);
                 if (UserDataManager.Instance.IsRemoveAds())
                 {
+                    _shopView.infoText.text = Explanation;
                     await OpenErrorPanel();
                 }
                 else
                 {
                     var item = _playFabCatalogManager.catalogList.First(x => x.ItemId == GameCommonData.RemoveAdsItem);
-                    var result = await _playFabShopManager.TryPurchaseItem(item.ItemId, GameCommonData.RealMoneyKey,
+                    await _playFabShopManager.TryPurchaseItem(item.ItemId, GameCommonData.RealMoneyKey,
                         GameCommonData.RemoveAdsPrice);
-                    if (!result)
-                    {
-                        //   await OpenErrorPanel();
-                    }
                 }
             }
 
@@ -76,6 +77,7 @@ namespace Manager.TitleManager
                 await _uiAnimation.Close(errorPanel, GameCommonData.CloseDuration);
                 _shopView.errorPanel.SetActive(false);
                 _shopView.infoText.enabled = false;
+                _shopView.infoText.text = "";
             }
 
             private async UniTask OpenErrorPanel()
